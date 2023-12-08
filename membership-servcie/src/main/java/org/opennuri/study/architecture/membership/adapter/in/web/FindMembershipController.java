@@ -20,7 +20,6 @@ public class FindMembershipController {
     private final FindMembershipUseCase findMembershipUseCase;
     @GetMapping(path = "/membership/findMembership/{membershipId}")
     ResponseEntity<Membership> findMembershipByMemberId(@PathVariable String membershipId ){
-        //TODO command 객체 생성
         FindMembershipCommand command = FindMembershipCommand.builder()
                 .membershipId(membershipId)
                 .build();
