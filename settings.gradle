@@ -1,4 +1,4 @@
 rootProject.name = 'study-architecture'
-include 'membership-servcie'
-include 'common-service'
+include 'membership-service'
+include 'common'
 
