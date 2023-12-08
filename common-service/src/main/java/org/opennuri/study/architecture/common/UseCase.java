@@ -1,4 +1,4 @@
-package common;
+package org.opennuri.study.architecture.common;
 
 
 import org.springframework.core.annotation.AliasFor;
@@ -10,7 +10,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
-public @interface WebAdapter {
+public @interface UseCase {
+
     /**
      * The value may indicate a suggestion for a logical component name,
      * to be turned into a Spring bean in case of an autodetected component.
@@ -19,5 +20,4 @@ public @interface WebAdapter {
 
     @AliasFor(annotation = Component.class)
     String value() default "";
-
 }

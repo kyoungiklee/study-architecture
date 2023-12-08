@@ -1,7 +1,8 @@
 package org.opennuri.study.architecture.membership.adapter.out.persistence;
 
-import common.PersistenceAdapter;
+
 import lombok.RequiredArgsConstructor;
+import org.opennuri.study.architecture.common.PersistenceAdapter;
 import org.opennuri.study.architecture.membership.appication.port.out.FindMembershipPort;
 import org.opennuri.study.architecture.membership.appication.port.out.ModifyMembershipPort;
 import org.opennuri.study.architecture.membership.appication.port.out.RegisterMembershipPort;

@@ -1,13 +1,11 @@
 package org.opennuri.study.architecture.membership.adapter.in.web;
 
 
-import common.WebAdapter;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.opennuri.study.architecture.common.WebAdapter;
 import org.opennuri.study.architecture.membership.appication.port.in.ModifyMembershipCommand;
-import org.opennuri.study.architecture.membership.appication.port.in.ModifyMembershipUseCase;
-import org.opennuri.study.architecture.membership.appication.port.in.RegisterMembershipCommand;
-import org.opennuri.study.architecture.membership.appication.port.in.RegisterMembershipUseCase;
 import org.opennuri.study.architecture.membership.domain.Membership;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

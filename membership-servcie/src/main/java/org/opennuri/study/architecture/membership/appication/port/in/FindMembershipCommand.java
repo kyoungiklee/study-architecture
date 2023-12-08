@@ -1,9 +1,10 @@
 package org.opennuri.study.architecture.membership.appication.port.in;
 
-import common.SelfValidating;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.opennuri.study.architecture.common.SelfValidating;
 
 @Data
 @Builder

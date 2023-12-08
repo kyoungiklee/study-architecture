@@ -1,8 +1,9 @@
 package org.opennuri.study.architecture.membership.adapter.in.web;
 
 
-import common.WebAdapter;
+
 import lombok.RequiredArgsConstructor;
+import org.opennuri.study.architecture.common.WebAdapter;
 import org.opennuri.study.architecture.membership.appication.port.in.FindMembershipCommand;
 import org.opennuri.study.architecture.membership.appication.port.in.FindMembershipUseCase;
 import org.opennuri.study.architecture.membership.domain.Membership;

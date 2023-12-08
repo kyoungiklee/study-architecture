@@ -1,12 +1,12 @@
 package org.opennuri.study.architecture.membership.appication.port.in;
 
-import common.SelfValidating;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.opennuri.study.architecture.common.SelfValidating;
 
 @Data
 @Builder

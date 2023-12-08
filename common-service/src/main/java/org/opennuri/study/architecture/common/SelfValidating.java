@@ -1,4 +1,4 @@
-package common;
+package org.opennuri.study.architecture.common;
 
 import jakarta.validation.*;
 
@@ -6,7 +6,7 @@ import java.util.Set;
 
 
 public abstract class SelfValidating<T> {
-    private Validator validator;
+    private final Validator validator;
 
     public SelfValidating() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();

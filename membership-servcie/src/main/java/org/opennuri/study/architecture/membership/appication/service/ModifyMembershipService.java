@@ -1,7 +1,8 @@
 package org.opennuri.study.architecture.membership.appication.service;
 
-import common.UseCase;
+
 import lombok.RequiredArgsConstructor;
+import org.opennuri.study.architecture.common.UseCase;
 import org.opennuri.study.architecture.membership.adapter.out.persistence.MembershipJpaEntity;
 import org.opennuri.study.architecture.membership.adapter.out.persistence.MembershipMapper;
 import org.opennuri.study.architecture.membership.appication.port.in.ModifyMembershipCommand;
