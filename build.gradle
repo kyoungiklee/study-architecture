@@ -1,0 +1,48 @@
+buildscript {
+    dependencies {
+        classpath("io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE")
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.opennuri.study.architecture'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly('org.projectlombok:lombok')
+    annotationProcessor('org.projectlombok:lombok')
+    annotationProcessor('org.springframework.boot:spring-boot-autoconfigure-processor')
+//    implementation(group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0')
+//    implementation(group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0')
+    testImplementation('com.tngtech.archunit:archunit-junit5:1.0.1')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation('org.springframework.boot:spring-boot-starter-validation')
+    implementation('org.springframework.boot:spring-boot-actuator')
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation(group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '3.1.0')
+//    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation('org.jetbrains:annotations:24.0.1')
+    implementation('junit:junit:4.13.2')
+
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
