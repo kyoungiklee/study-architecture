@@ -29,8 +29,6 @@ public class RegisterMembershipService implements RegisterMembershipUseCase {
     @Override
     public Membership resisterMembership(RegisterMembershipCommand command) {
 
-        log.info(command.getAddress());
-
         MembershipJpaEntity jpaEntity = registerMembershipPort.createMembership(
                 new Membership.MembershipName(command.getName()),
                 new Membership.MembershipEmail(command.getEmail()),
