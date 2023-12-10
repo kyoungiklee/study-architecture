@@ -1,9 +1,10 @@
 package org.opennuri.study.architecture.money.domain;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

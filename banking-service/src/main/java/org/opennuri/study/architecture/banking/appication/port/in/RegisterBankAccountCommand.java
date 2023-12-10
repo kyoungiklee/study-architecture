@@ -1,6 +1,5 @@
 package org.opennuri.study.architecture.banking.appication.port.in;
 
-import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

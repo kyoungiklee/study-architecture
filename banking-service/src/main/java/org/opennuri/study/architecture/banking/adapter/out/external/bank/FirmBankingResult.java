@@ -15,7 +15,7 @@ public class FirmBankingResult {
         SUCCESS("성공"),
         FAIL("실패");
 
-        private String description;
+        private final String description;
     }
 
     @Override
