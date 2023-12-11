@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IncreaseMoneyChangingRequest {
-    private String membershipId;
-    private Long moneyAmount;
+    private String membershipId; // 멤버십 아이디
+    private Long moneyAmount; // 금액
 }

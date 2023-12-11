@@ -2,16 +2,21 @@ package org.opennuri.study.architecture.money.adapter.out.persistence;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.opennuri.study.architecture.common.BaseEntity;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestStatus;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestType;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MoneyChangingRequestJpaEntity {
+@EqualsAndHashCode(callSuper = true)
+public class MoneyChangingRequestJpaEntity  extends BaseEntity {
     @Id
     @GeneratedValue
     private Long changingMoneyRequestId; // 식별자

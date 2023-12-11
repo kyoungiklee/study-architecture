@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.opennuri.study.architecture.common.UseCase;
 import org.opennuri.study.architecture.money.application.port.in.IncreaseMoneyRequestCommand;
 import org.opennuri.study.architecture.money.application.port.in.IncreaseMoneyRequestUseCase;
+import org.opennuri.study.architecture.money.application.port.out.ChangeStatusPort;
 import org.opennuri.study.architecture.money.application.port.out.IncreaseMoneyPort;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequest;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestStatus;
@@ -17,6 +18,7 @@ import java.util.UUID;
 public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase {
 
     private final IncreaseMoneyPort increaseMoneyPort;
+    private final ChangeStatusPort changeStatusPort;
     @Override
     public ChangingMoneyRequest increaseMoneyRequest(IncreaseMoneyRequestCommand command) {
         //1. 고객 정보가 정상인지 확인 (회원)
@@ -34,9 +36,13 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
         );
         //5. 펌뱅킹을 수행 (개인계좌 --> 법인계좌 이체) (뱅킹)
         //6. 성공시 증액 요청 상태를 완료로 변경(머니)
-        //8-1. 멤버머니 잔액을 증액(머니)
-        //8-2. 결과 실패시 실패로 증액요청 상태 변경 후 리턴
+        ChangingMoneyRequest changeStatus =
+                changeStatusPort.changeRequestStatus(changeMoneyRequest.getUuid(), ChangingMoneyRequestStatus.SUCCESS);
 
-        return null;
+        //7-1. 멤버머니 잔액을 증액(머니)
+
+        //7-2. 결과 실패시 실패로 증액요청 상태 변경 후 리턴
+
+        return changeMoneyRequest;
     }
 }

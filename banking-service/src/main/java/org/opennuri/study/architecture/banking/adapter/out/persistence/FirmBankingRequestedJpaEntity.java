@@ -4,13 +4,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.opennuri.study.architecture.common.BaseEntity;
 
 @Entity
 @Table(name = "firm_banking_request")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FirmBankingRequestedJpaEntity {
+public class FirmBankingRequestedJpaEntity  extends BaseEntity {
 
     @Id
     @GeneratedValue
