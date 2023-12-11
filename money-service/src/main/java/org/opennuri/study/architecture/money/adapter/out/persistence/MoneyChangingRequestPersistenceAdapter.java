@@ -45,7 +45,7 @@ public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort
     @Override
     public MemberMoney increaseMoney(MemberMoney.MembershipId membershipId, MemberMoney.MoneyAmount moneyAmount) {
         //1. 멤버십 조회
-        persistence.findByMembershipId(membershipId.value());
+        //changingMoneyPersistence.findByMembershipId(membershipId.value());
         //2. 멤버가 없는 경우 멤버를 생성하고 증액
         //2. 멤버십 Money 증액
         //3. 증액된 멤버십 Money 리턴
@@ -61,7 +61,7 @@ public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort
     @Override
     public ChangingMoneyRequest changeRequestStatus(String uuid, ChangingMoneyRequestStatus status) {
         //1. uuid로 증액요청 조회
-        Optional<MoneyChangingRequestJpaEntity> optional = persistence.findByUuid(uuid);
+        Optional<MoneyChangingRequestJpaEntity> optional = changingMoneyPersistence.findByUuid(uuid);
         if(optional.isEmpty()){
             throw new IllegalArgumentException("uuid not found");
         }
