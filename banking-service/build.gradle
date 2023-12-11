@@ -51,8 +51,8 @@ dependencies {
     implementation('org.jetbrains:annotations:24.0.1')
 
     //DB
-    runtimeOnly('com.h2database:h2')
     runtimeOnly(group: 'mysql', name: 'mysql-connector-java', version: '8.0.33')
+    testRuntimeOnly('com.h2database:h2')
 
     //Documentation
     implementation(group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0')

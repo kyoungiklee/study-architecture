@@ -9,13 +9,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.opennuri.study.architecture.common.BaseEntity;
 
 @Entity
 @Table(name = "registered_bank_account")
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisteredBankAccountJpaEntity {
+public class RegisteredBankAccountJpaEntity extends BaseEntity {
 
     @Id
     @GeneratedValue

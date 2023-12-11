@@ -5,17 +5,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.opennuri.study.architecture.common.BaseEntity;
 
 @Entity
 @Table(name = "membership")
-@Getter @Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MembershipJpaEntity {
+@EqualsAndHashCode(callSuper = true)
+public class MembershipJpaEntity extends BaseEntity {
 
     @Id
     @GeneratedValue
