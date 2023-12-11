@@ -9,6 +9,7 @@ import org.opennuri.study.architecture.money.application.port.out.IncreaseMoneyP
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequest;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestStatus;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestType;
+import org.opennuri.study.architecture.money.domain.MemberMoney;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -40,6 +41,9 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
                 changeStatusPort.changeRequestStatus(changeMoneyRequest.getUuid(), ChangingMoneyRequestStatus.SUCCESS);
 
         //7-1. 멤버머니 잔액을 증액(머니)
+        increaseMoneyPort.increaseMoney(
+                new MemberMoney.MembershipId(changeMoneyRequest.getMembershipId())
+                , new MemberMoney.MoneyAmount(changeMoneyRequest.getMoneyAmount()));
 
         //7-2. 결과 실패시 실패로 증액요청 상태 변경 후 리턴
 

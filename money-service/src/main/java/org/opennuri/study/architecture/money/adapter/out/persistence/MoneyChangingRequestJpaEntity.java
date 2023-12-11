@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Table(name = "MONEY_CHANGING_REQUEST")
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -20,7 +21,7 @@ public class MoneyChangingRequestJpaEntity  extends BaseEntity {
     @Id
     @GeneratedValue
     private Long changingMoneyRequestId; // 식별자
-    private String membershipId; // 회원 식별자
+    private Long membershipId; // 회원 식별자
     @Enumerated(value = EnumType.STRING)
     private ChangingMoneyRequestType requestType; // DEPOSIT("충전"), // 충전, WITHDRAW("사용"); // 사용
     private Long moneyAmount; // 충전 또는 사용 금액
@@ -30,7 +31,7 @@ public class MoneyChangingRequestJpaEntity  extends BaseEntity {
     private String uuid; // 충전 또는 사용 요청 UUID
 
     public MoneyChangingRequestJpaEntity(
-            String membershipId
+            Long membershipId
             , ChangingMoneyRequestType requestType
             , Long moneyAmount
             , ChangingMoneyRequestStatus requestStatus

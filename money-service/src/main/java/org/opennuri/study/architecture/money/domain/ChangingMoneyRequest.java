@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChangingMoneyRequest {
     private final Long changingMoneyRequestId; // 식별자
-    private final String membershipId; // 회원 식별자
+    private final Long membershipId; // 회원 식별자
     private final ChangingMoneyRequestType requestType; // 충전/사용
     private final Long moneyAmount; // 충전 또는 사용 금액
     private final ChangingMoneyRequestStatus requestStatus; // 충전 또는 사용 요청 상태
@@ -37,7 +37,7 @@ public class ChangingMoneyRequest {
         );
     }
     public record ChangingMoneyRequestId(Long changingMoneyRequestId) {}
-    public record MembershipId(String membershipId) {}
+    public record MembershipId(Long membershipId) {}
     public record RequestType(ChangingMoneyRequestType requestType) {}
     public record MoneyAmount(Long moneyAmount) {}
     public record RequestStatus(ChangingMoneyRequestStatus requestStatus) {}

@@ -21,7 +21,7 @@ public class RequestMoneyChangingController {
         log.info("increaseMoney: {}", request);
 
         IncreaseMoneyRequestCommand command = new IncreaseMoneyRequestCommand(
-                request.getMembershipId()
+                Long.valueOf(request.getMembershipId())
                 , request.getMoneyAmount()
         );
         return increaseMoneyRequestUseCase.increaseMoneyRequest(command);

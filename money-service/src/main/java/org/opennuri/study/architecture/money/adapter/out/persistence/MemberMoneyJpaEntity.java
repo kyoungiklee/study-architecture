@@ -12,7 +12,7 @@ import org.opennuri.study.architecture.common.BaseEntity;
 
 @Entity
 @Getter @Setter
-@Table(name = "member_money")
+@Table(name = "MEMBER_MONEY")
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberMoneyJpaEntity extends BaseEntity {

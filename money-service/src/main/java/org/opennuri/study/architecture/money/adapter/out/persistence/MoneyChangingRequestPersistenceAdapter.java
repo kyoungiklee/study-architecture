@@ -7,7 +7,6 @@ import org.opennuri.study.architecture.money.application.port.out.IncreaseMoneyP
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequest;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestStatus;
 import org.opennuri.study.architecture.money.domain.MemberMoney;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 

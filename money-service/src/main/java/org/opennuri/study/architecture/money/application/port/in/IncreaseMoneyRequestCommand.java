@@ -16,14 +16,14 @@ import org.opennuri.study.architecture.common.SelfValidating;
 public class IncreaseMoneyRequestCommand extends SelfValidating<IncreaseMoneyRequestCommand> {
     @NotNull
     @NotBlank
-    private final String membershipId; // 회원 식별자
+    private final Long membershipId; // 회원 식별자
 
     @NotNull
     @Positive
     @Max(value = 1000000L)
     private final Long moneyAmount; // 충전 또는 사용 금액
 
-    public IncreaseMoneyRequestCommand(String membershipId, Long moneyAmount) {
+    public IncreaseMoneyRequestCommand(Long membershipId, Long moneyAmount) {
         this.membershipId = membershipId;
         this.moneyAmount = moneyAmount;
 
