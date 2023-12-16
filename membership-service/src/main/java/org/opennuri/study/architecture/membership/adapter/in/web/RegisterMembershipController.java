@@ -22,6 +22,8 @@ public class RegisterMembershipController {
 
     @PostMapping(path = "/membership/register")
     Membership registerMembership(@RequestBody RegisterMembershipRequest request) {
+
+        log.info("registerMembership request: {}", request);
         // request~~~
         // request --> command
         // usecase ~~(request x command o)
@@ -33,7 +35,8 @@ public class RegisterMembershipController {
                 .isCorp(request.isCorp())
                 .build();
 
-        log.info(command.toString());
+        log.info("registerMembership command: {}", command);
+
         return registerMembershipUseCase.resisterMembership(command);
 
     }

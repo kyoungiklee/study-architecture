@@ -1,18 +1,18 @@
 package org.opennuri.study.architecture.money.application.port.out;
 
-import org.opennuri.study.architecture.money.domain.ChangingMoneyRequest;
+import org.opennuri.study.architecture.money.domain.MoneyChangingRequest;
 import org.opennuri.study.architecture.money.domain.MemberMoney;
 
 public interface IncreaseMoneyPort {
 
     // 증액요청 생성
-    ChangingMoneyRequest createChangeMoneyRequest(
-            ChangingMoneyRequest.MembershipId membershipId,
-            ChangingMoneyRequest.RequestType requestType,
-            ChangingMoneyRequest.MoneyAmount moneyAmount,
-            ChangingMoneyRequest.RequestStatus requestStatus,
-            ChangingMoneyRequest.RequestDateTime requestDateTime,
-            ChangingMoneyRequest.UUID uuid
+    MoneyChangingRequest createChangeMoneyRequest(
+            MoneyChangingRequest.MembershipId membershipId,
+            MoneyChangingRequest.RequestType requestType,
+            MoneyChangingRequest.MoneyAmount moneyAmount,
+            MoneyChangingRequest.RequestStatus requestStatus,
+            MoneyChangingRequest.RequestDateTime requestDateTime,
+            MoneyChangingRequest.UUID uuid
     );
 
     /**

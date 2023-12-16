@@ -1,7 +1,6 @@
 package org.opennuri.study.architecture.money.application.port.in;
 
 import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
@@ -15,7 +14,6 @@ import org.opennuri.study.architecture.common.SelfValidating;
 @EqualsAndHashCode(callSuper = false)
 public class IncreaseMoneyRequestCommand extends SelfValidating<IncreaseMoneyRequestCommand> {
     @NotNull
-    @NotBlank
     private final Long membershipId; // 회원 식별자
 
     @NotNull

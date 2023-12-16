@@ -23,7 +23,6 @@ public class RegisterMembershipCommand extends SelfValidating<RegisterMembership
     @NotBlank
     private final String address;
 
-    @AssertTrue
     private final boolean isValid;
 
     private final boolean isCorp;

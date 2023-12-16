@@ -20,8 +20,8 @@ public class ModifyMembershipController {
 
     private final org.opennuri.study.architecture.membership.appication.port.in.ModifyMembershipUseCase ModifyMembershipUseCase;
 
-    @PostMapping(path = "/membership/modify/{membershipId}")
-    Membership modifyMembership(@PathVariable("membershipId") String membershipId, @RequestBody ModifyMembershipRequest request) {
+    @PostMapping(path = "/membership/{membershipId}")
+    Membership modifyMembership(@PathVariable(value = "membershipId") String membershipId, @RequestBody ModifyMembershipRequest request) {
         ModifyMembershipCommand command = ModifyMembershipCommand.builder()
                 .membershipId(membershipId)
                 .name(request.getName())

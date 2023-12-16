@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opennuri.study.architecture.money.application.port.in.IncreaseMoneyRequestCommand;
 import org.opennuri.study.architecture.money.application.port.in.IncreaseMoneyRequestUseCase;
-import org.opennuri.study.architecture.money.domain.ChangingMoneyRequest;
+import org.opennuri.study.architecture.money.domain.MoneyChangingRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,14 +17,22 @@ public class RequestMoneyChangingController {
     private final IncreaseMoneyRequestUseCase increaseMoneyRequestUseCase;
 
     @PostMapping("/money/increase")
-    public ChangingMoneyRequest increaseMoney(@RequestBody IncreaseMoneyChangingRequest request) {
+    public MoneyChangingResultDetail increaseMoney(@RequestBody IncreaseMoneyChangingRequest request) {
         log.info("increaseMoney: {}", request);
 
-        IncreaseMoneyRequestCommand command = new IncreaseMoneyRequestCommand(
-                Long.valueOf(request.getMembershipId())
-                , request.getMoneyAmount()
+        IncreaseMoneyRequestCommand command = IncreaseMoneyRequestCommand.builder()
+                .membershipId(Long.parseLong(request.getMembershipId()))
+                .moneyAmount(request.getMoneyAmount())
+                .build();
+
+        MoneyChangingRequest moneyChangingRequest = increaseMoneyRequestUseCase.increaseMoneyRequest(command);
+
+        // MoneyChangingRequest -> MoneyChangingResultDetail
+        return new MoneyChangingResultDetail(
+                moneyChangingRequest.getMembershipId().toString(),
+                moneyChangingRequest.getMoneyAmount(),
+                moneyChangingRequest.getRequestStatus()
         );
-        return increaseMoneyRequestUseCase.increaseMoneyRequest(command);
     }
 
 }

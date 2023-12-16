@@ -12,6 +12,13 @@ spring:
 server:
   port: 9091
 
+logging:
+  topic: simplepay.logging.out.stdout
+
+kafka:
+  clusters:
+    bootstrapservers: localhost:9092
+
 spring:
   config:
     activate:

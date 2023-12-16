@@ -8,6 +8,8 @@ import org.opennuri.study.architecture.banking.adapter.out.external.bank.BankAcc
 import org.opennuri.study.architecture.banking.adapter.out.external.bank.GetBankAccountInfoRequest;
 import org.opennuri.study.architecture.banking.appication.port.in.RegisterBankAccountCommand;
 import org.opennuri.study.architecture.banking.appication.port.in.RegisterBankAccountUseCase;
+import org.opennuri.study.architecture.banking.appication.port.out.GetMembershipPort;
+import org.opennuri.study.architecture.banking.appication.port.out.MembershipStatus;
 import org.opennuri.study.architecture.banking.appication.port.out.RegisterBankAccountPort;
 import org.opennuri.study.architecture.banking.appication.port.out.RequestBankAccountInfoPort;
 import org.opennuri.study.architecture.banking.domain.RegisteredBankAccount;
@@ -20,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor(access = AccessLevel.MODULE)
 public class BankAccountRegisterService implements RegisterBankAccountUseCase {
 
+    private final GetMembershipPort getMembershipPort;
+
     @NonNull
     private final RegisterBankAccountPort registerBankAccountPort;
 
@@ -30,7 +34,12 @@ public class BankAccountRegisterService implements RegisterBankAccountUseCase {
     public RegisteredBankAccount registerBankAccount(RegisterBankAccountCommand command) {
 
         // 1. 회원이 유효한지 membership-service에 확인한다.
-        //todo 회원이 유효한지 membership-service에 확인
+        MembershipStatus membershipStatus = getMembershipPort.getMembership(command.getMembershipId());
+        if(!membershipStatus.isValid()) {
+            // todo 실패한 경우 적절한 Exception 처리로 변경한다.
+            // 실패한 경우 null 을 리턴한다.
+            return null;
+        }
 
         // 2. 외부 은행 시스템에 요청하는 계좌에 대한 정보를 획득한다.
         //  Biz Logic -> Port -> Adapter -> External System

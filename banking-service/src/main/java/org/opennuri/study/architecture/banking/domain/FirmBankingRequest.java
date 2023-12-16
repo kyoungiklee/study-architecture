@@ -5,11 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Value;
 import org.opennuri.study.architecture.banking.adapter.out.persistence.FirmBankingRequestStatus;
-import org.opennuri.study.architecture.common.BaseDomainModel;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class FirmBankingRequest extends BaseDomainModel {
+public class FirmBankingRequest {
 
     private Long firmBankingRequestId;
     private String membershipId;

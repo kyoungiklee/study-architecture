@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class FindMembershipController {
 
     private final FindMembershipUseCase findMembershipUseCase;
-    @GetMapping(path = "/membership/findMembership/{membershipId}")
-    ResponseEntity<Membership> findMembershipByMemberId(@PathVariable String membershipId ){
+    @GetMapping(path = "/membership/{membershipId}")
+    ResponseEntity<Membership> findMembershipByMemberId(@PathVariable(value = "membershipId") String membershipId ){
         FindMembershipCommand command = FindMembershipCommand.builder()
                 .membershipId(membershipId)
                 .build();

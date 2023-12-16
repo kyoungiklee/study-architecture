@@ -12,7 +12,7 @@ plugins {
     id 'com.palantir.docker' version '0.35.0'
 }
 
-group = 'com.opennuri.study.architecture.banking'
+group = 'com.opennuri.study.architecture.logging'
 version = '1.0.0'
 
 java {

@@ -1,7 +1,7 @@
 package org.opennuri.study.architecture.money.application.port.in;
 
-import org.opennuri.study.architecture.money.domain.ChangingMoneyRequest;
+import org.opennuri.study.architecture.money.domain.MoneyChangingRequest;
 
 public interface IncreaseMoneyRequestUseCase {
-    ChangingMoneyRequest increaseMoneyRequest(IncreaseMoneyRequestCommand command);
+    MoneyChangingRequest increaseMoneyRequest(IncreaseMoneyRequestCommand command);
 }

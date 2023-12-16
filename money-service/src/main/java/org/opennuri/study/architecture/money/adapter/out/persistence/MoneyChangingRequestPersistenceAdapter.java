@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.opennuri.study.architecture.common.PersistenceAdapter;
 import org.opennuri.study.architecture.money.application.port.out.ChangeStatusPort;
 import org.opennuri.study.architecture.money.application.port.out.IncreaseMoneyPort;
-import org.opennuri.study.architecture.money.domain.ChangingMoneyRequest;
+import org.opennuri.study.architecture.money.domain.MoneyChangingRequest;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestStatus;
 import org.opennuri.study.architecture.money.domain.MemberMoney;
 
@@ -32,13 +32,13 @@ public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort
      * @return 생성된 증액요청
      */
     @Override
-    public ChangingMoneyRequest createChangeMoneyRequest(
-            ChangingMoneyRequest.MembershipId membershipId
-            , ChangingMoneyRequest.RequestType requestType
-            , ChangingMoneyRequest.MoneyAmount moneyAmount
-            , ChangingMoneyRequest.RequestStatus requestStatus
-            , ChangingMoneyRequest.RequestDateTime requestDateTime
-            , ChangingMoneyRequest.UUID uuid) {
+    public MoneyChangingRequest createChangeMoneyRequest(
+            MoneyChangingRequest.MembershipId membershipId
+            , MoneyChangingRequest.RequestType requestType
+            , MoneyChangingRequest.MoneyAmount moneyAmount
+            , MoneyChangingRequest.RequestStatus requestStatus
+            , MoneyChangingRequest.RequestDateTime requestDateTime
+            , MoneyChangingRequest.UUID uuid) {
 
         MoneyChangingRequestJpaEntity savedEntity = changingMoneyPersistence.save(new MoneyChangingRequestJpaEntity(
                 membershipId.membershipId()
@@ -85,7 +85,7 @@ public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort
      * @return  변경된 증액요청
      */
     @Override
-    public ChangingMoneyRequest changeRequestStatus(String uuid, ChangingMoneyRequestStatus status) {
+    public MoneyChangingRequest changeRequestStatus(String uuid, ChangingMoneyRequestStatus status) {
         //1. uuid로 증액요청 조회
         Optional<MoneyChangingRequestJpaEntity> optional = changingMoneyPersistence.findByUuid(uuid);
         if(optional.isEmpty()){
