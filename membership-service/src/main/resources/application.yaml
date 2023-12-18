@@ -16,8 +16,8 @@ logging:
   topic: simplepay.logging.out.stdout
 
 kafka:
-  clusters:
-    bootstrapservers: localhost:9092
+  bootstrap:
+    servers: localhost:9092
 
 spring:
   config:
