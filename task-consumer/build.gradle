@@ -12,7 +12,7 @@ plugins {
     id 'com.palantir.docker' version '0.35.0'
 }
 
-group = 'com.opennuri.study.architecture.money'
+group = 'com.opennuri.study.architecture.taskconsumer'
 version = '1.0.0'
 
 java {
@@ -59,6 +59,10 @@ dependencies {
 
     //httpclient
     implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.3'
+
+    //kafka
+    implementation group: 'org.springframework.kafka', name: 'spring-kafka', version: '3.1.0'
+
 
 
 

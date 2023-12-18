@@ -10,7 +10,7 @@ spring:
 
 ---
 server:
-  port: 9093
+  port: 9095
 
 logging:
   topic: simplepay.logging.out.stdout
@@ -18,8 +18,24 @@ logging:
 kafka:
   bootstrap:
     servers: localhost:9092
+  consumer:
+    group:
+      id: simplepay.task.consumer
   task:
     topic: simplepay.task.topic
+  enable:
+    auto:
+      commit: true
+  auto:
+    commit:
+      interval:
+        ms: 1000
+    offset:
+      reset: earliest
+  key:
+    deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  value:
+    deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 membership:
   service:

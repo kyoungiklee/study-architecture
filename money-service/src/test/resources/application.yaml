@@ -19,6 +19,10 @@ kafka:
   clusters:
     bootstrapservers: localhost:9092
 
+membership:
+  service:
+    url: http://localhost:9091
+
 spring:
   config:
     activate:

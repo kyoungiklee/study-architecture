@@ -17,15 +17,34 @@ public class RequestMoneyChangingController {
     private final IncreaseMoneyRequestUseCase increaseMoneyRequestUseCase;
 
     @PostMapping("/money/increase")
-    public MoneyChangingResultDetail increaseMoney(@RequestBody IncreaseMoneyChangingRequest request) {
+    public MoneyChangingResultDetail increaseMoneyChangingRequest(@RequestBody IncreaseMoneyChangingRequest request) {
         log.info("increaseMoney: {}", request);
 
         IncreaseMoneyRequestCommand command = IncreaseMoneyRequestCommand.builder()
-                .membershipId(Long.parseLong(request.getMembershipId()))
+                .membershipId(request.getMembershipId())
                 .moneyAmount(request.getMoneyAmount())
                 .build();
 
         MoneyChangingRequest moneyChangingRequest = increaseMoneyRequestUseCase.increaseMoneyRequest(command);
+
+        // MoneyChangingRequest -> MoneyChangingResultDetail
+        return new MoneyChangingResultDetail(
+                moneyChangingRequest.getMembershipId().toString(),
+                moneyChangingRequest.getMoneyAmount(),
+                moneyChangingRequest.getRequestStatus()
+        );
+    }
+
+    @PostMapping("/money/increase-async")
+    public MoneyChangingResultDetail increaseMoneyChangingRequestAsync(@RequestBody IncreaseMoneyChangingRequest request) {
+        log.info("increaseMoney: {}", request);
+
+        IncreaseMoneyRequestCommand command = IncreaseMoneyRequestCommand.builder()
+                .membershipId(request.getMembershipId())
+                .moneyAmount(request.getMoneyAmount())
+                .build();
+
+        MoneyChangingRequest moneyChangingRequest = increaseMoneyRequestUseCase.increaseMoneyRequestAsync(command);
 
         // MoneyChangingRequest -> MoneyChangingResultDetail
         return new MoneyChangingResultDetail(
