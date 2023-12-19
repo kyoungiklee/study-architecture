@@ -1,20 +1,25 @@
 package org.opennuri.study.architecture.money.adapter.out.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.opennuri.study.architecture.common.task.RechargingMoneyTask;
 import org.opennuri.study.architecture.money.application.port.out.kafka.SendRechargingMoneyTaskPort;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Component
 public class TaskProducer implements SendRechargingMoneyTaskPort {
 
+    //private final KafkaTemplate<String, String> kafkaTemplate;
     private final KafkaProducer<String, String> kafkaProducer;
 
     @Value("${kafka.task.topic}")
@@ -35,6 +40,7 @@ public class TaskProducer implements SendRechargingMoneyTaskPort {
 
     @Override
     public void sendRechargingMoneyTask(RechargingMoneyTask task) {
+        log.info("sendRechargingMoneyTask: {}", task.getTaskId());
         this.sendMassage(task.getTaskId(), task);
 
     }
@@ -61,5 +67,14 @@ public class TaskProducer implements SendRechargingMoneyTaskPort {
                 }
             }
         );
+
+        /*ProducerRecord<String, String> record = new ProducerRecord<>(this.topicName, key, jsonStringToProducer);
+        CompletableFuture<SendResult<String, String>> send = this.kafkaTemplate.send(record);
+        try {
+            SendResult<String, String> sendResult = send.get();
+            log.info("sendResult: {}", sendResult);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }*/
     }
 }

@@ -23,7 +23,7 @@ kafka:
 
 membership:
   service:
-    url: http://membership-service:8080
+    url: http://localhost:9091
 
 spring:
   config:

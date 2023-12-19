@@ -22,7 +22,10 @@ kafka:
     group:
       id: simplepay.task.consumer
   task:
-    topic: simplepay.task.topic
+    consumer:
+      topic: simplepay.task.topic
+    result:
+      topic: simplepay.task.result.topic
   enable:
     auto:
       commit: true
