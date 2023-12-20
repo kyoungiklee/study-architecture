@@ -19,13 +19,12 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class TaskProducer implements SendRechargingMoneyTaskPort {
 
-    //private final KafkaTemplate<String, String> kafkaTemplate;
     private final KafkaProducer<String, String> kafkaProducer;
 
-    @Value("${kafka.task.topic}")
+    @Value("${kafka.task.producer.topic}")
     private String topicName;
 
-    public TaskProducer(@Value("${kafka.bootstrap.servers}") String bootstrapServers) {
+    public TaskProducer(@Value("${kafka.clusters.bootstrapservers}") String bootstrapServers) {
         Properties properties = new Properties();
         properties.put("bootstrap.servers", bootstrapServers);
         properties.put("acks", "all");
@@ -67,14 +66,5 @@ public class TaskProducer implements SendRechargingMoneyTaskPort {
                 }
             }
         );
-
-        /*ProducerRecord<String, String> record = new ProducerRecord<>(this.topicName, key, jsonStringToProducer);
-        CompletableFuture<SendResult<String, String>> send = this.kafkaTemplate.send(record);
-        try {
-            SendResult<String, String> sendResult = send.get();
-            log.info("sendResult: {}", sendResult);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }*/
     }
 }

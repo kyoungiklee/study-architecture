@@ -16,8 +16,8 @@ public class LoggingProducer {
     private final KafkaProducer<String, String> kafkaProducer;
     private final String topic;
 
-    public LoggingProducer(@Value("${logging.topic}") String topic,
-                           @Value("${kafka.bootstrap.servers}") String bootstrapServers) {
+    public LoggingProducer(@Value("${kafka.task.logging.topic}") String topic,
+                           @Value("${kafka.clusters.bootstrapservers}") String bootstrapServers) {
 
         Properties properties = new Properties();
         properties.put("bootstrap.servers", bootstrapServers);

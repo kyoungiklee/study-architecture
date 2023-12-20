@@ -3,6 +3,7 @@ package org.opennuri.study.architecture.banking.adapter.out.persistence;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.opennuri.study.architecture.common.BaseEntity;
 
@@ -11,6 +12,7 @@ import org.opennuri.study.architecture.common.BaseEntity;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class FirmBankingRequestedJpaEntity  extends BaseEntity {
 
     @Id

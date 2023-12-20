@@ -6,6 +6,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Properties;
 
 import static java.util.Collections.singletonList;
@@ -16,7 +17,7 @@ public class LoggingConsumer {
     private final KafkaConsumer<String, String> kafkaConsumer;
 
     public LoggingConsumer(@Value("${kafka_clusters_bootstrapservers}") String bootstrapServers,
-                           @Value("${logging_topic}") String topic) {
+                           @Value("${kafka.task.logging_topic}") String topic) {
 
 
         Properties properties = new Properties();
@@ -30,10 +31,12 @@ public class LoggingConsumer {
         this.kafkaConsumer.subscribe(singletonList(topic));
 
         log.info("LoggingConsumer is created");
-        Thread thread = new Thread(() -> {
+
+        // Thread를 이용하여 KafkaConsumer를 실행한다.
+        Thread consumerThread = new Thread(() -> {
             try {
                 while (true) {
-                    kafkaConsumer.poll(1000).forEach(record -> {
+                    kafkaConsumer.poll(Duration.ofMillis(1000)).forEach(record -> {
                         log.info("Received log: {}", record);
                     });
                 }
@@ -43,6 +46,6 @@ public class LoggingConsumer {
                 kafkaConsumer.close();
             }
         });
-        thread.start();
+        consumerThread.start();
     }
 }

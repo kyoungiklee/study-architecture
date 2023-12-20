@@ -1,5 +1,6 @@
 package org.opennuri.study.architecture.money.application.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opennuri.study.architecture.common.CountDownLatchManager;
@@ -22,10 +23,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @UseCase
 @RequiredArgsConstructor
+@Transactional
 public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase {
 
     private final CountDownLatchManager countDownLatchManager;
@@ -136,10 +140,18 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
 
 
         //완료될때까지 기다린다.
+        boolean await = false;
         try {
-            countDownLatchManager.getCountDownLatch(rechargingMoneyTask.getTaskId()).await();
+            //countDownLatchManager.getCountDownLatch(rechargingMoneyTask.getTaskId()).await();
+            await = countDownLatchManager.getCountDownLatch(rechargingMoneyTask.getTaskId()).await(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        }
+
+        // 1초 이내에 완료되지 않으면 timeout 처리한다. (한정된 시간내에 처리 되지 않는 경우 사용한다.)
+        if (!await) {
+            log.info("timeout");
+            throw new RuntimeException("timeout");
         }
 
         // TaskResult를 가져온다.
@@ -154,11 +166,10 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
                     new MemberMoney.MembershipId(changeMoneyRequest.getMembershipId())
                     , new MemberMoney.MoneyAmount(changeMoneyRequest.getMoneyAmount()));
         } else {
+            // 결과 실패시 실패로 증액요청 상태를 실패로 변경 후 리턴
             changeStatus =
                     changeStatusPort.changeRequestStatus(changeMoneyRequest.getUuid(), ChangingMoneyRequestStatus.FAILED);
         }
-
-        //7-2. 결과 실패시 실패로 증액요청 상태 변경 후 리턴
 
         return changeStatus;
     }

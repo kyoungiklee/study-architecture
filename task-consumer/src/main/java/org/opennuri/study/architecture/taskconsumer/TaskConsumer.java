@@ -36,22 +36,24 @@ public class TaskConsumer {
         log.info("task: {}", task);
         for (SubTask subTask : task.getSubTasks()) {
             log.info("subTask: {}", subTask);
-            //TODO: subTask를 이용해서 각각의 서비스를 호출
-            SubTask.SubTaskType subTaskType = subTask.getSubTaskType();
 
+            //멤버십, 뱅킹 서비스 호출 코드 작성
+            SubTask.SubTaskType subTaskType = subTask.getSubTaskType();
             if (subTaskType == SubTask.SubTaskType.MEMBERSHIP) {
                 //TODO: 멤버십 서비스 호출 코드 작성(멤버 유효성 여부 확인)
                 log.info("membershipId: {}, subTaskType: {}", subTask.getMembershipId(), subTask.getSubTaskType());
-
+                subTask.setSubTaskStatus(SubTask.SubTaskStatus.COMPLETED);
             }
 
             if (subTaskType == SubTask.SubTaskType.BANKING) {
+                //TODO: 뱅킹 서비스 호출 코드 작성(계좌 유효성 여부 확인)
                 log.info("membershipId: {}, subTaskType: {}", subTask.getMembershipId(), subTask.getSubTaskType());
+                subTask.setSubTaskStatus(SubTask.SubTaskStatus.COMPLETED);
             }
-            subTask.setSubTaskStatus(SubTask.SubTaskStatus.COMPLETED);
         }
 
         taskResultProducer.sendTaskResult(task.getTaskId(), task);
+        log.info("taskResultProducer.sendTaskResult: {}", task.getTaskId());
     }
 
 }

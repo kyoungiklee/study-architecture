@@ -16,7 +16,7 @@ import java.net.http.HttpResponse;
 public class MembershipServiceAdapter implements GetMembershipPort {
 
 
-    @Value("${service.membership.url}")
+    @Value("${membership.service.url}")
     private String membershipServiceUrl;
     private final CommonHttpClient httpClient;
 

@@ -3,23 +3,93 @@ spring:
     default: dev
 
 ---
+kafka:
+  clusters:
+    bootstrapservers: kafka:29092
+  task:
+    producer:
+      topic: simplepay.task.topic
+    consumer:
+      topic: simplepay.task.result.topic
+    logging:
+      topic: simplepay.logging.out.stdout
+  consumer:
+    group:
+      id: simplepay.task.result.consumer
+  enable:
+    auto:
+      commit: true
+  auto:
+    commit:
+      interval:
+        ms: 1000
+    offset:
+      reset: earliest
+  key:
+    deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  value:
+    deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+membership:
+  service:
+    url: http://membership-service:8080
+
 spring:
   config:
     activate:
       on-profile: dev
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://mysql:3306/simple_pay?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      username: simplepay
+      password: simplepay
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL57Dialect
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+
 
 ---
 server:
   port: 9093
 
-logging:
-  topic: simplepay.logging.out.stdout
-
 kafka:
-  bootstrap:
-    servers: localhost:9092
+  clusters:
+    bootstrapservers: localhost:9092
   task:
-    topic: simplepay.task.topic
+    producer:
+      topic: simplepay.task.topic
+    consumer:
+      topic: simplepay.task.result.topic
+    logging:
+      topic: simplepay.logging.out.stdout
+  consumer:
+    group:
+      id: simplepay.task.result.consumer
+  enable:
+    auto:
+      commit: true
+  auto:
+    commit:
+      interval:
+        ms: 1000
+    offset:
+      reset: earliest
+  key:
+    deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  value:
+    deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 membership:
   service:
