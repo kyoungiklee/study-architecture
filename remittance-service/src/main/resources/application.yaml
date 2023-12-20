@@ -1,0 +1,77 @@
+spring:
+  profiles:
+    default: dev
+
+---
+kafka:
+  clusters:
+    bootstrapservers: kafka:29092
+  task:
+    logging:
+      topic: simplepay.logging.out.stdout
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://mysql:3306/simple_pay?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      username: simplepay
+      password: simplepay
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL57Dialect
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+
+
+---
+server:
+  port: 9093
+
+kafka:
+  clusters:
+    bootstrapservers: localhost:9092
+  task:
+    logging:
+      topic: simplepay.logging.out.stdout
+
+spring:
+  config:
+    activate:
+      on-profile: local
+#H2
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+#Database
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+    username: SA
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql:
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
