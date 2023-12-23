@@ -24,7 +24,7 @@ public class TaskConsumer {
         ObjectMapper mapper = new ObjectMapper();
 
         log.info("Received message: ({}, {})", record.key(), record.value());
-        RechargingMoneyTask task = null;
+        RechargingMoneyTask task;
 
         try {
             task = mapper.readValue(record.value(), RechargingMoneyTask.class);

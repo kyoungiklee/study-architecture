@@ -1,7 +1,5 @@
 package org.opennuri.study.architecture.membership.adapter.in.web;
 
-
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opennuri.study.architecture.common.WebAdapter;
