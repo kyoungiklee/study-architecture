@@ -55,10 +55,8 @@ class FindMemberMoneyServiceTest {
         assertThat(memberMoney.getMembershipId()).isEqualTo(1L);
         assertThat(memberMoney.getMoneyAmount()).isEqualTo(1000L);
 
-        assertThatThrownBy(() -> {
-            findMemberMoneyService.findMemberMoney(2L);})
+        assertThatThrownBy(() -> findMemberMoneyService.findMemberMoney(2L))
                 .isInstanceOf(BusinessCheckFailException.class)
                 .hasMessageContaining("멤버쉽 money가 존재하지 않습니다.");
-
     }
 }

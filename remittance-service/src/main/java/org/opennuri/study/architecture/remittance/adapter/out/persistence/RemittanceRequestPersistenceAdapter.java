@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opennuri.study.architecture.common.PersistenceAdapter;
 import org.opennuri.study.architecture.remittance.application.port.in.FindRemittanceCommand;
-import org.opennuri.study.architecture.remittance.application.port.in.RequestRemittanceCommand;
 import org.opennuri.study.architecture.remittance.application.port.out.FindRemittancePort;
 import org.opennuri.study.architecture.remittance.application.port.out.RequestRemittancePort;
 import org.opennuri.study.architecture.remittance.common.RemittanceStatus;

@@ -1,9 +1,6 @@
 package org.opennuri.study.architecture.remittance.adapter.out.service.money;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.opennuri.study.architecture.common.ServiceAdapter;
 import org.opennuri.study.architecture.remittance.application.port.out.money.MoneyInfo;
@@ -45,14 +42,14 @@ public class MoneyServiceAdapter implements MoneyServicePort {
         //membershipId 값이 number형인지 확인한다.
         String stringOfMembershipId;
         try {
-            String s = String.valueOf(membershipId);
+            stringOfMembershipId = String.valueOf(membershipId);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("membershipId is not number");
         }
         //amount 값이 number형인지 확인한다.
         String stringOfAmount;
         try {
-            String s = String.valueOf(amount);
+            stringOfAmount = String.valueOf(amount);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("amount is not number");
         }

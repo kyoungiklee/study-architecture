@@ -1,6 +1,5 @@
 package org.opennuri.study.architecture.remittance.application.port.out;
 
-import org.opennuri.study.architecture.remittance.application.port.in.RequestRemittanceCommand;
 import org.opennuri.study.architecture.remittance.common.RemittanceStatus;
 import org.opennuri.study.architecture.remittance.domain.RemittanceRequest;
 

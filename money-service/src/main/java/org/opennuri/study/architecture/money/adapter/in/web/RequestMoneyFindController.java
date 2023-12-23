@@ -46,13 +46,13 @@ public class RequestMoneyFindController {
 
             MemberMoneyResponse notFound = new MemberMoneyResponse(Long.parseLong(membershipId), 0L
                     , "멤버쉽 money가 존재하지 않습니다.");
-            return new ResponseEntity<MemberMoneyResponse>(notFound, null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(notFound, null, HttpStatus.NOT_FOUND);
         } catch (ServerErrorException e) {
             log.error("멤버쉽 money 조회 실패. 멤버쉽 아이디: {}", membershipId, e);
 
             MemberMoneyResponse serverError = new MemberMoneyResponse(Long.parseLong(membershipId), 0L
                     , "멤버쉽 money 조회 실패");
-            return new ResponseEntity<MemberMoneyResponse>(serverError, null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(serverError, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         //멤버쉽 money 조회 성공 시 응답 처리
         MemberMoneyResponse memberMoneyResponse = new MemberMoneyResponse(

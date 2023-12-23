@@ -14,16 +14,15 @@ import org.opennuri.study.architecture.money.application.port.out.IncreaseMoneyP
 import org.opennuri.study.architecture.money.application.port.out.kafka.SendRechargingMoneyTaskPort;
 import org.opennuri.study.architecture.money.application.port.out.membership.MembershipServicePort;
 import org.opennuri.study.architecture.money.application.port.out.membership.MembershipStatus;
-import org.opennuri.study.architecture.money.domain.MoneyChangingRequest;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestStatus;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestType;
 import org.opennuri.study.architecture.money.domain.MemberMoney;
+import org.opennuri.study.architecture.money.domain.MoneyChangingRequest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -138,7 +137,7 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
         countDownLatchManager.addCountDownLatch(rechargingMoneyTask.getTaskId(), 1);
 
         //완료될때까지 기다린다.
-        boolean await = false;
+        boolean await;
         try {
             // kafka TaskConsumer에서 요청내용을 처리후 task.result.topic으로 결과를 produce한다.
             // money-service에서는 task.result.topic을 subscribe하여 결과를 받아 처리후CountDownLatch를 countDown한다
@@ -157,7 +156,7 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
         // TaskResult를 가져온다.
         String result = countDownLatchManager.getDataForKey(rechargingMoneyTask.getTaskId());
 
-        MoneyChangingRequest changeStatus = null;
+        MoneyChangingRequest changeStatus;
         //Step 4. 증액을 위한 충전 요청 상태 변경 및 기록 (머니)
         if(result.equals("SUCCESS")) {
             //Step 4-1. 성공시 증액 요청 상태를 완료로 변경(머니)

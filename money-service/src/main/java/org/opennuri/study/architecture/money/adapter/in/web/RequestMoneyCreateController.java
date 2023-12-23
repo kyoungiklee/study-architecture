@@ -21,7 +21,7 @@ public class RequestMoneyCreateController {
     public ResponseEntity<MemberMoney> createMoney(@RequestBody CreateMoneyRequest request) {
         log.info("createMemberMoney: {}", request);
 
-        MemberMoney memberMoney = null;
+        MemberMoney memberMoney;
         try {
             memberMoney = createMemberMoneyUseCase.createMemberMoney(
                     CreateMoneyRequestCommand.builder()

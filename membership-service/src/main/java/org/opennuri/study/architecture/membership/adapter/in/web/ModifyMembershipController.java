@@ -27,7 +27,7 @@ public class ModifyMembershipController {
         try {
             longOfMembership = Long.parseLong(membershipId);
         } catch (NumberFormatException e) {
-            return new ResponseEntity<MembershipResponse>(new MembershipResponse(), null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new MembershipResponse(), null, HttpStatus.BAD_REQUEST);
         }
 
         ModifyMembershipCommand command = ModifyMembershipCommand.builder()
@@ -48,6 +48,6 @@ public class ModifyMembershipController {
                 membership.getAddress(),
                 membership.isCorp()
         );
-        return new ResponseEntity<MembershipResponse>(membershipResponse, null, HttpStatus.OK);
+        return new ResponseEntity<>(membershipResponse, null, HttpStatus.OK);
     }
 }

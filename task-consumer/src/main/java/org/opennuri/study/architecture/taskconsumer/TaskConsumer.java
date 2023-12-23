@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.opennuri.study.architecture.common.task.RechargingMoneyTask;
 import org.opennuri.study.architecture.common.task.SubTask;
 import org.springframework.kafka.annotation.KafkaListener;

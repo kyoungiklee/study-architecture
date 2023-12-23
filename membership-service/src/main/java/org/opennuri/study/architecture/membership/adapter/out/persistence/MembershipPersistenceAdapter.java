@@ -52,10 +52,10 @@ public class MembershipPersistenceAdapter implements RegisterMembershipPort, Fin
             , Membership.MembershipIsCorp membershipIsCorp) {
 
         //find
-        MembershipJpaEntity jpaEntity  = membershipRepository.findById(Long.valueOf(membershipId.getMembershipId()))
+        MembershipJpaEntity jpaEntity  = membershipRepository.findById(membershipId.getMembershipId())
                 .orElseThrow();
         //modify
-        jpaEntity.setMembershipId(Long.valueOf(membershipId.getMembershipId()));
+        jpaEntity.setMembershipId(membershipId.getMembershipId());
         jpaEntity.setName(membershipName.getNameValue());
         jpaEntity.setEmail(membershipEmail.getEmailValue());
         jpaEntity.setAddress(membershipAddress.getAddressValue());

@@ -1,7 +1,6 @@
 package org.opennuri.study.architecture.remittance.application.port.out.money;
 
 import org.opennuri.study.architecture.remittance.adapter.out.service.money.IncreaseMoneyResponse;
-import org.opennuri.study.architecture.remittance.adapter.out.service.money.MoneyServiceAdapter;
 
 public interface MoneyServicePort {
     MoneyInfo getMoneyInfo(Long membershipId);

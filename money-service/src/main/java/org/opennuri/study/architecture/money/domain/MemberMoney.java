@@ -18,20 +18,7 @@ public class MemberMoney {
                 , moneyAmount.moneyAmount());
     }
 
-    public record MemberMoneyId(Long memberMoneyId) {
-        public static MemberMoneyId from(Long memberMoneyId) {
-            return new MemberMoneyId(memberMoneyId);
-        }
-    }
-    public record MembershipId(Long membershipId) {
-        public static MembershipId from(Long membershipId) {
-            return new MembershipId(membershipId);
-        }
-    }
-
-    public record MoneyAmount(Long moneyAmount) {
-        public static MoneyAmount from(Long moneyAmount) {
-            return new MoneyAmount(moneyAmount);
-        }
-    }
+    public record MemberMoneyId(Long memberMoneyId) {}
+    public record MembershipId(Long membershipId) {}
+    public record MoneyAmount(Long moneyAmount) {}
 }
