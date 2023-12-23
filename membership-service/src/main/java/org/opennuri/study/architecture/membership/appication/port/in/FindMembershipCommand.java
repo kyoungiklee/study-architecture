@@ -10,5 +10,5 @@ import org.opennuri.study.architecture.common.SelfValidating;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 public class FindMembershipCommand extends SelfValidating<FindMembershipCommand> {
-    private final String membershipId;
+    private final Long membershipId;
 }

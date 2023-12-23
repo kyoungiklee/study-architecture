@@ -23,7 +23,7 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase {
 
 
     @Override
-    public FirmBankingRequest requestFirmBanking(RequestFirmBankingCommand command) {
+    public FirmBankingResult requestFirmBanking(RequestFirmBankingCommand command) {
 
         // 1. 요청에 대해 정보를 먼저 저장한다.(요청상태 : 요청중)
         FirmBankingRequest firmBankingRequest = requestFirmBankingPort.createFirmBankingRequest(
@@ -51,6 +51,8 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase {
                 .toBankName(command.getToBankName())
                 .toBankAccountNumber(command.getToBankAccountNumber())
                 .moneyAmount(command.getMoneyAmount())
+                .membershipId(command.getMembershipId())
+                .description(command.getDescription())
                 .build();
 
         // 6. 외부 시스템에 대한 응답을 받는다.
@@ -59,10 +61,11 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase {
 
         if(FirmBankingResult.FirmBankingResultCode.SUCCESS.equals(firmBankingResult.getResultCode())) {
             // 7. 응답이 성공이면 요청에 대한 상태를 완료로 변경한다.
-           return requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.APPROVED);
+           requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.APPROVED);
         } else {
             // 8. 응답이 실패이면 요청에 대한 상태를 실패로 변경한다.
-            return requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.REJECTED);
+            requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.REJECTED);
         }
+        return firmBankingResult;
     }
 }

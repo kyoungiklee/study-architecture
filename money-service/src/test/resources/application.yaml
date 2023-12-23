@@ -1,32 +1,45 @@
-spring:
-  profiles:
-    default: local
-
 ---
-spring:
-  config:
-    activate:
-      on-profile: dev
-
----
-server:
-  port: 9093
-
-logging:
-  topic: simplepay.logging.out.stdout
-
+# common LoggingProducer에서 사용하는 설정(모든 컨트롤러 접근 시 로깅)
 kafka:
   clusters:
     bootstrapservers: localhost:9092
+  task:
+    producer:
+      topic: simplepay.task.topic
+    consumer:
+      topic: simplepay.task.result.topic
+    logging:
+      topic: simplepay.logging.out.stdout
+  consumer:
+    group:
+      id: simplepay.task.result.consumer
+  enable:
+    auto:
+      commit: true
+  auto:
+    commit:
+      interval:
+        ms: 1000
+    offset:
+      reset: earliest
+  key:
+    deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  value:
+    deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
-membership:
-  service:
-    url: http://localhost:9091
+service:
+  membership:
+    url: http://localhost:8081
+  banking:
+    url: http://localhost:8082
+    firmbanking:
+      accountNumber: 5555-6666-7777-8888
+      accountName: (주)심플페이
 
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: test
 #H2
   h2:
     console:

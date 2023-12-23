@@ -2,15 +2,21 @@ package org.opennuri.study.architecture.membership.adapter.in.web;
 
 
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opennuri.study.architecture.common.WebAdapter;
 import org.opennuri.study.architecture.membership.appication.port.in.RegisterMembershipCommand;
 import org.opennuri.study.architecture.membership.appication.port.in.RegisterMembershipUseCase;
 import org.opennuri.study.architecture.membership.domain.Membership;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.net.http.HttpResponse;
 
 @Slf4j
 @WebAdapter
@@ -21,7 +27,8 @@ public class RegisterMembershipController {
     private final RegisterMembershipUseCase registerMembershipUseCase;
 
     @PostMapping(path = "/membership/register")
-    Membership registerMembership(@RequestBody RegisterMembershipRequest request) {
+    public ResponseEntity<MembershipResponse> registerMembership(@RequestBody RegisterMembershipRequest request,
+                                                                 HttpServletResponse response) {
 
         log.info("registerMembership request: {}", request);
         // request~~~
@@ -37,7 +44,16 @@ public class RegisterMembershipController {
 
         log.info("registerMembership command: {}", command);
 
-        return registerMembershipUseCase.resisterMembership(command);
+        Membership membership = registerMembershipUseCase.resisterMembership(command);
+        MembershipResponse membershipResponse = new MembershipResponse(
+                membership.getMembershipId(),
+                membership.getName(),
+                membership.getEmail(),
+                membership.getAddress(),
+                membership.isCorp()
+        );
+        log.info("registerMembership response: {}", membershipResponse);
 
+        return new ResponseEntity<MembershipResponse>(membershipResponse, null, HttpStatus.CREATED);
     }
 }

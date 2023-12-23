@@ -3,6 +3,7 @@ spring:
     default: dev
 
 ---
+# docker 환경에서 실행할 경우 사용하는 설정(자바 실행 시 프로파일 정보를 dev 로 설정한다. -Dspring.profiles.active=dev  기본값이 dev 이므로 생략 가능하다.)
 kafka:
   clusters:
     bootstrapservers: kafka:29092
@@ -15,10 +16,6 @@ spring:
     activate:
       on-profile: dev
   datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://mysql:3306/simple_pay?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-#    username: simplepay
-#    password: simplepay
     hikari:
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbc-url: jdbc:mysql://mysql:3306/simple_pay?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
@@ -40,9 +37,9 @@ spring:
       mode: always
 
 ---
+# 단독으로 실행할 경우 사용하는 설정(자바 실행 시 프로파일 정보를 local 로 설정한다. -Dspring.profiles.active=local)
 server:
-  port: 9091
-
+  port: 8091
 
 kafka:
   clusters:

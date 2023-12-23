@@ -3,6 +3,7 @@ package org.opennuri.study.architecture.money.adapter.out.persistence;
 import lombok.RequiredArgsConstructor;
 import org.opennuri.study.architecture.common.PersistenceAdapter;
 import org.opennuri.study.architecture.money.application.port.out.ChangeStatusPort;
+import org.opennuri.study.architecture.money.application.port.out.DecreaseMoneyPort;
 import org.opennuri.study.architecture.money.application.port.out.IncreaseMoneyPort;
 import org.opennuri.study.architecture.money.domain.MoneyChangingRequest;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestStatus;
@@ -16,7 +17,7 @@ import java.util.Optional;
  */
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort, ChangeStatusPort {
+public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort, ChangeStatusPort, DecreaseMoneyPort {
 
     private final SpringDataChangingMoneyPersistence changingMoneyPersistence; // 증액요청 저장소
     private final SpringDataMemberMoneyPersistence memberMoneyPersistence; // 멤버십 Money 저장소
@@ -53,25 +54,49 @@ public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort
     }
 
     /**
+     * 멤버십에 Money를 감소시킨다.
+     * @param membershipId 멤버십 ID
+     * @param moneyAmount 감소할 금액
+     * @return  감소된 멤버십 Money
+     */
+    @Override
+    public MemberMoney decreaseMoney(MemberMoney.MembershipId membershipId
+            , MemberMoney.MoneyAmount moneyAmount) {
+        //1. 멤버십 조회
+        MemberMoneyJpaEntity findByMembershipEntity = memberMoneyPersistence.findByMembershipId(membershipId.membershipId());
+        if (findByMembershipEntity == null) {
+            throw new IllegalArgumentException("membership not found");
+        }
+
+        //2. 멤버십 Money 감소
+        findByMembershipEntity.decreaseMoney(moneyAmount.moneyAmount());
+        //3. 멤버십 Money 저장
+        MemberMoneyJpaEntity savedEntity = memberMoneyPersistence.save(findByMembershipEntity);
+        //4. 감소된 멤버십 Money 리턴
+        return MemberMoneyMapper.mapToMemberMoney(savedEntity);
+    }
+
+    /**
      * 멤버십에 Money를 증액한다.
      * @param membershipId 멤버십 ID
      * @param moneyAmount 증액할 금액
      * @return  증액된 멤버십 Money
      */
     @Override
-    public MemberMoney increaseMoney(MemberMoney.MembershipId membershipId, MemberMoney.MoneyAmount moneyAmount) {
+    public MemberMoney increaseMoney(MemberMoney.MembershipId membershipId
+            , MemberMoney.MoneyAmount moneyAmount) {
         //1. 멤버십 조회
-        MemberMoneyJpaEntity findByMembershipEntity = memberMoneyPersistence.findByMembershipId(membershipId.value());
+        MemberMoneyJpaEntity findByMembershipEntity = memberMoneyPersistence.findByMembershipId(membershipId.membershipId());
         //2. 멤버가 없는 경우 멤버를 생성하고 증액
         if(findByMembershipEntity == null){
             MemberMoneyJpaEntity savedEntity = memberMoneyPersistence.save(new MemberMoneyJpaEntity(
-                    membershipId.value()
-                    , moneyAmount.value()
+                    membershipId.membershipId()
+                    , moneyAmount.moneyAmount()
             ));
             return MemberMoneyMapper.mapToMemberMoney(savedEntity);
         }
         //2. 멤버십 Money 증액
-        findByMembershipEntity.increaseMoney(moneyAmount.value());
+        findByMembershipEntity.increaseMoney(moneyAmount.moneyAmount());
         //3. 멤버십 Money 저장
         MemberMoneyJpaEntity savedEntity = memberMoneyPersistence.save(findByMembershipEntity);
         //4. 증액된 멤버십 Money 리턴
@@ -97,4 +122,5 @@ public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort
         //3. 변경된 증액요청 리턴
         return ChangingMoneyRequestMapper.mapToChangingMoneyRequest(entity);
     }
+
 }

@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 
 @Configuration
@@ -33,5 +34,20 @@ public class CountDownLatchManager {
 
     public CountDownLatch getCountDownLatch(String key) {
         return countDownLatchMap.get(key);
+    }
+
+    public boolean await(String taskId) {
+        try {
+            return countDownLatchMap.get(taskId).await(1000, java.util.concurrent.TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            return false;
+        }
+    }
+
+    public Optional<String> getResult(String taskId) {
+        if (countDownLatchMap.get(taskId).getCount() == 0) {
+            return Optional.of(stringMap.get(taskId));
+        }
+        return Optional.empty();
     }
 }

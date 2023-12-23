@@ -11,7 +11,7 @@ import org.opennuri.study.architecture.banking.adapter.out.persistence.FirmBanki
 public class FirmBankingRequest {
 
     private Long firmBankingRequestId;
-    private String membershipId;
+    private Long membershipId;
     private String fromBankName;
     private String fromBankAccountNumber;
     private String toBankName;
@@ -62,11 +62,11 @@ public class FirmBankingRequest {
 
     @Value
     public static class MembershipId {
-        public MembershipId(String membershipId) {
+        public MembershipId(Long membershipId) {
             this.membershipId = membershipId;
         }
 
-        String membershipId;
+        Long membershipId;
     }
 
     @Value

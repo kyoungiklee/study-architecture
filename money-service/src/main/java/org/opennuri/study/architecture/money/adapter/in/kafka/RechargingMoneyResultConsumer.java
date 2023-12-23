@@ -18,11 +18,11 @@ import java.util.List;
 public class RechargingMoneyResultConsumer {
     private final CountDownLatchManager countDownLatchManager;
     private final LoggingProducer loggingProducer;
-    @KafkaListener(topics = "${kafka.task.consumer.topic}", groupId = "{kafka.consumer.group.id}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${kafka.task.consumer.topic}", groupId = "${kafka.consumer.group.id}", containerFactory = "kafkaListenerContainerFactory")
     public void consume(ConsumerRecord<String, String> record) {
         log.info("consume key: {} consume value: {}", record.key(), record.value());
 
-        RechargingMoneyTask task = null;
+        RechargingMoneyTask task;
         try {
             task = RechargingMoneyTask.fromJson(record.value());
         } catch (Exception e) {
@@ -35,6 +35,13 @@ public class RechargingMoneyResultConsumer {
         for (SubTask subTask : subTasks) {
             log.info("subTask: {}", subTask);
             if (subTask.getSubTaskStatus() != SubTask.SubTaskStatus.COMPLETED) {
+                if(subTask.getSubTaskType() == SubTask.SubTaskType.MEMBERSHIP) {
+                    loggingProducer.sendLog(task.getTaskId(), "MembershipTask is failed");
+                    countDownLatchManager.setDataForKey(task.getTaskId(), "MEMBERSHIP_CHECK_FAILED");
+                } else if(subTask.getSubTaskType() == SubTask.SubTaskType.BANKING) {
+                    loggingProducer.sendLog(task.getTaskId(), "AccountTask is failed");
+                    countDownLatchManager.setDataForKey(task.getTaskId(), "ACCOUNT_CHECK_FAILED");
+                }
                 isCompleted = false;
                 break;
             }
@@ -43,10 +50,7 @@ public class RechargingMoneyResultConsumer {
         // 모든 작업이 완료되었을 때
         if (isCompleted) {
             loggingProducer.sendLog(task.getTaskId(), "RechargingMoneyTask is completed");
-            countDownLatchManager.setDataForKey(task.getTaskId(), "success");
-        } else {
-            loggingProducer.sendLog(task.getTaskId(), "RechargingMoneyTask is failed");
-            countDownLatchManager.setDataForKey(task.getTaskId(), "fail");
+            countDownLatchManager.setDataForKey(task.getTaskId(), "SUCCESS");
         }
         countDownLatchManager.getCountDownLatch(task.getTaskId()).countDown();
     }

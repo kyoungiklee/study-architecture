@@ -1,8 +1,8 @@
 package org.opennuri.study.architecture.banking.appication.port.in;
 
-import org.opennuri.study.architecture.banking.domain.FirmBankingRequest;
+import org.opennuri.study.architecture.banking.adapter.out.external.bank.FirmBankingResult;
 
 public interface RequestFirmBankingUseCase {
 
-    FirmBankingRequest requestFirmBanking(RequestFirmBankingCommand command);
+    FirmBankingResult requestFirmBanking(RequestFirmBankingCommand command);
 }

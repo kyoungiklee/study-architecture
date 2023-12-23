@@ -18,7 +18,7 @@ public class FirmBankingRequestedJpaEntity  extends BaseEntity {
     @Id
     @GeneratedValue
     private Long firmBankingRequestId;
-    private String membershipId;
+    private Long membershipId;
     private String fromBankName;
     private String fromBankAccountNumber;
     private String toBankName;
@@ -31,7 +31,7 @@ public class FirmBankingRequestedJpaEntity  extends BaseEntity {
     private String uuid;
 
     public FirmBankingRequestedJpaEntity(
-            String membershipId
+            Long membershipId
             , String fromBankName
             , String fromBankAccountNumber
             , String toBankName

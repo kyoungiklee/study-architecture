@@ -30,4 +30,8 @@ public class MemberMoneyJpaEntity extends BaseEntity {
     public void increaseMoney(Long value) {
         this.moneyAmount += value;
     }
+
+    public void decreaseMoney(Long value) {
+        this.moneyAmount -= value;
+    }
 }

@@ -17,7 +17,8 @@ public class SubTask {
     @Getter
     public enum SubTaskType {
         MEMBERSHIP("membership"),
-        BANKING("banking");
+        BANKING("banking"),
+        MONEY("money");
 
         private final String description;
     }

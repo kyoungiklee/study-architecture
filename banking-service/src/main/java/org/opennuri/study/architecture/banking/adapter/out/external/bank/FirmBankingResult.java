@@ -6,6 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class FirmBankingResult {
+    private Long membershipId;
+    private Long moneyAmount;
     private FirmBankingResultCode resultCode;
     private String resultMessage;
 
@@ -21,7 +23,9 @@ public class FirmBankingResult {
     @Override
     public String toString() {
         return "FirmBankingResult{" +
-                "resultCode=" + resultCode +
+                "membershipId='" + membershipId + '\'' +
+                ", moneyAmount=" + moneyAmount +
+                ", resultCode=" + resultCode +
                 ", resultMessage='" + resultMessage + '\'' +
                 '}';
     }

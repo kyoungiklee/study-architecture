@@ -19,12 +19,26 @@ public class FindMembershipController {
 
     private final FindMembershipUseCase findMembershipUseCase;
     @GetMapping(path = "/membership/{membershipId}")
-    ResponseEntity<Membership> findMembershipByMemberId(@PathVariable(value = "membershipId") String membershipId ){
+    public ResponseEntity<MembershipResponse> findMembershipByMemberId(@PathVariable(value = "membershipId") String membershipId ){
+        long longOfMembership;
+        try {
+            longOfMembership = Long.parseLong(membershipId);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().build();
+        }
+
         FindMembershipCommand command = FindMembershipCommand.builder()
-                .membershipId(membershipId)
+                .membershipId(longOfMembership)
                 .build();
 
         Membership membership = findMembershipUseCase.findMembership(command);
-        return ResponseEntity.ok(membership);
+        MembershipResponse membershipResponse = new MembershipResponse(
+                membership.getMembershipId(),
+                membership.getName(),
+                membership.getEmail(),
+                membership.getAddress(),
+                membership.isCorp()
+        );
+        return ResponseEntity.ok(membershipResponse);
     }
 }

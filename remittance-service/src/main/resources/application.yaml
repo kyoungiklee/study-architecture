@@ -3,12 +3,22 @@ spring:
     default: dev
 
 ---
+# docker 환경에서 실행할 경우 사용하는 설정(자바 실행 시 프로파일 정보를 dev 로 설정한다. -Dspring.profiles.active=dev  기본값이 dev 이므로 생략 가능하다.)
 kafka:
   clusters:
     bootstrapservers: kafka:29092
   task:
     logging:
       topic: simplepay.logging.out.stdout
+
+# service 요청 주소: docker 내부에서 사용하는 주소와 포트로 설정한다.(docker-compose.yml 파일의 service 이름과 포트로 동일하게 설정한다.)
+service:
+  membership:
+    url: http://membership-service:8080
+  banking:
+    url: http://banking-service:8080
+  money:
+    url: http://money-service:8080
 
 spring:
   config:
@@ -22,7 +32,7 @@ spring:
       password: simplepay
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
@@ -38,8 +48,15 @@ spring:
 
 ---
 server:
-  port: 9093
+  port: 8094
 
+service:
+  membership:
+    url: http://localhost:8081
+  banking:
+    url: http://localhost:8082
+  money:
+    url: http://localhost:8083
 kafka:
   clusters:
     bootstrapservers: localhost:9092

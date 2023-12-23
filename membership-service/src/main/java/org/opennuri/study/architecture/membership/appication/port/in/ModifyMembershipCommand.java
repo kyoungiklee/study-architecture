@@ -16,7 +16,7 @@ import org.opennuri.study.architecture.common.SelfValidating;
 public class ModifyMembershipCommand extends SelfValidating<ModifyMembershipCommand> {
 
     @NotNull
-    private final String membershipId;
+    private final Long membershipId;
 
     @NotNull
     private final String name;
@@ -34,7 +34,7 @@ public class ModifyMembershipCommand extends SelfValidating<ModifyMembershipComm
     private final boolean isCorp;
 
 
-    public ModifyMembershipCommand(String membershipId, String name, String email, String address, boolean isValid, boolean isCorp) {
+    public ModifyMembershipCommand(Long membershipId, String name, String email, String address, boolean isValid, boolean isCorp) {
         this.membershipId = membershipId;
         this.name = name;
         this.email = email;

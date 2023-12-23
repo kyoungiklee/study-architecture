@@ -2,10 +2,12 @@ package org.opennuri.study.architecture.banking.adapter.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
+import org.opennuri.study.architecture.banking.adapter.out.persistence.SpringDataRegisteredBankAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -15,7 +17,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 @AutoConfigureMockMvc
+@ActiveProfiles(value = "test")
 class RequestFirmBankingControllerTest {
+
+    @Autowired
+    private SpringDataRegisteredBankAccountRepository springDataRegisteredBankAccountRepository;
+
+    @BeforeEach()
+    void setUp() {
+        springDataRegisteredBankAccountRepository.deleteAll();
+    }
 
     @Autowired
     private MockMvc mockMvc;

@@ -33,6 +33,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-actuator')
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    testImplementation 'org.projectlombok:lombok:1.18.28'
     annotationProcessor('org.springframework.boot:spring-boot-autoconfigure-processor')
 
     //Lombok

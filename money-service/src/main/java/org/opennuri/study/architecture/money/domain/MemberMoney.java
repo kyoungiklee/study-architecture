@@ -13,25 +13,25 @@ public class MemberMoney {
 
     public static MemberMoney from(MemberMoneyId memberMoneyId, MembershipId membershipId, MoneyAmount moneyAmount) {
         return new MemberMoney(
-                memberMoneyId.value()
-                , membershipId.value()
-                , moneyAmount.value());
+                memberMoneyId.memberMoneyId()
+                , membershipId.membershipId()
+                , moneyAmount.moneyAmount());
     }
 
-    public record MemberMoneyId(Long value) {
-        public static MemberMoneyId from(Long value) {
-            return new MemberMoneyId(value);
+    public record MemberMoneyId(Long memberMoneyId) {
+        public static MemberMoneyId from(Long memberMoneyId) {
+            return new MemberMoneyId(memberMoneyId);
         }
     }
-    public record MembershipId(Long value) {
-        public static MembershipId from(Long value) {
-            return new MembershipId(value);
+    public record MembershipId(Long membershipId) {
+        public static MembershipId from(Long membershipId) {
+            return new MembershipId(membershipId);
         }
     }
 
-    public record MoneyAmount(Long value) {
-        public static MoneyAmount from(Long value) {
-            return new MoneyAmount(value);
+    public record MoneyAmount(Long moneyAmount) {
+        public static MoneyAmount from(Long moneyAmount) {
+            return new MoneyAmount(moneyAmount);
         }
     }
 }

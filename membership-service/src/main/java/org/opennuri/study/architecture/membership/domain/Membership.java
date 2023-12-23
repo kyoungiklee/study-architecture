@@ -9,7 +9,7 @@ import lombok.Value;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Membership {
 
-    private final String membershipId;
+    private final Long membershipId;
     private final String name;
     private final String email;
     private final String address;
@@ -36,10 +36,10 @@ public class Membership {
 
     @Value
     public static class MembershipId {
-        public MembershipId(String value) {
+        public MembershipId(Long value) {
             this.membershipId = value;
         }
-        String membershipId;
+        Long membershipId;
     }
 
     @Value
@@ -79,5 +79,17 @@ public class Membership {
             this.isCorpValue = value;
         }
         boolean isCorpValue;
+    }
+
+    @Override
+    public String toString() {
+        return "Membership{" +
+                "membershipId=" + membershipId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", isValid=" + isValid +
+                ", isCorp=" + isCorp +
+                '}';
     }
 }

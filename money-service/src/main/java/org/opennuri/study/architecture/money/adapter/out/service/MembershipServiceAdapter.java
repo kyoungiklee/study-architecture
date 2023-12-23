@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class MembershipServiceAdapter implements MembershipServicePort {
     private final RestTemplate restTemplate;
 
-    @Value("${membership.service.url}")
+    @Value("${service.membership.url}")
     private String membershipServiceUrl;
 
     @Override

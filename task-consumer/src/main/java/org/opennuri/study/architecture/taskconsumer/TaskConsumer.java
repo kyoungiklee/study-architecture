@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class TaskConsumer {
 
     private final TaskResultProducer taskResultProducer;
-    @KafkaListener(topics = "${kafka.task.consumer.topic}", groupId = "{kafka.consumer.group.id}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${kafka.task.consumer.topic}", groupId = "${kafka.consumer.group.id}", containerFactory = "kafkaListenerContainerFactory")
     public void consume(ConsumerRecord<String, String> record) {
 
         log.info("consume: {}", record);
@@ -50,6 +50,7 @@ public class TaskConsumer {
                 log.info("membershipId: {}, subTaskType: {}", subTask.getMembershipId(), subTask.getSubTaskType());
                 subTask.setSubTaskStatus(SubTask.SubTaskStatus.COMPLETED);
             }
+
         }
 
         taskResultProducer.sendTaskResult(task.getTaskId(), task);
