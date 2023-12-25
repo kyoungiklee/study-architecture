@@ -222,7 +222,12 @@ public class DecreaseMoneyRequestService implements DecreaseMoneyRequestUseCase 
         log.info("countDownLatch taskId: {}", countDownLatchManager.getCountDownLatch(rechargingMoneyTask.getTaskId()));
 
         //6. 완료될때까지 기다린다.(kafka TaskConsumer에서 요청내용을 처리후 task.result.topic으로 결과를 produce한다.
-        countDownLatchManager.await(rechargingMoneyTask.getTaskId());
+        boolean await = countDownLatchManager.await(rechargingMoneyTask.getTaskId());
+        //7. 1초 이내에 완료되면 true를 리턴한다. 1초내에 완료되지 않으면 false를 리턴한다.
+        if (!await) {
+            log.info("timeout");
+            throw new RuntimeException("timeout");
+        }
 
         //7. TaskConsumer에서 produce한 처리결과를 ResultConsumer consume하여 countDownLatchManager에 결과를 저장한다. (countDownLatchManager에 결과가 저장되면 countDown을 실행한다.)
         return countDownLatchManager.getResult(rechargingMoneyTask.getTaskId()).orElse("FAIL");

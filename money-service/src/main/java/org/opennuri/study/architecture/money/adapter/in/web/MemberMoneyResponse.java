@@ -2,10 +2,11 @@ package org.opennuri.study.architecture.money.adapter.in.web;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Objects;
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 public class MemberMoneyResponse {
     private String membershipId;

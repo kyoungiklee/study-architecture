@@ -1,7 +1,6 @@
 package org.opennuri.study.architecture.common;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

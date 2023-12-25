@@ -13,8 +13,6 @@ import org.opennuri.study.architecture.money.application.port.in.IncreaseMoneyRe
 import org.opennuri.study.architecture.money.application.port.out.ChangeStatusPort;
 import org.opennuri.study.architecture.money.application.port.out.IncreaseMoneyPort;
 import org.opennuri.study.architecture.money.application.port.out.kafka.SendRechargingMoneyTaskPort;
-import org.opennuri.study.architecture.money.application.port.out.membership.MembershipServicePort;
-import org.opennuri.study.architecture.money.application.port.out.membership.MembershipStatus;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestStatus;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestType;
 import org.opennuri.study.architecture.money.domain.MemberMoney;
@@ -36,7 +34,6 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
 
     private final IncreaseMoneyPort increaseMoneyPort;
     private final ChangeStatusPort changeStatusPort;
-    private final MembershipServicePort membershipServicePort;
     private final SendRechargingMoneyTaskPort sendRechargingMoneyTaskPort;
 
 
@@ -113,14 +110,13 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
         String result = countDownLatchManager.getDataForKey(rechargingMoneyTask.getTaskId());
         log.info("result: {}", result);
 
-        MemberMoney memberMoney = null;
-        MoneyChangingRequest changeStatus;
+        MemberMoney memberMoney;
         //Step 4. 증액을 위한 충전 요청 상태 변경 및 기록 (머니)
-        if(result.equals("SUCCESS")) {
+        if (result.equals("SUCCESS")) {
             //Step 4-1. 성공시 증액 요청 상태를 완료로 변경(머니)
             // 검증 결과 성공시 증액 요청 상태를 완료로 변경 후 신규 레코드로 저장
-            changeStatus =
-                    changeStatusPort.changeRequestStatus(changeMoneyRequest.getUuid(), ChangingMoneyRequestStatus.SUCCESS);
+
+            changeStatusPort.changeRequestStatus(changeMoneyRequest.getUuid(), ChangingMoneyRequestStatus.SUCCESS);
             // 멤버머니 잔액을 증액(머니)
             memberMoney = increaseMoneyPort.increaseMoney(
                     new MemberMoney.MembershipId(changeMoneyRequest.getMembershipId())
@@ -128,8 +124,8 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
         } else {
             //step 4-2. 실패시 성공시 증액 요청 상태를 실패로 변경(머니)
             // 결과 실패시 증액요청 상태를 실패로 변경 후 신규 레코드로 저장, 멤버머니 잔액증액은 하지 않는다.
-            changeStatus =
-                    changeStatusPort.changeRequestStatus(changeMoneyRequest.getUuid(), ChangingMoneyRequestStatus.FAILED);
+
+            changeStatusPort.changeRequestStatus(changeMoneyRequest.getUuid(), ChangingMoneyRequestStatus.FAILED);
             throw new BusinessCheckFailException("increase money failed");
         }
 

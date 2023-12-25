@@ -8,7 +8,6 @@ import org.opennuri.study.architecture.money.application.port.in.IncreaseMoneyRe
 import org.opennuri.study.architecture.money.application.port.in.IncreaseMoneyRequestUseCase;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestStatus;
 import org.opennuri.study.architecture.money.domain.MemberMoney;
-import org.opennuri.study.architecture.money.domain.MoneyChangingRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
