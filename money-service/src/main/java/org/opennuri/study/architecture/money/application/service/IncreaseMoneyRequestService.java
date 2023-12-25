@@ -85,13 +85,14 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
                 .build();
 
         log.info("rechargingMoneyTask: {}", rechargingMoneyTask);
+
         countDownLatchManager.addCountDownLatch(rechargingMoneyTask.getTaskId(), 1);
         // kafka로 전송한다.
         sendRechargingMoneyTaskPort.sendRechargingMoneyTask(rechargingMoneyTask);
         // CountDownLatch를 생성한다. (TaskId를 key로 하여 CountDownLatch를 생성한다.)
 
 
-        /*//완료될때까지 기다린다.
+        //완료될때까지 기다린다.
         boolean await;
         try {
             // kafka TaskConsumer에서 요청내용을 처리후 task.result.topic으로 결과를 produce한다.
@@ -106,13 +107,10 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
         if (!await) {
             log.info("timeout");
             throw new RuntimeException("timeout");
-        }*/
-        //6. 완료될때까지 기다린다.(kafka TaskConsumer에서 요청내용을 처리후 task.result.topic으로 결과를 produce한다.
-        countDownLatchManager.await(rechargingMoneyTask.getTaskId());
+        }
 
         // TaskResult를 가져온다.
-        //String result = countDownLatchManager.getDataForKey(rechargingMoneyTask.getTaskId());
-        String result = countDownLatchManager.getResult(rechargingMoneyTask.getTaskId()).orElse("FAIL");
+        String result = countDownLatchManager.getDataForKey(rechargingMoneyTask.getTaskId());
         log.info("result: {}", result);
 
         MemberMoney memberMoney = null;
