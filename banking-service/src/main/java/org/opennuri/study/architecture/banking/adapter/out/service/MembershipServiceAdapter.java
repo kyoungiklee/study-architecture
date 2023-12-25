@@ -40,6 +40,7 @@ public class MembershipServiceAdapter implements GetMembershipPort {
             }
             ObjectMapper objectMapper = new ObjectMapper();
             Membership membership = objectMapper.readValue(stringHttpResponse.body(), Membership.class);
+            log.info("membership : {}", membership);
             if(membership.isValid()) {
                 return new MembershipStatus(membership.getMembershipId(), true);
             }else {

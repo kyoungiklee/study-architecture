@@ -45,7 +45,7 @@ class RequestMoneyChangingControllerTest {
     @DisplayName(value = "고객 money 증액 요청")
     void increaseMoney() throws Exception {
 
-        IncreaseMoneyChangingRequest request = IncreaseMoneyChangingRequest.builder()
+        ChangingMoneyRequest request = org.opennuri.study.architecture.money.adapter.in.web.ChangingMoneyRequest.builder()
                 .membershipId("1")
                 .moneyAmount(1000L)
                 .build();

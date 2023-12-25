@@ -37,6 +37,7 @@ public class FindMembershipController {
                 membership.getName(),
                 membership.getEmail(),
                 membership.getAddress(),
+                membership.isValid(),
                 membership.isCorp()
         );
         return ResponseEntity.ok(membershipResponse);

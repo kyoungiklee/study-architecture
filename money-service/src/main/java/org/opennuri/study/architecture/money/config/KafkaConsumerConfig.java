@@ -23,15 +23,11 @@ public class KafkaConsumerConfig {
     private final KafkaProperties kafkaProperties;
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
-        log.info("BOOTSTRAP_SERVERS_CONFIG: {}", kafkaProperties.BOOTSTRAP_SERVERS);
-        log.info("CONSUMER_GROUP_ID: {}", kafkaProperties.CONSUMER_GROUP_ID);
 
         Map<String, Object> props = new HashMap<>();
 
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 kafkaProperties.BOOTSTRAP_SERVERS);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG,
-                kafkaProperties.CONSUMER_GROUP_ID);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,
                 kafkaProperties.ENABLE_AUTO_COMMIT);
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG,

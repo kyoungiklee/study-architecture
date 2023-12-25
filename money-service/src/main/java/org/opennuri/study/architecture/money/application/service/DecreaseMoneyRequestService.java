@@ -41,14 +41,16 @@ public class DecreaseMoneyRequestService implements DecreaseMoneyRequestUseCase 
 
     @Value("${service.banking.url}")
     private String bankingUrl;
-
     @Value("${service.banking.firmbanking.accountNumber}")
     private String  corporationAccountNumber;
     @Value("${service.banking.firmbanking.accountName}")
     private String  corporationAccountName;
 
-
-
+    /**
+     * 고객의 Money 잔액을 감소시킨다.
+     * @param command 요청정보
+     * @return 고객의 Money 잔액
+     */
     @Override
     @Transactional
     public MemberMoney decreaseMoneyRequest(DecreaseMoneyRequestCommand command) {
@@ -70,7 +72,7 @@ public class DecreaseMoneyRequestService implements DecreaseMoneyRequestUseCase 
                 , ChangingMoneyRequestStatus.REQUESTED, uuid);
 
         //2. 고객의 상태가 정상인지, 연동계좌가 정상인지 확인한다. (회원, 뱅킹)
-        String result = kafkaTaskProduce(command, membershipId, uuid);
+        String result = checkMembershipAccount(command, membershipId, uuid);
 
         log.info("result: {}", result);
 
@@ -184,7 +186,7 @@ public class DecreaseMoneyRequestService implements DecreaseMoneyRequestUseCase 
      * @return  요청결과
      */
     @NotNull
-    private String kafkaTaskProduce(DecreaseMoneyRequestCommand command, String membershipId, String uuid) {
+    private String checkMembershipAccount(DecreaseMoneyRequestCommand command, String membershipId, String uuid) {
         //1. 고객의 상태가 정상인지 확인용 subTask 생성. (회원)
         //taskName을 properties로 관리할 수 있도록 변경
         SubTask membershipCheckTask = SubTask.builder()
@@ -217,6 +219,7 @@ public class DecreaseMoneyRequestService implements DecreaseMoneyRequestUseCase 
         sendRechargingMoneyTaskPort.sendRechargingMoneyTask(rechargingMoneyTask);
         //5. CountDownLatch 생성한다. (TaskId를 key로 하여 CountDownLatch를 생성한다.)
         countDownLatchManager.addCountDownLatch(rechargingMoneyTask.getTaskId(), 1);
+        log.info("countDownLatch taskId: {}", countDownLatchManager.getCountDownLatch(rechargingMoneyTask.getTaskId()));
 
         //6. 완료될때까지 기다린다.(kafka TaskConsumer에서 요청내용을 처리후 task.result.topic으로 결과를 produce한다.
         countDownLatchManager.await(rechargingMoneyTask.getTaskId());

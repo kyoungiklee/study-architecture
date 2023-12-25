@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opennuri.study.architecture.common.CountDownLatchManager;
 import org.opennuri.study.architecture.common.UseCase;
+import org.opennuri.study.architecture.common.exception.BusinessCheckFailException;
 import org.opennuri.study.architecture.common.task.RechargingMoneyTask;
 import org.opennuri.study.architecture.common.task.SubTask;
 import org.opennuri.study.architecture.money.application.port.in.IncreaseMoneyRequestCommand;
@@ -38,56 +39,9 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
     private final MembershipServicePort membershipServicePort;
     private final SendRechargingMoneyTaskPort sendRechargingMoneyTaskPort;
 
-    /**
-     * 증액요청 처리
-     * @param command 증액요청
-     * @return 증액요청결과
-     */
-    @Override
-    public MoneyChangingRequest increaseMoneyRequest(IncreaseMoneyRequestCommand command) {
-        //1. 고객 정보가 정상인지 확인 (회원)
-        if (command.getMembershipId() == null) {
-            log.info("membershipId is null");
-            throw new IllegalArgumentException("membershipId is null");
-        }
-        MembershipStatus status = membershipServicePort.getMembershipInfo(command.getMembershipId());
-        log.info("membership status: {}", status);
-        if (status.getMembershipStatusType() != MembershipStatus.MembershipStatusType.NORMAL) {
-            log.info("membership is not normal");
-            throw new IllegalArgumentException("membership is not normal");
-        }
-
-        //2. 고객에게 연동된 계좌가 있는 지 확인, 연동된 계좌에 잔액이 충분한지 확인 (뱅킹))
-
-        //3. 법인계좌의 상태가 정상인지 확인 (뱅킹)
-
-        //4. 증액을 위한 충전 요청생성 및 기록 (머니)
-        MoneyChangingRequest changeMoneyRequest = increaseMoneyPort.createChangeMoneyRequest(
-                new MoneyChangingRequest.MembershipId(Long.parseLong(command.getMembershipId())),
-                new MoneyChangingRequest.RequestType(ChangingMoneyRequestType.DEPOSIT),
-                new MoneyChangingRequest.MoneyAmount(command.getMoneyAmount()),
-                new MoneyChangingRequest.RequestStatus(ChangingMoneyRequestStatus.REQUESTED),
-                new MoneyChangingRequest.RequestDateTime(LocalDateTime.now()),
-                new MoneyChangingRequest.UUID(UUID.randomUUID().toString())
-        );
-        //5. 펌뱅킹을 수행 (개인계좌 --> 법인계좌 이체) (뱅킹)
-
-        //6. 성공시 증액 요청 상태를 완료로 변경(머니)
-        MoneyChangingRequest changeStatus =
-                changeStatusPort.changeRequestStatus(changeMoneyRequest.getUuid(), ChangingMoneyRequestStatus.SUCCESS);
-
-        //7-1. 멤버머니 잔액을 증액(머니)
-        MemberMoney memberMoney = increaseMoneyPort.increaseMoney(
-                new MemberMoney.MembershipId(changeMoneyRequest.getMembershipId())
-                , new MemberMoney.MoneyAmount(changeMoneyRequest.getMoneyAmount()));
-
-        //7-2. 결과 실패시 실패로 증액요청 상태 변경 후 리턴
-
-        return changeStatus;
-    }
 
     @Override
-    public MoneyChangingRequest increaseMoneyRequestAsync(IncreaseMoneyRequestCommand command) {
+    public MemberMoney increaseMoneyRequest(IncreaseMoneyRequestCommand command) {
 
         //Step 1. 요청내용을 기록한다.
         MoneyChangingRequest changeMoneyRequest = increaseMoneyPort.createChangeMoneyRequest(
@@ -131,12 +85,13 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
                 .build();
 
         log.info("rechargingMoneyTask: {}", rechargingMoneyTask);
+        countDownLatchManager.addCountDownLatch(rechargingMoneyTask.getTaskId(), 1);
         // kafka로 전송한다.
         sendRechargingMoneyTaskPort.sendRechargingMoneyTask(rechargingMoneyTask);
         // CountDownLatch를 생성한다. (TaskId를 key로 하여 CountDownLatch를 생성한다.)
-        countDownLatchManager.addCountDownLatch(rechargingMoneyTask.getTaskId(), 1);
 
-        //완료될때까지 기다린다.
+
+        /*//완료될때까지 기다린다.
         boolean await;
         try {
             // kafka TaskConsumer에서 요청내용을 처리후 task.result.topic으로 결과를 produce한다.
@@ -151,11 +106,16 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
         if (!await) {
             log.info("timeout");
             throw new RuntimeException("timeout");
-        }
+        }*/
+        //6. 완료될때까지 기다린다.(kafka TaskConsumer에서 요청내용을 처리후 task.result.topic으로 결과를 produce한다.
+        countDownLatchManager.await(rechargingMoneyTask.getTaskId());
 
         // TaskResult를 가져온다.
-        String result = countDownLatchManager.getDataForKey(rechargingMoneyTask.getTaskId());
+        //String result = countDownLatchManager.getDataForKey(rechargingMoneyTask.getTaskId());
+        String result = countDownLatchManager.getResult(rechargingMoneyTask.getTaskId()).orElse("FAIL");
+        log.info("result: {}", result);
 
+        MemberMoney memberMoney = null;
         MoneyChangingRequest changeStatus;
         //Step 4. 증액을 위한 충전 요청 상태 변경 및 기록 (머니)
         if(result.equals("SUCCESS")) {
@@ -164,7 +124,7 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
             changeStatus =
                     changeStatusPort.changeRequestStatus(changeMoneyRequest.getUuid(), ChangingMoneyRequestStatus.SUCCESS);
             // 멤버머니 잔액을 증액(머니)
-            MemberMoney memberMoney = increaseMoneyPort.increaseMoney(
+            memberMoney = increaseMoneyPort.increaseMoney(
                     new MemberMoney.MembershipId(changeMoneyRequest.getMembershipId())
                     , new MemberMoney.MoneyAmount(changeMoneyRequest.getMoneyAmount()));
         } else {
@@ -172,8 +132,9 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
             // 결과 실패시 증액요청 상태를 실패로 변경 후 신규 레코드로 저장, 멤버머니 잔액증액은 하지 않는다.
             changeStatus =
                     changeStatusPort.changeRequestStatus(changeMoneyRequest.getUuid(), ChangingMoneyRequestStatus.FAILED);
+            throw new BusinessCheckFailException("increase money failed");
         }
 
-        return changeStatus;
+        return memberMoney;
     }
 }

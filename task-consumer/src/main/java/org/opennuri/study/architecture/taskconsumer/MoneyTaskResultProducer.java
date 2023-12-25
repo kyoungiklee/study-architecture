@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.opennuri.study.architecture.common.task.RechargingMoneyTask;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -12,13 +13,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TaskResultProducer {
+public class MoneyTaskResultProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Value("${kafka.task.result.topic}")
     private String topicName;
 
-    public void sendTaskResult(String key, Object task) {
+    public void sendTaskResult(String key, RechargingMoneyTask task) {
         log.info("send: ({}, {})", key, task);
 
         ObjectMapper mapper = new ObjectMapper();

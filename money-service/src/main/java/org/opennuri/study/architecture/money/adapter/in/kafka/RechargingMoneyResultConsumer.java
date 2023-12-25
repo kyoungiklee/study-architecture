@@ -11,6 +11,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 @Slf4j
 @Component
@@ -46,12 +47,24 @@ public class RechargingMoneyResultConsumer {
                 break;
             }
         }
-
+        //java.lang.NullPointerException: Cannot invoke "java.util.concurrent.CountDownLatch.countDown()"
+        // because the return value of "org.opennuri.study.architecture.common.CountDownLatchManager.getCountDownLatch(String)" is null
         // 모든 작업이 완료되었을 때
         if (isCompleted) {
             loggingProducer.sendLog(task.getTaskId(), "RechargingMoneyTask is completed");
+            log.info("countDownLatchManager.setDataForKey(task.getTaskId(): {}", task.getTaskId());
             countDownLatchManager.setDataForKey(task.getTaskId(), "SUCCESS");
         }
-        countDownLatchManager.getCountDownLatch(task.getTaskId()).countDown();
+        log.info("countDownLatchManager.getCountDownLatch(task.getTaskId()).countDown(): {}", task.getTaskId());
+
+        // Caused by: java.lang.NullPointerException: Cannot invoke "java.util.concurrent.CountDownLatch.countDown()"
+        // because the return value of "org.opennuri.study.architecture.common.CountDownLatchManager.getCountDownLatch(String)" is null
+        log.info("countDownLatchManager.getCountDownLatch(task.getTaskId()): {}", task.getTaskId());
+        CountDownLatch countDownLatch = countDownLatchManager.getCountDownLatch(task.getTaskId());
+        if(countDownLatch == null) {
+            log.info("countDownLatch is null");
+            throw new RuntimeException("countDownLatch is null");
+        }
+        countDownLatch.countDown();
     }
 }

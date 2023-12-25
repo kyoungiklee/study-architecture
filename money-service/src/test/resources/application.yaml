@@ -19,7 +19,7 @@ kafka:
   auto:
     commit:
       interval:
-        ms: 1000
+        ms: 10
     offset:
       reset: earliest
   key:

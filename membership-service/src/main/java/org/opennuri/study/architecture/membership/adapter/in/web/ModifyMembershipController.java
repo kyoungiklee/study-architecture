@@ -46,6 +46,7 @@ public class ModifyMembershipController {
                 membership.getName(),
                 membership.getEmail(),
                 membership.getAddress(),
+                membership.isValid(),
                 membership.isCorp()
         );
         return new ResponseEntity<>(membershipResponse, null, HttpStatus.OK);

@@ -21,9 +21,8 @@ public class RegisterBankAccountController {
 
     @PostMapping(path = "/banking/account/register")
     RegisteredBankAccount registerBankAccount(@RequestBody RegisterBankAccountRequest request) {
-        // request~~~
-        // request --> command
-        // usecase ~~(request x command o)
+        log.info("request: {}", request);
+
         RegisterBankAccountCommand command = RegisterBankAccountCommand.builder()
                 .membershipId(request.getMembershipId())
                 .bankName(request.getBankName())

@@ -76,6 +76,7 @@ class MembershipControllerTest {
                 .name("name")
                 .email("email")
                 .address("address")
+                .isValid(true)
                 .isCorp(true)
                 .build();
 
@@ -162,6 +163,7 @@ class MembershipControllerTest {
                 .name("modified_name")
                 .email("modified_email")
                 .address("modified_address")
+                .isValid(true)
                 .isCorp(false)
                 .build();
 

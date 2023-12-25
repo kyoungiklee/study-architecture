@@ -25,8 +25,6 @@ public class KafkaProducerConfig {
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
-        log.info("BOOTSTRAP_SERVERS_CONFIG: {}", kafkaProperties.BOOTSTRAP_SERVERS);
-        log.info("CONSUMER_GROUP_ID: {}", kafkaProperties.CONSUMER_GROUP_ID);
 
         Map<String, Object> producerConfig = new HashMap<>();
         producerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.BOOTSTRAP_SERVERS);

@@ -8,7 +8,7 @@ import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestStatus;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MoneyChangingResultDetail {
+public class ChangingMoneyResponse {
     private String membershipId;
     private Long amount;
     private ChangingMoneyRequestStatus status;

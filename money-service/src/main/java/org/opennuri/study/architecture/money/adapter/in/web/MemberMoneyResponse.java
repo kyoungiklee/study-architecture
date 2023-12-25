@@ -9,7 +9,6 @@ import java.util.Objects;
 @NoArgsConstructor
 public class MemberMoneyResponse {
     private String membershipId;
-
     private String moneyAmount;
     private String message;
 

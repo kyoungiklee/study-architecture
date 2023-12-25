@@ -24,9 +24,7 @@ public class RegisterMembershipController {
     public ResponseEntity<MembershipResponse> registerMembership(@RequestBody RegisterMembershipRequest request) {
 
         log.info("registerMembership request: {}", request);
-        // request~~~
-        // request --> command
-        // usecase ~~(request x command o)
+
         RegisterMembershipCommand command = RegisterMembershipCommand.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -43,6 +41,7 @@ public class RegisterMembershipController {
                 membership.getName(),
                 membership.getEmail(),
                 membership.getAddress(),
+                membership.isValid(),
                 membership.isCorp()
         );
         log.info("registerMembership response: {}", membershipResponse);

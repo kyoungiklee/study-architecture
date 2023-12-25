@@ -13,17 +13,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TaskConsumer {
+public class MoneyTaskConsumer {
 
-    private final TaskResultProducer taskResultProducer;
+    private final MoneyTaskResultProducer increaseMoneyTaskResultProducer;
     @KafkaListener(topics = "${kafka.task.consumer.topic}", groupId = "${kafka.consumer.group.id}", containerFactory = "kafkaListenerContainerFactory")
     public void consume(ConsumerRecord<String, String> record) {
 
-        log.info("consume: {}", record);
+        log.info("Received message: ({}, {})", record.key(), record.value());
 
         ObjectMapper mapper = new ObjectMapper();
 
-        log.info("Received message: ({}, {})", record.key(), record.value());
         RechargingMoneyTask task;
 
         try {
@@ -52,7 +51,7 @@ public class TaskConsumer {
 
         }
 
-        taskResultProducer.sendTaskResult(task.getTaskId(), task);
+        increaseMoneyTaskResultProducer.sendTaskResult(task.getTaskId(), task);
         log.info("taskResultProducer.sendTaskResult: {}", task.getTaskId());
     }
 

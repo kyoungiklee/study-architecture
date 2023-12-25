@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class IncreaseMoneyChangingRequest {
+public class ChangingMoneyRequest {
     @NotNull
     private String membershipId; // 멤버십 아이디
     @Positive

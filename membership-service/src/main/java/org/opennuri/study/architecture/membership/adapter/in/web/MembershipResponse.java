@@ -16,6 +16,7 @@ public class MembershipResponse {
     private String name;
     private String email;
     private String address;
+    private boolean isValid;
     private boolean isCorp;
 
     @Override
@@ -25,6 +26,7 @@ public class MembershipResponse {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
+                ", isValid='" + isValid + '\'' +
                 ", isCorp=" + isCorp +
                 '}';
     }
