@@ -1,12 +1,13 @@
 package org.opennuri.study.architecture.money.application.port.in;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
-import lombok.*;
+import jakarta.validation.constraints.Positive;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.opennuri.study.architecture.common.SelfValidating;
 
-
-@NoArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Builder
@@ -14,12 +15,13 @@ public class RechargingMoneyRequestCommand  extends SelfValidating<RechargingMon
 
     @NotNull
     private Long membershipId;
-    @NotNull @PositiveOrZero
-    private Long rechargingAmount;
+    @NotNull @Positive @Max(value = 1000000L) // 100만원 이하만 가능(테스트용)
+    private Long amount;
 
-    public RechargingMoneyRequestCommand(Long membershipId, Long rechargingAmount) {
+    public RechargingMoneyRequestCommand(Long membershipId, Long amount) {
         this.membershipId = membershipId;
-        this.rechargingAmount = rechargingAmount;
+        this.amount = amount;
+
         this.validateSelf();
     }
 }

@@ -18,7 +18,7 @@ public class IncreaseMoneyRequestCommand extends SelfValidating<IncreaseMoneyReq
 
     @NotNull
     @Positive
-    @Max(value = 1000000L)
+    @Max(value = 1000000L) // 100만원 이하만 가능(테스트용)
     private final Long moneyAmount; // 충전 또는 사용 금액
 
     public IncreaseMoneyRequestCommand(String membershipId, Long moneyAmount) {

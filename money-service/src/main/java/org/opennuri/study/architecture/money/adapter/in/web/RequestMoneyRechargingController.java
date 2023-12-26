@@ -20,23 +20,16 @@ public class RequestMoneyRechargingController {
     @PostMapping("/money/recharging")
     public ResponseEntity<MemberMoneyResponse> requestMoneyRecharging(@RequestBody RechargingMoneyRequest rechargingMoneyRequest) {
         log.info("requestMoneyRecharging: {}", rechargingMoneyRequest);
+
         RechargingMoneyRequestCommand command = RechargingMoneyRequestCommand.builder()
                 .membershipId(rechargingMoneyRequest.getMembershipId())
-                .rechargingAmount(rechargingMoneyRequest.getRechargingAmount())
+                .amount(rechargingMoneyRequest.getRechargingAmount())
                 .build();
+
         log.info("command: {}", command);
         MemberMoney memberMoney;
         try {
            memberMoney = rechargingMoneyRequestUseCase.rechargingMoney(command);
-           if(memberMoney == null) {
-               MemberMoneyResponse memberMoneyResponse = MemberMoneyResponse.builder()
-                       .membershipId(rechargingMoneyRequest.getMembershipId())
-                       .balance(0L)
-                       .valid(false)
-                       .message("FAIL")
-                       .build();
-               return new ResponseEntity<>(memberMoneyResponse, null, HttpStatus.INTERNAL_SERVER_ERROR);
-           }
         } catch (Exception e) {
             MemberMoneyResponse memberMoneyResponse = MemberMoneyResponse.builder()
                     .membershipId(rechargingMoneyRequest.getMembershipId())
