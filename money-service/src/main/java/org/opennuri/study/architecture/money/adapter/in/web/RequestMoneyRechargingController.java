@@ -23,7 +23,7 @@ public class RequestMoneyRechargingController {
 
         RechargingMoneyRequestCommand command = RechargingMoneyRequestCommand.builder()
                 .membershipId(rechargingMoneyRequest.getMembershipId())
-                .amount(rechargingMoneyRequest.getRechargingAmount())
+                .moneyAmount(rechargingMoneyRequest.getRechargingAmount())
                 .build();
 
         log.info("command: {}", command);

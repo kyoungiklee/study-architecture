@@ -51,7 +51,7 @@ public class RechargingMoneyRequestService implements RechargingMoneyRequestUseC
             //4. 고객의 Money 잔액을 증액한다. (머니)
             memberMoney = rechargingMoneyPort.rechargingMoney(
                     new MemberMoney.MembershipId(command.getMembershipId())
-                    , new MemberMoney.MoneyAmount(command.getAmount()));
+                    , new MemberMoney.MoneyAmount(command.getMoneyAmount()));
 
             //5. 요청정보를 처리완료 상태로 저장한다. (머니)
             saveChangingMoneyStatus(command
@@ -72,7 +72,7 @@ public class RechargingMoneyRequestService implements RechargingMoneyRequestUseC
         MoneyChangingRequest changeMoneyRequest = rechargingMoneyPort.createChangeMoneyRequest(
                 new MoneyChangingRequest.MembershipId(command.getMembershipId())
                 , new MoneyChangingRequest.RequestType(ChangingMoneyRequestType.WITHDRAW)
-                , new MoneyChangingRequest.MoneyAmount(command.getAmount())
+                , new MoneyChangingRequest.MoneyAmount(command.getMoneyAmount())
                 , new MoneyChangingRequest.RequestStatus(status)
                 , new MoneyChangingRequest.RequestDateTime(LocalDateTime.now())
                 , new MoneyChangingRequest.UUID(uuid));
@@ -107,7 +107,7 @@ public class RechargingMoneyRequestService implements RechargingMoneyRequestUseC
                 .taskId(uuid)
                 .taskName("머니 감액 작업")
                 .membershipId(command.getMembershipId().toString())
-                .moneyAmount(command.getAmount())
+                .moneyAmount(command.getMoneyAmount())
                 .subTasks(subTasks)
                 .build();
 

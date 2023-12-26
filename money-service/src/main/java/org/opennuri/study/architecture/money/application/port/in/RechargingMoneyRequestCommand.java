@@ -16,11 +16,11 @@ public class RechargingMoneyRequestCommand  extends SelfValidating<RechargingMon
     @NotNull
     private Long membershipId;
     @NotNull @Positive @Max(value = 1000000L) // 100만원 이하만 가능(테스트용)
-    private Long amount;
+    private Long moneyAmount;
 
-    public RechargingMoneyRequestCommand(Long membershipId, Long amount) {
+    public RechargingMoneyRequestCommand(Long membershipId, Long moneyAmount) {
         this.membershipId = membershipId;
-        this.amount = amount;
+        this.moneyAmount = moneyAmount;
 
         this.validateSelf();
     }
