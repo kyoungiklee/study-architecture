@@ -57,7 +57,7 @@ class RechargingMoneyRequestServiceTest {
 
         RechargingMoneyRequestCommand command = RechargingMoneyRequestCommand.builder()
                 .membershipId(membershipId)
-                .amount(rechargingAmount)
+                .moneyAmount(rechargingAmount)
                 .build();
 
         // when
