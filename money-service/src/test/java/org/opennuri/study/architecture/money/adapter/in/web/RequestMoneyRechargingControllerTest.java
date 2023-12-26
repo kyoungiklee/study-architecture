@@ -1,10 +1,8 @@
 package org.opennuri.study.architecture.money.adapter.in.web;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
-import org.opennuri.study.architecture.money.adapter.out.persistence.MemberMoneyJpaEntity;
 import org.opennuri.study.architecture.money.adapter.out.persistence.SpringDataChangingMoneyPersistence;
 import org.opennuri.study.architecture.money.application.port.in.CreateMoneyRequestCommand;
 import org.opennuri.study.architecture.money.application.service.CreateMemberMoneyService;
@@ -18,7 +16,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 

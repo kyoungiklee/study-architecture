@@ -1,9 +1,9 @@
 package org.opennuri.study.architecture.remittance.application.port.in;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.opennuri.study.architecture.common.SelfValidating;
 import org.opennuri.study.architecture.remittance.common.RemittanceStatus;
 import org.opennuri.study.architecture.remittance.common.RemittanceType;

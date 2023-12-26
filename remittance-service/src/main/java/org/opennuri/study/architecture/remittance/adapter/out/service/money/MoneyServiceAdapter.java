@@ -53,10 +53,16 @@ public class MoneyServiceAdapter implements MoneyServicePort {
         MoneyRequest increaseMoneyRequest = new MoneyRequest(membershipId, amount);
         String url = String.join("/", moneyUrl, "money/increase");
 
-        //restTemplate을 사용하여 money 서비스에 요청한다.(post)
-        MoneyResponse increaseMoneyResponse =
-                restTemplate.postForObject(url, increaseMoneyRequest, MoneyResponse.class);
-        log.info("increaseMoneyResponse: {}", increaseMoneyResponse);
+        MoneyResponse increaseMoneyResponse;
+        try {
+            //restTemplate을 사용하여 money 서비스에 요청한다.(post)
+            increaseMoneyResponse =
+                    restTemplate.postForObject(url, increaseMoneyRequest, MoneyResponse.class);
+            log.info("increaseMoneyResponse: {}", increaseMoneyResponse);
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("remittance-service -> money-service 통신 실패: %s", e.getMessage()));
+        }
+
 
         if(increaseMoneyResponse != null && increaseMoneyResponse.getStatus().equals("SUCCESS")) {
             return increaseMoneyResponse;

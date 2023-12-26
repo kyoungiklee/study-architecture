@@ -1,6 +1,5 @@
 package org.opennuri.study.architecture.remittance.common;
 
-import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

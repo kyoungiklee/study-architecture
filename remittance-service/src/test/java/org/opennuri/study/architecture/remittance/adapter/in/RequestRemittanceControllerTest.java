@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -73,9 +73,8 @@ class RequestRemittanceControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(result -> {
-                    log.info("result: {}", result.getResponse().getContentAsString());
-                })
+                .andExpect(result -> log.info("result: {}", result.getResponse().getContentAsString())
+                )
                 .andExpect(jsonPath("$.remittanceId").exists())
                 .andExpect(jsonPath("$.message").value("SUCCESS"));
 
@@ -85,8 +84,8 @@ class RequestRemittanceControllerTest {
         log.info("afterSenderMoneyInfo: {}", afterSenderMoneyInfo);
         log.info("afterRecieverMoneyInfo: {}", afterRecieverMoneyInfo);
 
-        assertTrue(beforSenderMoneyInfo.getBalance() - afterSenderMoneyInfo.getBalance() == request.getAmount());
-        assertTrue(afterRecieverMoneyInfo.getBalance() - beforRecieverMoneyInfo.getBalance() == request.getAmount());
+        assertEquals(beforSenderMoneyInfo.getBalance() - afterSenderMoneyInfo.getBalance(), (long) request.getAmount());
+        assertEquals(afterRecieverMoneyInfo.getBalance() - beforRecieverMoneyInfo.getBalance(), (long) request.getAmount());
 
     }
 }
