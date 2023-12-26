@@ -12,6 +12,12 @@ service:
     url: http://localhost:8081
   banking:
     url: http://localhost:8082
+    firmbanking:
+      from:
+        bank:
+          name: (주)심플페이
+          account:
+            number: 5555-6666-7777-8888
   money:
     url: http://localhost:8083
 

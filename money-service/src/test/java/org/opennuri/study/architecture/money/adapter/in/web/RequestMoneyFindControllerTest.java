@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
-@DisplayName(value = "고객의 money 조회 테스트")
+@DisplayName(value = "Controoler: RequestMoneyFindControllerTest")
 @ActiveProfiles(value = "test")
 class RequestMoneyFindControllerTest {
 
@@ -59,7 +59,10 @@ class RequestMoneyFindControllerTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.membershipId").value("1"))
-                .andExpect(jsonPath("$.moneyAmount").value("1000"));
+                .andExpect(jsonPath("$.balance").value("1000"))
+                .andExpect(jsonPath("$.valid").value(true))
+                .andExpect(jsonPath("$.message").value("SUCCESS"))
+        ;
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/money/find/2"))

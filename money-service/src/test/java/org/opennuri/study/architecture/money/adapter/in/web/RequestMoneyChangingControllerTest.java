@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles(value = "test")
-@DisplayName(value = "고객 money 요청 테스트")
+@DisplayName(value = "Controller: RequestMoneyChangingControllerTest")
 class RequestMoneyChangingControllerTest {
 
     @BeforeEach
@@ -42,7 +42,7 @@ class RequestMoneyChangingControllerTest {
     private ObjectMapper objectMapper;
     @Test
     @Order(1)
-    @DisplayName(value = "고객 money 증액 요청")
+    @DisplayName(value = "고객 money 증액 시킨다.")
     void increaseMoney() throws Exception {
 
         ChangingMoneyRequest request = org.opennuri.study.architecture.money.adapter.in.web.ChangingMoneyRequest.builder()

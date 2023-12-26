@@ -33,12 +33,7 @@ public class MoneyServiceAdapter implements MoneyServicePort {
     }
 
     @Override
-    public boolean requestMoneyRecharge(String membershipId, int amount) {
-        return false;
-    }
-
-    @Override
-    public IncreaseMoneyResponse requestMoneyIncrease(Long membershipId, Long amount) {
+    public MoneyResponse requestMoneyIncrease(Long membershipId, Long amount) {
         //membershipId 값이 number형인지 확인한다.
         String stringOfMembershipId;
         try {
@@ -54,19 +49,38 @@ public class MoneyServiceAdapter implements MoneyServicePort {
             throw new IllegalArgumentException("amount is not number");
         }
 
-        //IncreaseMoneyRequest 객체를 생성한다.
-        IncreaseMoneyRequest increaseMoneyRequest = new IncreaseMoneyRequest(membershipId, amount);
+        //MoneyRequest 객체를 생성한다.
+        MoneyRequest increaseMoneyRequest = new MoneyRequest(membershipId, amount);
         String url = String.join("/", moneyUrl, "money/increase");
 
         //restTemplate을 사용하여 money 서비스에 요청한다.(post)
-        IncreaseMoneyResponse increaseMoneyResponse =
-                restTemplate.postForObject(url, increaseMoneyRequest, IncreaseMoneyResponse.class);
+        MoneyResponse increaseMoneyResponse =
+                restTemplate.postForObject(url, increaseMoneyRequest, MoneyResponse.class);
         log.info("increaseMoneyResponse: {}", increaseMoneyResponse);
-        return increaseMoneyResponse;
+
+        if(increaseMoneyResponse != null && increaseMoneyResponse.getStatus().equals("SUCCESS")) {
+            return increaseMoneyResponse;
+        } else {
+            throw new RuntimeException("increaseMoneyResponse is null");
+        }
     }
 
     @Override
-    public boolean requestMoneyDecrease(String membershipId, int amount) {
-        return false;
+    public MoneyResponse requestMoneyDecrease(Long membershipId, Long amount) {
+        MoneyRequest decreaseMoneyRequest = new MoneyRequest(membershipId, amount);
+        String url = String.join("/", moneyUrl, "money/decrease");
+        MoneyResponse decreaseMoneyResponse = restTemplate.postForObject(url, decreaseMoneyRequest, MoneyResponse.class);
+
+        if(decreaseMoneyResponse != null && decreaseMoneyResponse.getStatus().equals("SUCCESS")) {
+            return decreaseMoneyResponse;
+        } else {
+            throw new RuntimeException("moneyResponse is null");
+        }
     }
+
+    @Override
+    public MoneyResponse requestMoneyRecharging(Long membershipId, Long rechargingAmount) {
+        return null;
+    }
+
 }

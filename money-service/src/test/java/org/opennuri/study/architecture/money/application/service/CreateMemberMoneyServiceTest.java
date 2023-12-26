@@ -13,12 +13,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
-@DisplayName(value = "고객 Money 생성 테스트")
+@DisplayName(value = "Service: CreateMemberMoneyServiceTest")
 @ActiveProfiles(value = "test")
 class CreateMemberMoneyServiceTest {
 
     @BeforeEach
     void setUp() {
+        springDataChangingMoneyPersistence.deleteAll();
+        springDataMemberMoneyPersistence.deleteAll();
+    }
+    @AfterEach
+    void tearDown() {
         springDataChangingMoneyPersistence.deleteAll();
         springDataMemberMoneyPersistence.deleteAll();
     }

@@ -11,9 +11,9 @@ import org.opennuri.study.architecture.remittance.common.RemittanceType;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class RequestRemittanceCommand extends SelfValidating<RequestRemittanceCommand> {
-    @NotNull @NotBlank
-    private String senderId; //송금요청자 아이디
-    private String receiverId; //송금요청 수신자 아이디
+    @NotNull
+    private Long senderId; //송금요청자 아이디
+    private Long receiverId; //송금요청 수신자 아이디
     private String toBankName; //송금요청 은행 이름
     private String toAccountNumber; //송금요청 은행 계좌번호
     private RemittanceType requestType; //송금요청 타입 (내부고객, 외부은행)
@@ -24,10 +24,10 @@ public class RequestRemittanceCommand extends SelfValidating<RequestRemittanceCo
     private RemittanceStatus requestStatus; //송금요청 상태 (요청, 완료, 실패)
 
 
-    // RemittanceRequest  생성자
+    // RemittanceRequestVO  생성자
     // RequestRemittanceCommandBuilder의 build() 메서드를 통해 생성자를 호출할 수 있으며
     // 생셩자 호출 시 validation을 수행한다.
-    private RequestRemittanceCommand(@NotNull @NotBlank String senderId, String receiverId, String toBankName, String toAccountNumber, RemittanceType requestType, @NotNull @Positive Long amount, String description, RemittanceStatus requestStatus) {
+    private RequestRemittanceCommand(@NotNull Long senderId, Long receiverId, String toBankName, String toAccountNumber, RemittanceType requestType, @NotNull @Positive Long amount, String description, RemittanceStatus requestStatus) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.toBankName = toBankName;
@@ -41,8 +41,8 @@ public class RequestRemittanceCommand extends SelfValidating<RequestRemittanceCo
 
     public static void main(String[] args) {
         RequestRemittanceCommand requestRemittanceCommand = RequestRemittanceCommand.builder()
-                .senderId("senderId")
-                .receiverId("receiverId")
+                .senderId(1L)
+                .receiverId(2L)
                 .toBankName("toBankName")
                 .toAccountNumber("toAccountNumber")
                 .requestType(RemittanceType.INTERNAL)
@@ -58,8 +58,8 @@ public class RequestRemittanceCommand extends SelfValidating<RequestRemittanceCo
     }
 
     public static class RequestRemittanceCommandBuilder {
-        private @NotNull @NotBlank String senderId;
-        private String receiverId;
+        private @NotNull Long senderId;
+        private Long receiverId;
         private String toBankName;
         private String toAccountNumber;
         private RemittanceType requestType;
@@ -70,12 +70,12 @@ public class RequestRemittanceCommand extends SelfValidating<RequestRemittanceCo
         RequestRemittanceCommandBuilder() {
         }
 
-        public RequestRemittanceCommandBuilder senderId(@NotNull @NotBlank String senderId) {
+        public RequestRemittanceCommandBuilder senderId(@NotNull Long senderId) {
             this.senderId = senderId;
             return this;
         }
 
-        public RequestRemittanceCommandBuilder receiverId(String receiverId) {
+        public RequestRemittanceCommandBuilder receiverId(Long receiverId) {
             this.receiverId = receiverId;
             return this;
         }

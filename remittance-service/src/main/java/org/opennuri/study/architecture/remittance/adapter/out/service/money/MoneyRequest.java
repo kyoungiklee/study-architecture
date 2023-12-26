@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class IncreaseMoneyRequest {
+public class MoneyRequest {
     private Long membershipId;
     private Long moneyAmount;
 
-    public IncreaseMoneyRequest(Long membershipId, Long moneyAmount) {
+    public MoneyRequest(Long membershipId, Long moneyAmount) {
         this.membershipId = membershipId;
         this.moneyAmount = moneyAmount;
     }

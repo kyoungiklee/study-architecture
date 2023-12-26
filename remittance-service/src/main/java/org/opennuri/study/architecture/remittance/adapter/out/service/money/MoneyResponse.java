@@ -7,12 +7,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class IncreaseMoneyResponse {
+public class MoneyResponse {
     private Long membershipId;
     private Long amount;
     private String status;
 
-    public IncreaseMoneyResponse(Long membershipId, Long amount, String status) {
+    public MoneyResponse(Long membershipId, Long amount, String status) {
         this.membershipId = membershipId;
         this.amount = amount;
         this.status = status;
@@ -20,7 +20,7 @@ public class IncreaseMoneyResponse {
 
     @Override
     public String toString() {
-        return "IncreaseMoneyResponse{" +
+        return "MoneyResponse{" +
                 "membershipId=" + membershipId +
                 ", amount=" + amount +
                 ", success='" + status + '\'' +

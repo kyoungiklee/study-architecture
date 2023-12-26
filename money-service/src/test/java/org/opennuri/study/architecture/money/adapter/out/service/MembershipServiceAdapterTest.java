@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles(value = "test")
-@DisplayName(value = "멤버십 서비스 어댑터 테스트")
+@DisplayName(value = "Adapter: MembershipServiceAdapterTest")
 class MembershipServiceAdapterTest {
 
     @BeforeEach
@@ -32,7 +32,7 @@ class MembershipServiceAdapterTest {
     MembershipServiceAdapter membershipServiceAdapter;
     @Test
     @Order(1)
-    @DisplayName("회원정보 조회")
+    @DisplayName("회원 정보를 조회한다(moeneyservice -> membershipservice)")
     void getMembershipInfo() {
         MembershipStatus membershipStatus = membershipServiceAdapter.getMembershipInfo("1");
         assertEquals(membershipStatus.getMembershipId(), "1");

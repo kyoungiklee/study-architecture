@@ -8,17 +8,18 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class MoneyInfo {
     private String membershipId;
-    private String moneyAmount;
+    private Long balance;
+    private boolean isValid;
     private String message;
 
     @Override
     public String toString() {
         return "MoneyInfo{" +
                 "membershipId='" + membershipId + '\'' +
-                ", moneyAmount='" + moneyAmount + '\'' +
+                ", moneyAmount='" + balance + '\'' +
+                ", isValid=" + isValid +
                 ", message='" + message + '\'' +
                 '}';
     }

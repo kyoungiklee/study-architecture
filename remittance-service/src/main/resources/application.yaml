@@ -17,6 +17,13 @@ service:
     url: http://membership-service:8080
   banking:
     url: http://banking-service:8080
+    firmbanking:
+      from:
+        bank:
+          name: (주)심플페이
+          account:
+            number: 5555-6666-7777-8888
+
   money:
     url: http://money-service:8080
 
@@ -55,6 +62,12 @@ service:
     url: http://localhost:8081
   banking:
     url: http://localhost:8082
+    firmbanking:
+      from:
+        bank:
+          name: (주)심플페이
+          account:
+            number: 5555-6666-7777-8888
   money:
     url: http://localhost:8083
 kafka:

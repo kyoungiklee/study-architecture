@@ -16,11 +16,17 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
-@DisplayName(value = "멤버쉽 잔액 조회 테스트")
+@DisplayName(value = "Service: FindMemberMoneyServiceTest")
 @ActiveProfiles(value = "test")
 class FindMemberMoneyServiceTest {
     @BeforeEach
     void setUp() {
+        springDataChangingMoneyPersistence.deleteAll();
+        springDataMemberMoneyPersistence.deleteAll();
+    }
+
+    @AfterEach
+    void tearDown() {
         springDataChangingMoneyPersistence.deleteAll();
         springDataMemberMoneyPersistence.deleteAll();
     }
@@ -39,7 +45,7 @@ class FindMemberMoneyServiceTest {
 
     @Test
     @Order(1)
-    @DisplayName(value = "멤버쉽 아이디로 멤버쉽 잔액을 조회한다.")
+    @DisplayName(value = "고객 money를 조회한다.")
     void findMemberMoney() {
         //given
         CreateMoneyRequestCommand command = CreateMoneyRequestCommand.builder()

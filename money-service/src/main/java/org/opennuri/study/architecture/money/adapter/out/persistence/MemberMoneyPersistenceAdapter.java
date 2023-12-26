@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.opennuri.study.architecture.common.PersistenceAdapter;
 import org.opennuri.study.architecture.money.application.port.out.CreateMemberMoneyPort;
 import org.opennuri.study.architecture.money.application.port.out.FindMemberMoneyPort;
+import org.opennuri.study.architecture.money.application.port.out.RechargingMoneyPort;
 import org.opennuri.study.architecture.money.domain.MemberMoney;
+import org.opennuri.study.architecture.money.domain.MoneyChangingRequest;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class MemberMoneyPersistenceAdapter implements FindMemberMoneyPort, CreateMemberMoneyPort {
+public class MemberMoneyPersistenceAdapter implements FindMemberMoneyPort, CreateMemberMoneyPort{
     private final SpringDataMemberMoneyPersistence memberMoneyPersistence;
 
     @Override

@@ -24,21 +24,27 @@ public class RemittanceRequestJpaEntity extends BaseEntity {
     private Long remittanceRequestId;
     @Comment("송금요청자 아이디")
     @Column(nullable = false)
-    private String senderId;
+    private Long senderId;
     @Comment("송금요청 수신자 아이디")
-    private String receiverId;
+    private Long receiverId;
     @Comment("송금요청 은행 이름")
     private String toBankName;
     @Comment("송금요청 은행 계좌번호")
     private String toAccountNumber;
     @Comment("송금요청 타입 (내부고객, 외부은행)")
     @Column(nullable = false)
+
+    // 송금요청 타입 (내부고객, 외부은행) 내부고객인 경우 receiverId가 필수이며, 외부은행인 경우 toBankName, toAccountNumber가 필수이다.
+    @Enumerated(EnumType.STRING)
     private RemittanceType requestType;
+
     @Comment("송금요청 금액")
     @Column(nullable = false)
     private Long amount;
     @Comment("송금요청 설명")
     private String description;
+
+    @Enumerated(EnumType.STRING)
     @Comment("송금요청 상태 (요청, 완료, 실패)")
     @Column(nullable = false)
     private RemittanceStatus requestStatus;

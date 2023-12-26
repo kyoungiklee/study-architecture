@@ -23,7 +23,7 @@ class MembershipServiceAdapterTest {
     @Order(1)
     @DisplayName(value = "멤버십 상태를 조회한다.")
     void getMembershipStatus() {
-        MembershipInfo membershipInfo = membershipServiceAdapter.getMembershipStatus("1");
+        MembershipInfo membershipInfo = membershipServiceAdapter.getMembershipStatus(1L);
 
         log.info("membershipInfo: {}", membershipInfo);
 

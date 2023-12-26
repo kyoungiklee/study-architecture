@@ -21,4 +21,13 @@ public class MemberMoney {
     public record MemberMoneyId(Long memberMoneyId) {}
     public record MembershipId(Long membershipId) {}
     public record MoneyAmount(Long moneyAmount) {}
+
+    @Override
+    public String toString() {
+        return "MemberMoney{" +
+                "memberMoneyId=" + memberMoneyId +
+                ", membershipId=" + membershipId +
+                ", moneyAmount=" + moneyAmount +
+                '}';
+    }
 }

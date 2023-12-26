@@ -17,8 +17,16 @@ public class MembershipServiceAdapter implements MembershipServicePort {
     private String membershipUrl;
 
     @Override
-    public MembershipInfo getMembershipStatus(String membershipId) {
-        String url = String.join("/", membershipUrl, "membership", membershipId);
+    public MembershipInfo getMembershipStatus(Long membershipId) {
+
+        String stringOfMembershipId;
+        try {
+            stringOfMembershipId = String.valueOf(membershipId);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("membershipId must be a number");
+        }
+
+        String url = String.join("/", membershipUrl, "membership", stringOfMembershipId);
         return restTemplate.getForObject(url, MembershipInfo.class);
     }
 }

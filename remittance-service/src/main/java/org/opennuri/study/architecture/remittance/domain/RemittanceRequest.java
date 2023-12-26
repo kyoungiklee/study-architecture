@@ -12,8 +12,8 @@ import org.opennuri.study.architecture.remittance.common.RemittanceType;
 public class RemittanceRequest {
     //송금요청에 대한 정보를 담는 클래스
     private final Long remittanceRequestId;
-    private final String senderId;
-    private final String receiverId;
+    private final Long senderId;
+    private final Long receiverId;
     private final String toBankName;
     private final String toAccountNumber;
     private final RemittanceType requestType;
@@ -23,7 +23,7 @@ public class RemittanceRequest {
     private final String uuid;
 
 
-    //RemittanceRequest  생성자
+    //RemittanceRequestVO  생성자
     public static RemittanceRequest from(RemittanceRequestId remittanceRequestId,
                                                        SenderId senderId,
                                                        ReceiverId receiverId,
@@ -48,8 +48,8 @@ public class RemittanceRequest {
     }
 
     public record RemittanceRequestId(Long remittanceRequestId) {} //송금요청 아이디
-    public record SenderId(String senderId) {} //송금요청자 아이디
-    public record ReceiverId(String receiverId) {} //송금요청 수신자 아이디
+    public record SenderId(Long senderId) {} //송금요청자 아이디
+    public record ReceiverId(Long receiverId) {} //송금요청 수신자 아이디
     public record ToBankName(String toBankName) {} //송금요청 은행 이름
     public record ToAccountNumber(String toAccountNumber) {} //송금요청 은행 계좌번호
     public record RequestType(RemittanceType requestType) {} //송금요청 타입 (내부고객, 외부은행)
@@ -60,7 +60,7 @@ public class RemittanceRequest {
 
     @Override
     public String toString() {
-        return "RemittanceRequest{" +
+        return "RemittanceRequestVO{" +
                 "remittanceRequestId=" + remittanceRequestId +
                 ", senderId='" + senderId + '\'' +
                 ", receiverId='" + receiverId + '\'' +
