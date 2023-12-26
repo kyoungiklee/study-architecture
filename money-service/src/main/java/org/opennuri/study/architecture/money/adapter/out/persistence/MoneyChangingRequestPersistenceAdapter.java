@@ -109,7 +109,7 @@ public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort
 
     @NotNull
     private MemberMoney getMemberMoney(MemberMoney.MembershipId membershipId, MemberMoney.MoneyAmount moneyAmount) {
-        MemberMoneyJpaEntity findByMembershipEntity = null;
+        MemberMoneyJpaEntity findByMembershipEntity;
         try {
             findByMembershipEntity = memberMoneyPersistence.findByMembershipId(membershipId.membershipId());
         } catch (Exception e) {

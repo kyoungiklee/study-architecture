@@ -9,10 +9,9 @@ import org.opennuri.study.architecture.remittance.adapter.out.service.money.Mone
 import org.opennuri.study.architecture.remittance.application.port.in.RequestRemittanceCommand;
 import org.opennuri.study.architecture.remittance.application.port.in.RequestRemittanceUseCase;
 import org.opennuri.study.architecture.remittance.application.port.out.RequestRemittancePort;
-import org.opennuri.study.architecture.remittance.application.port.out.banking.BankingInfo;
 import org.opennuri.study.architecture.remittance.application.port.out.banking.BankingServicePort;
-import org.opennuri.study.architecture.remittance.application.port.out.membership.MembershipServicePort;
 import org.opennuri.study.architecture.remittance.application.port.out.membership.MembershipInfo;
+import org.opennuri.study.architecture.remittance.application.port.out.membership.MembershipServicePort;
 import org.opennuri.study.architecture.remittance.application.port.out.money.MoneyInfo;
 import org.opennuri.study.architecture.remittance.application.port.out.money.MoneyServicePort;
 import org.opennuri.study.architecture.remittance.common.RemittanceStatus;
@@ -65,7 +64,7 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
                     , RemittanceStatus.MEMBERSHIP_CHECK_COMPLETE);
         } else {
             //step2-2. membershipInfo가 유효하지 않으면 remittanceStatus를 MEMBERSHIP_CHECK_FAIL 변경후 저장한다.
-            remittanceRequestHistory = requestRemittancePort.saveRemittanceRequestHistory(remittanceRequestHistory
+            requestRemittancePort.saveRemittanceRequestHistory(remittanceRequestHistory
                     , RemittanceStatus.MEMBERSHIP_CHECK_FAIL);
             throw new BusinessCheckFailException("멤버십 상태가 유효하지 않습니다.");
         }
@@ -81,7 +80,7 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
                     , RemittanceStatus.MONEY_CHECK_COMPLETE);
         } else {
             //step3-2. moneyInfo가 유효하지 않으면 remittanceStatus를 MONEY_CHECK_FAIL 변경후 저장한다.
-            remittanceRequestHistory = requestRemittancePort.saveRemittanceRequestHistory(remittanceRequestHistory
+            requestRemittancePort.saveRemittanceRequestHistory(remittanceRequestHistory
                     , RemittanceStatus.MONEY_CHECK_FAIL);
             throw new BusinessCheckFailException("고객 money가 유효하지 않습니다.");
         }
@@ -92,10 +91,10 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
 
             try {
                 //step3-3-1. moneyAmount를 command의 amount로 충전한다.
-                MoneyResponse moneyInfo1 = moneyServicePort.requestMoneyRecharging(command.getSenderId(), rechargingAmount);
+                moneyServicePort.requestMoneyRecharging(command.getSenderId(), rechargingAmount);
             } catch (Exception e) {
                 //step3-3-2. 충전요청이 실패하면 remittanceStatus를 MONEY_RECHARGING_FAIL 변경후 저장한다.
-                remittanceRequestHistory = requestRemittancePort.saveRemittanceRequestHistory(remittanceRequestHistory
+                requestRemittancePort.saveRemittanceRequestHistory(remittanceRequestHistory
                         , RemittanceStatus.MONEY_RECHARGING_FAIL);
                 throw new BusinessCheckFailException("고객 money 충전에 실패하였습니다.");
             }
@@ -110,12 +109,12 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
             if(command.getRequestType() == RemittanceType.INTERNAL) { // 내부송금인 경우
                 try {
                     //step4. command의 requestType이 INTERNAL이면 command의 amount를 senderId의 money에서 차감한다.
-                    MoneyResponse senderMoney = moneyServicePort.requestMoneyDecrease(command.getSenderId(), command.getAmount());
+                    moneyServicePort.requestMoneyDecrease(command.getSenderId(), command.getAmount());
                     //step4-1. command의 requwestType이 INTERNAL이면 command의 amount를 receiverId의 money에 더한다.
-                    MoneyResponse receiverMoney = moneyServicePort.requestMoneyIncrease(command.getReceiverId(), command.getAmount());
+                    moneyServicePort.requestMoneyIncrease(command.getReceiverId(), command.getAmount());
                 } catch (Exception e) {
                     //step4-2. 송금요청이 실패하면 remittanceStatus를 FAIL 변경후 저장한다.
-                    remittanceRequestHistory = requestRemittancePort.saveRemittanceRequestHistory(remittanceRequestHistory
+                    requestRemittancePort.saveRemittanceRequestHistory(remittanceRequestHistory
                             , RemittanceStatus.FAIL);
                     throw new BusinessCheckFailException("고객 money 송금에 실패하였습니다.");
                 }
@@ -125,8 +124,6 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
             } else { //외부 송금인 경우
 
                 //step5. command의 requestType이 EXTERNAL이면 bankName과 accountNumber로 외부송금을 요청한다.
-                BankingInfo membershipBankingInfo = bankingServicePort.getMembershipBankingInfo(command.getSenderId().toString());
-                //step5-1. 외부송금을 요청한다.
                 FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
                         .membershipId(command.getSenderId().toString())
                         .fromBankName(fromBankName)
@@ -137,7 +134,12 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
                         .description(command.getDescription())
                         .build();
 
-                boolean isSuccess = bankingServicePort.requestFirmBanking(firmBankingRequest);
+                boolean isSuccess = false;
+                try {
+                    isSuccess = bankingServicePort.requestFirmBanking(firmBankingRequest);
+                } catch (Exception e) {
+                    throw new BusinessCheckFailException("고객 money 타행송금에 실패하였습니다.");
+                }
 
                 if(isSuccess) {
                     //step5-2. 외부송금이 성공하면 command의 amount를 senderId의 money에서 차감한다.
@@ -149,13 +151,12 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
                             , RemittanceStatus.COMPLETE);
                 } else {
                     //step5-4. 외부송금이 실패하면 remittanceStatus를 FAIL 변경후 저장한다.
-                    remittanceRequestHistory = requestRemittancePort.saveRemittanceRequestHistory(remittanceRequestHistory
+                    requestRemittancePort.saveRemittanceRequestHistory(remittanceRequestHistory
                             , RemittanceStatus.FAIL);
                     throw new BusinessCheckFailException("고객 money 타행송금에 실패하였습니다.");
                 }
             }
         }
-
         return remittanceRequestHistory;
     }
 }

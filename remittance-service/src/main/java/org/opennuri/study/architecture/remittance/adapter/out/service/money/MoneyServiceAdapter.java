@@ -34,20 +34,7 @@ public class MoneyServiceAdapter implements MoneyServicePort {
 
     @Override
     public MoneyResponse requestMoneyIncrease(Long membershipId, Long amount) {
-        //membershipId 값이 number형인지 확인한다.
-        String stringOfMembershipId;
-        try {
-            stringOfMembershipId = String.valueOf(membershipId);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("membershipId is not number");
-        }
-        //amount 값이 number형인지 확인한다.
-        String stringOfAmount;
-        try {
-            stringOfAmount = String.valueOf(amount);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("amount is not number");
-        }
+
 
         //MoneyRequest 객체를 생성한다.
         MoneyRequest increaseMoneyRequest = new MoneyRequest(membershipId, amount);

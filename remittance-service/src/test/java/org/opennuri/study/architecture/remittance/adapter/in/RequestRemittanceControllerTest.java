@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -62,7 +61,7 @@ class RequestRemittanceControllerTest {
                 .description("테스트")
                 .build();
         log.info("request: {}", request);
-        //when //then
+        //when
         MoneyInfo beforSenderMoneyInfo = moneyServiceAdapter.getMoneyInfo(1L);
         MoneyInfo beforRecieverMoneyInfo = moneyServiceAdapter.getMoneyInfo(2L);
         log.info("beforSenderMoneyInfo: {}", beforSenderMoneyInfo);
@@ -73,11 +72,11 @@ class RequestRemittanceControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(result -> log.info("result: {}", result.getResponse().getContentAsString())
-                )
+                .andExpect(result -> log.info("result: {}", result.getResponse().getContentAsString()))
                 .andExpect(jsonPath("$.remittanceId").exists())
                 .andExpect(jsonPath("$.message").value("SUCCESS"));
 
+        //then
         // 송금요청 후 송금자의 잔액과 수신자의 잔액을 확인한다.
         MoneyInfo afterSenderMoneyInfo = moneyServiceAdapter.getMoneyInfo(1L);
         MoneyInfo afterRecieverMoneyInfo = moneyServiceAdapter.getMoneyInfo(2L);
