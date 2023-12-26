@@ -54,7 +54,6 @@ public class RemittanceRequestPersistenceAdapter implements RequestRemittancePor
     @Override
     public RemittanceRequest saveRemittanceRequestHistory(RemittanceRequest remittanceRequest, RemittanceStatus remittanceStatus) {
         RemittanceRequestJpaEntity entity = remittanceRequestRepository.save(RemittanceRequestJpaEntity.builder()
-                .remittanceRequestId(remittanceRequest.getRemittanceRequestId())
                 .senderId(remittanceRequest.getSenderId())
                 .receiverId(remittanceRequest.getReceiverId())
                 .toBankName(remittanceRequest.getToBankName())

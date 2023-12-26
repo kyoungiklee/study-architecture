@@ -81,6 +81,32 @@ services:
 #      - KAFKA_VALUE_DESERIALIZER=org.apache.kafka.common.serialization.StringDeserializer
 
 
+  remittance-service:
+    image: study-architecture-remittance-service:1.0.0
+    networks:
+      - simplepay_network
+    ports:
+      - "8084:8080"
+    depends_on:
+      - mysql
+  #    환경설정 파일(application.yaml)로 대체
+  #    environment:
+  #      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/simple_pay?useSSL=false&allowPublicKeyRetrieval=true
+  #      - SPRING_DATASOURCE_USERNAME=simplepay
+  #      - SPRING_DATASOURCE_PASSWORD=simplepay
+  #      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL57Dialect
+  #      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  #      - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
+  #      - KAFKA_TASK_CONSUMER_TOPIC=simplepay.task.result.topic
+  #      - KAFKA_TASK_PRODUCER_TOPIC=simplepay.task.topic
+  #      - KAFKA_TASK_LOGGING_TOPIC=simplepay.logging.out.stdout
+  #      - KAFKA_TASK_CONSUMER_GROUP_ID=simplepay.task.result.consumer
+  #      - KAFKA_ENABLE_AUTO_COMMIT=true
+  #      - KAFKA_AUTO_COMMIT_INTERVAL_MS=1000
+  #      - KAFKA_AUTO_OFFSET_RESET=earliest
+  #      - KAFKA_KEY_DESERIALIZER=org.apache.kafka.common.serialization.StringDeserializer
+  #      - KAFKA_VALUE_DESERIALIZER=org.apache.kafka.common.serialization.StringDeserializer
+
   logging-service:
     image: study-architecture-logging-service:1.0.0
     networks:
