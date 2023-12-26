@@ -20,6 +20,14 @@ public enum RemittanceStatus {
     MONEY_RECHARGING_COMPLETE("충전 완료"),
     //충전 요청 실패
     MONEY_RECHARGING_FAIL("충전 실패"),
+    //타행송금 실패
+    REMITTANCE_EXTERNAL_FAIL("타행송금 실패"),
+    //타행송금 완료
+    REMITTANCE_EXTERNAL_COMPLETE("타행송금 완료"),
+    //내부고객 송금 완료
+    REMITTANCE_INTERNAL_COMPLETE("내부고객 송금 완료"),
+    //내부고객 송금 실패
+    REMITTANCE_INTERNAL_FAIL("내부고객 송금 실패"),
     //송금 완료
     COMPLETE("완료"),
     //송금 실패

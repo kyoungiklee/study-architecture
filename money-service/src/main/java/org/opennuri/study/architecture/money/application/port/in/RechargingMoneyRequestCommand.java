@@ -2,10 +2,7 @@ package org.opennuri.study.architecture.money.application.port.in;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.opennuri.study.architecture.common.SelfValidating;
 
 
