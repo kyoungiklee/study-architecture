@@ -11,7 +11,8 @@ import org.springframework.context.annotation.Import;
         "org.opennuri.study.architecture.common"
 })
 @Import({
-        JpaAuditingConfig.class
+        JpaAuditingConfig.class,
+        FilterConfig.class
 })
 public class AppConfig {
 }

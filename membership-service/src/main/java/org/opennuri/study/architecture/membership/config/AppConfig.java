@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
         "org.opennuri.study.architecture.common"
 })
 @Import({
-        JpaAuditingConfig.class
+        JpaAuditingConfig.class,
+        FilterConfig.class
 })
 public class AppConfig {
 }

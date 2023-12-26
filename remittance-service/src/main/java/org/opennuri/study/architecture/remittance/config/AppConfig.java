@@ -12,7 +12,8 @@ import org.springframework.context.annotation.Import;
 })
 @Import({
         JpaAuditingConfig.class,
-        RestTemplateConfig.class
+        RestTemplateConfig.class,
+        FilterConfig.class
 })
 public class AppConfig {
 }

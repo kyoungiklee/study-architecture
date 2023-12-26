@@ -14,7 +14,8 @@ import org.springframework.context.annotation.Import;
 @Import({
         JpaAuditingConfig.class,
         RestTemplateConfig.class,
-        KafkaProducerConfig.class
+        KafkaProducerConfig.class,
+        FilterConfig.class
 })
 public class AppConfig {
 }
