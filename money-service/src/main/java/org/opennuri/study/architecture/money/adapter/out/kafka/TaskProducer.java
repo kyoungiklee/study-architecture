@@ -1,19 +1,15 @@
 package org.opennuri.study.architecture.money.adapter.out.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.opennuri.study.architecture.common.task.RechargingMoneyTask;
 import org.opennuri.study.architecture.money.application.port.out.kafka.SendRechargingMoneyTaskPort;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Component

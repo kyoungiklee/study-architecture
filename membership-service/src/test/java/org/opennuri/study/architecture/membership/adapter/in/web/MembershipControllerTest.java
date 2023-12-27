@@ -1,7 +1,6 @@
 package org.opennuri.study.architecture.membership.adapter.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.opennuri.study.architecture.membership.adapter.out.persistence.SpringDataMembershipRepository;
 import org.opennuri.study.architecture.membership.appication.port.in.FindMembershipCommand;
@@ -22,11 +21,10 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@Slf4j
 @SpringBootTest
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles(value = "test")
-@DisplayName(value = "멤버십 컨트롤러 테스트")
+@DisplayName(value = "Controller: MembershipControllerTest(멤버십 컨트롤러 테스트)")
 class MembershipControllerTest {
 
     @Autowired
@@ -44,11 +42,6 @@ class MembershipControllerTest {
 
     private static MockMvc mockMvc;
 
-    @BeforeAll
-    static void beforeAll() {
-        log.info("beforeAll");
-    }
-
     @BeforeEach
     void setUp() {
         springDataMembershipRepository.deleteAll();
@@ -61,9 +54,9 @@ class MembershipControllerTest {
 
     @Test
     @Order(1)
-    @DisplayName(value = "멤버십 등록")
+    @DisplayName(value = "멤버십에 가입한다. - 성공케이스")
     void registerMembership() throws Exception {
-
+       //given
         RegisterMembershipRequest request = RegisterMembershipRequest.builder()
                 .name("name")
                 .email("email")
@@ -79,7 +72,7 @@ class MembershipControllerTest {
                 .isValid(true)
                 .isCorp(true)
                 .build();
-
+        //when //then
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/membership/register")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -91,7 +84,7 @@ class MembershipControllerTest {
 
     @Test
     @Order(2)
-    @DisplayName(value = "멤버십 조회")
+    @DisplayName(value = "멤버십을 조회한다. - 성공케이스") //실패케이스 추가해야 함 (존재하지 않는 멤버십 조회)
     void findMembershipByMemberId() throws Exception {
 
         RegisterMembershipCommand command = RegisterMembershipCommand.builder()
@@ -101,8 +94,6 @@ class MembershipControllerTest {
                 .isCorp(false)
                 .build();
         Membership membership = registerMembershipService.resisterMembership(command);
-        log.info("membership: {}", membership);
-
 
         MembershipResponse membershipResponse = MembershipResponse.builder()
                 .membershipId(membership.getMembershipId())
@@ -111,8 +102,6 @@ class MembershipControllerTest {
                 .address("인천광역시 계양구 계산동 주부토로")
                 .isCorp(false)
                 .build();
-
-        log.info("membership: {}", membership);
 
         ///membership/findMembership/{membershipId}
         mockMvc.perform(MockMvcRequestBuilders.get("/membership/" + membership.getMembershipId())
@@ -131,7 +120,7 @@ class MembershipControllerTest {
 
     @Test
     @Order(3)
-    @DisplayName(value = "멤버십 수정")
+    @DisplayName(value = "멤버십을 수정한다. - 성공케이스") //실패케이스 추가해야 함
     void modifyMembership() throws Exception {
 
         //given
@@ -148,7 +137,6 @@ class MembershipControllerTest {
                 .build();
 
         Membership findMembership = findMembershipService.findMembership(findMembershipCommand);
-        log.info("findMembership: {}", findMembership);
 
         ModifyMembershipRequest modifyMembershipRequest = ModifyMembershipRequest.builder()
                 .name("modified_name")

@@ -22,6 +22,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("FindBankAccountController 테스트")
 class FindBankAccountControllerTest {
 
+    @AfterEach
+    void tearDown() {
+    }
+
     @Autowired
     private SpringDataRegisteredBankAccountRepository springDataRegisteredBankAccountRepository;
 

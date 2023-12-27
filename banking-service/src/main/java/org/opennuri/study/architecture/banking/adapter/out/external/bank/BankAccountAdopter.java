@@ -47,7 +47,7 @@ public class BankAccountAdopter implements RequestBankAccountInfoPort, RequestEx
     private boolean requestFirmBankingTransfer(ExternalFirmBankingRequest request) {
         // firmbanking-service로 이체 요청을 하여 볍이계좌로 정상적으로 이체 되었음
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500); // 펍뱅킹 요청 서비스 시뮬레이션을 위해 0.5초 대기
             log.info("requestFirmBankingTransfer success : {}", request.toString());
         } catch (InterruptedException e) {
             log.error("requestFirmBankingTransfer : {}", e.getMessage());

@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 @AutoConfigureMockMvc
 @ActiveProfiles(value = "test")
+@DisplayName(value = "Controller: RequestFirmBankingControllerTest(타행계좌 이체 요청 테스트)")
 class RequestFirmBankingControllerTest {
 
     @Autowired
@@ -36,7 +37,7 @@ class RequestFirmBankingControllerTest {
 
     @Test
     @Order(1)
-    @DisplayName("계좌이체 요청")
+    @DisplayName("타행계좌로 이체를 요청한다.")
     void requestFirmBanking() throws Exception {
 
         RequestFirmBankingRequest request = RequestFirmBankingRequest.builder()

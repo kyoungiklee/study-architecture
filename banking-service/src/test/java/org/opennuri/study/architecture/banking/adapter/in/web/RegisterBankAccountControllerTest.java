@@ -3,6 +3,7 @@ package org.opennuri.study.architecture.banking.adapter.in.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.opennuri.study.architecture.banking.adapter.out.persistence.SpringDataRegisteredBankAccountRepository;
+import org.opennuri.study.architecture.banking.appication.service.BankAccountFindService;
 import org.opennuri.study.architecture.banking.domain.RegisteredBankAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,6 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 
@@ -20,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @AutoConfigureMockMvc
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles(value = "test")
-@DisplayName(value = "계좌 등록 테스트")
+@DisplayName(value = "Controller: RegisterBankAccountControllerTest(계좌 등록 테스트)")
 class RegisterBankAccountControllerTest {
     @Autowired
     private SpringDataRegisteredBankAccountRepository springDataRegisteredBankAccountRepository;
@@ -37,9 +41,12 @@ class RegisterBankAccountControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    private BankAccountFindService bankAccountFindService;
+
     @Test
     @Order(1)
-    @DisplayName(value = "계좌 등록")
+    @DisplayName(value = "고객은 연결계좌를 등록한다")
     void registerBankAccount() throws Exception {
         RegisterBankAccountRequest request = RegisterBankAccountRequest.builder()
                 .bankName("simple bank")
@@ -48,19 +55,18 @@ class RegisterBankAccountControllerTest {
                 .validLinkedStatus(true)
                 .build();
 
-        RegisteredBankAccount registeredBankAccount = RegisteredBankAccount.generateRegisteredBankAccount(
-                new RegisteredBankAccount.RegisteredBankAccountId("1")
-                , new RegisteredBankAccount.MembershipId("1")
-                , new RegisteredBankAccount.BankName("simple bank")
-                , new RegisteredBankAccount.BankAccountNumber("123-45678-67890")
-                , new RegisteredBankAccount.ValidLinkedStatus(true)
-        );
 
         mockMvc.perform(MockMvcRequestBuilders.post("/banking/account/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(mapper.writeValueAsString(registeredBankAccount)));
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Optional<RegisteredBankAccount> bankAccount =  bankAccountFindService.findBankAccount(1L);
+        assertThat(bankAccount.isPresent()).isTrue();
+        assertThat(bankAccount.get().getBankName()).isEqualTo("simple bank");
+        assertThat(bankAccount.get().getBankAccountNumber()).isEqualTo("123-45678-67890");
+        assertThat(bankAccount.get().getMembershipId()).isEqualTo("1");
+        assertThat(bankAccount.get().isValidLinkedStatus()).isEqualTo(true);
     }
 }
