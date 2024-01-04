@@ -2,6 +2,7 @@ package org.opennuri.study.architecture.money.application.port.in;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 import org.opennuri.study.architecture.common.SelfValidating;
 
@@ -17,7 +18,7 @@ public class CreateMoneyRequestCommand extends SelfValidating<CreateMoneyRequest
 
     @NotNull
     private Long membershipId;
-    @NotNull @Positive
+    @NotNull @PositiveOrZero
     private Long moneyAmount;
 
     private CreateMoneyRequestCommand(Long membershipId, Long moneyAmount) {

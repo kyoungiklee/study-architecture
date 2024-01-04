@@ -3,14 +3,18 @@ package org.opennuri.study.architecture.money.application.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.opennuri.study.architecture.common.CountDownLatchManager;
 import org.opennuri.study.architecture.common.UseCase;
 import org.opennuri.study.architecture.common.exception.BusinessCheckFailException;
+import org.opennuri.study.architecture.common.exception.BusinessException;
 import org.opennuri.study.architecture.common.task.RechargingMoneyTask;
 import org.opennuri.study.architecture.common.task.SubTask;
+import org.opennuri.study.architecture.money.adapter.axon.command.MemberMoneyIncreaseCommand;
 import org.opennuri.study.architecture.money.application.port.in.IncreaseMoneyRequestCommand;
 import org.opennuri.study.architecture.money.application.port.in.IncreaseMoneyRequestUseCase;
 import org.opennuri.study.architecture.money.application.port.out.ChangeStatusPort;
+import org.opennuri.study.architecture.money.application.port.out.FindMemberMoneyPort;
 import org.opennuri.study.architecture.money.application.port.out.IncreaseMoneyPort;
 import org.opennuri.study.architecture.money.application.port.out.kafka.SendRechargingMoneyTaskPort;
 import org.opennuri.study.architecture.money.domain.ChangingMoneyRequestStatus;
@@ -22,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -30,41 +35,24 @@ import java.util.concurrent.TimeUnit;
 @Transactional
 public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase {
 
-    private final CountDownLatchManager countDownLatchManager;
-
-    private final IncreaseMoneyPort increaseMoneyPort;
-    private final ChangeStatusPort changeStatusPort;
-    private final SendRechargingMoneyTaskPort sendRechargingMoneyTaskPort;
-
+    private final CountDownLatchManager countDownLatchManager; // CountDownLatch를 관리하는 매니저(CountDownLatch를 생성하고 관리한다.)
+    private final IncreaseMoneyPort increaseMoneyPort; // 머니 증액을 위한 포트
+    private final ChangeStatusPort changeStatusPort; // 머니 증액 요청 상태 변경을 위한 포트
+    private final SendRechargingMoneyTaskPort sendRechargingMoneyTaskPort; // 머니 증액을 위한 Task를 전송하는 포트
+    private final FindMemberMoneyPort findMemberMoneyPort; // 머니 증액을 위해 고객 머니를 찾는 포트
+    private final CommandGateway commandGateway; // axon commandGateway
 
     @Override
     public MemberMoney increaseMoneyRequest(IncreaseMoneyRequestCommand command) {
 
         //Step 1. 요청내용을 기록한다.
-        MoneyChangingRequest changeMoneyRequest = increaseMoneyPort.createChangeMoneyRequest(
-                new MoneyChangingRequest.MembershipId(Long.parseLong(command.getMembershipId())),
-                new MoneyChangingRequest.RequestType(ChangingMoneyRequestType.DEPOSIT),
-                new MoneyChangingRequest.MoneyAmount(command.getMoneyAmount()),
-                new MoneyChangingRequest.RequestStatus(ChangingMoneyRequestStatus.REQUESTED),
-                new MoneyChangingRequest.RequestDateTime(LocalDateTime.now()),
-                new MoneyChangingRequest.UUID(UUID.randomUUID().toString())
-        );
+        MoneyChangingRequest changeMoneyRequest = increaseMoneyPort.createChangeMoneyRequest(new MoneyChangingRequest.MembershipId(Long.parseLong(command.getMembershipId())), new MoneyChangingRequest.RequestType(ChangingMoneyRequestType.DEPOSIT), new MoneyChangingRequest.MoneyAmount(command.getMoneyAmount()), new MoneyChangingRequest.RequestStatus(ChangingMoneyRequestStatus.REQUESTED), new MoneyChangingRequest.RequestDateTime(LocalDateTime.now()), new MoneyChangingRequest.UUID(UUID.randomUUID().toString()));
         //Async Task 처리(Taks, SubTask 생성
         //Step 2. 증액 요청 고객의 상태가 정상인지 확인을 위한 태스크 (회원)
-        SubTask validMemberTask = SubTask.builder()
-                .membershipId(command.getMembershipId())
-                .subTaskName("고객정보 유효성 체크")
-                .subTaskType(SubTask.SubTaskType.MEMBERSHIP)
-                .subTaskStatus(SubTask.SubTaskStatus.STARTED)
-                .build();
+        SubTask validMemberTask = SubTask.builder().membershipId(command.getMembershipId()).subTaskName("고객정보 유효성 체크").subTaskType(SubTask.SubTaskType.MEMBERSHIP).subTaskStatus(SubTask.SubTaskStatus.STARTED).build();
 
         //Step 3. 고객연결계좌 상태가 정상인지 확인을 위한 태스크 (뱅킹)
-        SubTask validBankingTask = SubTask.builder()
-                .membershipId(command.getMembershipId())
-                .subTaskName("연결계좌 유효성 체크")
-                .subTaskType(SubTask.SubTaskType.BANKING)
-                .subTaskStatus(SubTask.SubTaskStatus.STARTED)
-                .build();
+        SubTask validBankingTask = SubTask.builder().membershipId(command.getMembershipId()).subTaskName("연결계좌 유효성 체크").subTaskType(SubTask.SubTaskType.BANKING).subTaskStatus(SubTask.SubTaskStatus.STARTED).build();
 
         List<SubTask> subTasks = new ArrayList<>();
         subTasks.add(validMemberTask);
@@ -73,13 +61,7 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
         log.info("subTasks: {}", subTasks);
 
         // Task 생성
-        RechargingMoneyTask rechargingMoneyTask = RechargingMoneyTask.builder()
-                .taskId(UUID.randomUUID().toString())
-                .taskName("머니 증액 작업")
-                .membershipId(command.getMembershipId())
-                .moneyAmount(command.getMoneyAmount())
-                .subTasks(subTasks)
-                .build();
+        RechargingMoneyTask rechargingMoneyTask = RechargingMoneyTask.builder().taskId(UUID.randomUUID().toString()).taskName("머니 증액 작업").membershipId(command.getMembershipId()).moneyAmount(command.getMoneyAmount()).subTasks(subTasks).build();
 
         log.info("rechargingMoneyTask: {}", rechargingMoneyTask);
 
@@ -118,9 +100,7 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
 
             changeStatusPort.changeRequestStatus(changeMoneyRequest.getUuid(), ChangingMoneyRequestStatus.SUCCESS);
             // 멤버머니 잔액을 증액(머니)
-            memberMoney = increaseMoneyPort.increaseMoney(
-                    new MemberMoney.MembershipId(changeMoneyRequest.getMembershipId())
-                    , new MemberMoney.MoneyAmount(changeMoneyRequest.getMoneyAmount()));
+            memberMoney = increaseMoneyPort.increaseMoney(new MemberMoney.MembershipId(changeMoneyRequest.getMembershipId()), changeMoneyRequest.getMoneyAmount());
         } else {
             //step 4-2. 실패시 성공시 증액 요청 상태를 실패로 변경(머니)
             // 결과 실패시 증액요청 상태를 실패로 변경 후 신규 레코드로 저장, 멤버머니 잔액증액은 하지 않는다.
@@ -130,5 +110,36 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
         }
 
         return memberMoney;
+    }
+
+    /**
+     * 이벤트로 증액요청을 처리한다.
+     *
+     * @param command 증액요청 커맨드
+     * @return 증액된 멤버십 Money
+     */
+    @Override
+    public MemberMoney increaseMoneyRequestByEvent(IncreaseMoneyRequestCommand command) {
+
+        //MembershipId String --> Long
+        long longOfMembershipId = Long.parseLong(command.getMembershipId());
+        //Step 1. 고객 머니를 찾는다
+        MemberMoney memberMoney = findMemberMoneyPort.findMemberMoney(longOfMembershipId);
+        String aggregateId = memberMoney.getAggregateId();
+        log.info("aggregateId: {}", aggregateId);
+
+        //Step 2. 고객 머니 증액 이벤트를 발행하고 증액을 실행한다.
+        CompletableFuture<MemberMoney> memberMoneyCompletableFuture
+                = commandGateway.send(new MemberMoneyIncreaseCommand(aggregateId, longOfMembershipId, command.getMoneyAmount()))
+                .whenComplete((result, throwable) -> {
+                    if (throwable != null) {
+                        log.error("increaseMoney error", throwable);
+                        throw new BusinessException("increaseMoney error");
+                    }
+                }).thenApply(result -> {
+                    log.info("result: {}", result);
+                    return increaseMoneyPort.increaseMoney(new MemberMoney.MembershipId(longOfMembershipId), command.getMoneyAmount());
+                });
+        return memberMoneyCompletableFuture.join();
     }
 }

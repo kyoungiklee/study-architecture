@@ -3,6 +3,7 @@ package org.opennuri.study.architecture.money.adapter.in.web;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opennuri.study.architecture.common.exception.BusinessException;
+import org.opennuri.study.architecture.money.adapter.axon.command.MemberMoneyCreateCommand;
 import org.opennuri.study.architecture.money.application.port.in.CreateMoneyRequestCommand;
 import org.opennuri.study.architecture.money.application.port.in.CreateMemberMoneyUseCase;
 import org.opennuri.study.architecture.money.domain.MemberMoney;
@@ -24,6 +25,26 @@ public class RequestMoneyCreateController {
         MemberMoney memberMoney;
         try {
             memberMoney = createMemberMoneyUseCase.createMemberMoney(
+                    CreateMoneyRequestCommand.builder()
+                            .membershipId(request.getMembershipId())
+                            .moneyAmount(request.getMoneyAmount())
+                            .build());
+
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest()
+                    .build();
+        }
+
+        return ResponseEntity.ok(memberMoney);
+    }
+
+    @PostMapping("/money/create-eda")
+    public ResponseEntity<MemberMoney> createMoneyByEvent(@RequestBody CreateMoneyRequest request) {
+        log.info("createMemberMoney: {}", request);
+
+        MemberMoney memberMoney;
+        try {
+            memberMoney = createMemberMoneyUseCase.createMemberMoneyByEvent(
                     CreateMoneyRequestCommand.builder()
                             .membershipId(request.getMembershipId())
                             .moneyAmount(request.getMoneyAmount())

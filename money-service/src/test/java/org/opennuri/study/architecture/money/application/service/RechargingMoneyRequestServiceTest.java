@@ -50,6 +50,7 @@ class RechargingMoneyRequestServiceTest {
         springDataMemberMoneyPersistence.save(new MemberMoneyJpaEntity(
                 1L
                 , 1000L
+                ,""
         ));
 
         Long membershipId = 1L;
@@ -65,6 +66,6 @@ class RechargingMoneyRequestServiceTest {
 
         // then
         assertThat(memberMoney.getMembershipId()).isEqualTo(membershipId);
-        assertThat(memberMoney.getMoneyAmount()).isEqualTo(2000L);
+        assertThat(memberMoney.getBalance()).isEqualTo(2000L);
     }
 }

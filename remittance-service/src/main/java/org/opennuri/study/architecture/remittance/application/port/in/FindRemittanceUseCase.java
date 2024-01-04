@@ -7,6 +7,6 @@ import java.util.List;
 
 @UseCase
 public interface FindRemittanceUseCase {
-    List<RemittanceRequest> findRemittanceHistory(FindRemittanceCommand command);
+    List<RemittanceRequest> findRemittanceHistory(RemittanceSearchCommand command);
 
 }

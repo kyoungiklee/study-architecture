@@ -59,6 +59,6 @@ class DecreaseMoneyRequestServiceTest {
                 .build();
         MemberMoney memberMoney = decreaseMoneyRequestService.decreaseMoneyRequest(command);
         // when // then
-        assertThat(memberMoney.getMoneyAmount()).isEqualTo(9000L);
+        assertThat(memberMoney.getBalance()).isEqualTo(9000L);
     }
 }

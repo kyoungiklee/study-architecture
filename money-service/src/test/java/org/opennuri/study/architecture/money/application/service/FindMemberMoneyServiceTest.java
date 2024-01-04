@@ -59,7 +59,7 @@ class FindMemberMoneyServiceTest {
 
         //then
         assertThat(memberMoney.getMembershipId()).isEqualTo(1L);
-        assertThat(memberMoney.getMoneyAmount()).isEqualTo(1000L);
+        assertThat(memberMoney.getBalance()).isEqualTo(1000L);
 
         assertThatThrownBy(() -> findMemberMoneyService.findMemberMoney(2L))
                 .isInstanceOf(BusinessCheckFailException.class)

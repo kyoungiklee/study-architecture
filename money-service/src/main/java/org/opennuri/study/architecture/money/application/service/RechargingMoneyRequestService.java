@@ -51,7 +51,7 @@ public class RechargingMoneyRequestService implements RechargingMoneyRequestUseC
             //4. 고객의 Money 잔액을 증액한다. (머니)
             memberMoney = rechargingMoneyPort.rechargingMoney(
                     new MemberMoney.MembershipId(command.getMembershipId())
-                    , new MemberMoney.MoneyAmount(command.getMoneyAmount()));
+                    , command.getMoneyAmount());
 
             //5. 요청정보를 처리완료 상태로 저장한다. (머니)
             saveChangingMoneyStatus(command

@@ -16,7 +16,7 @@ public interface DecreaseMoneyPort {
 
     MemberMoney decreaseMoney(
             MemberMoney.MembershipId membershipId,
-            MemberMoney.MoneyAmount moneyAmount
+            Long moneyAmount
     );
 
 }

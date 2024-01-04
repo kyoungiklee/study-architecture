@@ -31,6 +31,16 @@ kafka:
   value:
     deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
+# axon server
+axon:
+  serializer:
+    general: xstream
+    events: jackson
+    messages: jackson
+  axonserver:
+    servers: axon-server:8124
+
+
 # service 요청 주소: docker 내부에서 사용하는 주소와 포트로 설정한다.(docker-compose.yml 파일의 service 이름과 포트로 동일하게 설정한다.)
 service:
   membership:
@@ -138,3 +148,10 @@ spring:
   sql:
     init:
       mode: always
+axon:
+  serializer:
+    general: xstream
+    events: jackson
+    messages: jackson
+  axonserver:
+    servers: localhost:8124

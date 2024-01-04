@@ -51,6 +51,6 @@ class CreateMemberMoneyServiceTest {
         //then
         assertThat(memberMoney).isNotNull();
         assertThat(memberMoney.getMembershipId()).isEqualTo(1L);
-        assertThat(memberMoney.getMoneyAmount()).isEqualTo(1000L);
+        assertThat(memberMoney.getBalance()).isEqualTo(1000L);
     }
 }

@@ -23,7 +23,7 @@ public interface IncreaseMoneyPort {
      */
     MemberMoney increaseMoney(
             MemberMoney.MembershipId membershipId
-            , MemberMoney.MoneyAmount moneyAmount
+            , Long moneyAmount
     );
 
 }

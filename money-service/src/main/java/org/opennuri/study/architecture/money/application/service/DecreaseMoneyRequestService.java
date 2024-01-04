@@ -83,7 +83,7 @@ public class DecreaseMoneyRequestService implements DecreaseMoneyRequestUseCase 
             log.info("memberMoney: {}", memberMoney);
 
             // 잔액이 충분하지 않으면
-            if(memberMoney.getMoneyAmount() < command.getMoneyAmount()) {
+            if(memberMoney.getBalance() < command.getMoneyAmount()) {
                 //3. 충분하지 않으면, 고객 연결 계좌로부터 충전을 요청한다. (뱅킹)
                 FirmBankingResponse firmBankingResponse = rechargingMembershipMoney(command, memberMoney, membershipId);
                 log.info("firmBankingResponse: {}", firmBankingResponse);
@@ -96,7 +96,7 @@ public class DecreaseMoneyRequestService implements DecreaseMoneyRequestUseCase 
                     //3-2 고객의 Money 잔액을 충전요청한 금액 만큼 증액한다.(머니)
                     MemberMoney increaseMoney = increaseMoneyPort.increaseMoney(
                             new MemberMoney.MembershipId(command.getMembershipId())
-                            , new MemberMoney.MoneyAmount(firmBankingResponse.getMoneyAmount()));
+                            ,firmBankingResponse.getMoneyAmount());
 
                     if(increaseMoney == null) {
                         //3-2-1 고객의 Money 잔액을 충전요청한 금액 만큼 증액하는데 실패하였다면 요청정보의 상태를 실패로 변경한다. (머니)
@@ -107,7 +107,7 @@ public class DecreaseMoneyRequestService implements DecreaseMoneyRequestUseCase 
                     //3-3 고객의 Money 잔액을 사용요청한 금액 만큼 감소시킨다. (머니)
                     MemberMoney decreaseMoney = decreaseMoneyPort.decreaseMoney(
                             new MemberMoney.MembershipId(command.getMembershipId())
-                            , new MemberMoney.MoneyAmount(command.getMoneyAmount()));
+                            , command.getMoneyAmount());
 
                     if (decreaseMoney == null) {
                         //3-3-1 고객의 Money 잔액을 사용요청한 금액 만큼 감소시키는데 실패하였다면 요청정보의 상태를 실패로 변경한다. (머니)
@@ -126,7 +126,7 @@ public class DecreaseMoneyRequestService implements DecreaseMoneyRequestUseCase 
                 //4-2 충분하면, 고객의 Money 잔액을 감소시킨다. (머니)
                 MemberMoney decreaseMoney = decreaseMoneyPort.decreaseMoney(
                         new MemberMoney.MembershipId(command.getMembershipId())
-                        , new MemberMoney.MoneyAmount(command.getMoneyAmount()));
+                        , command.getMoneyAmount());
                 //5. 요청정보의 상태를 완료로 변경한다. (머니)
                 saveChangingMoneyStatus(command, ChangingMoneyRequestStatus.SUCCESS, uuid);
                 return decreaseMoney;
@@ -260,7 +260,7 @@ public class DecreaseMoneyRequestService implements DecreaseMoneyRequestUseCase 
         String firmBankingUrl = String.join("/", bankingUrl, "banking/firmbanking/request");
         log.info("firmBankingUrl: {}", firmBankingUrl);
 
-        long transferRequestAmount = Math.abs(memberMoney.getMoneyAmount() - command.getMoneyAmount());
+        long transferRequestAmount = Math.abs(memberMoney.getBalance() - command.getMoneyAmount());
 
         // 충전요청금액이 1만원 미만이면 1만원으로 변경한다.
         if( transferRequestAmount < 10_000L) {

@@ -2,6 +2,7 @@ package org.opennuri.study.architecture.money.adapter.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
+import org.opennuri.study.architecture.money.adapter.out.persistence.MemberMoneyJpaEntity;
 import org.opennuri.study.architecture.money.adapter.out.persistence.SpringDataChangingMoneyPersistence;
 import org.opennuri.study.architecture.money.adapter.out.persistence.SpringDataMemberMoneyPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,15 @@ class RequestMoneyChangingControllerTest {
     @Order(1)
     @DisplayName(value = "고객 money 증액 시킨다.")
     void increaseMoney() throws Exception {
+        springDataMemberMoneyPersistence.save(
+                new MemberMoneyJpaEntity(
+                        1L
+                        , 1000L
+                        , "1"
+                )
+        );
 
-        ChangingMoneyRequest request = org.opennuri.study.architecture.money.adapter.in.web.ChangingMoneyRequest.builder()
+        ChangingMoneyRequest request = ChangingMoneyRequest.builder()
                 .membershipId("1")
                 .moneyAmount(1000L)
                 .build();
@@ -57,7 +65,7 @@ class RequestMoneyChangingControllerTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.membershipId").value("1"))
-                .andExpect(jsonPath("$.amount").value("1000"))
+                .andExpect(jsonPath("$.amount").value("2000"))
                 .andExpect(jsonPath("$.status").value("SUCCESS"));
     }
 }

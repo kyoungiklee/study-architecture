@@ -52,7 +52,7 @@ public class RequestMoneyFindController {
         //멤버쉽 money 조회 성공 시 응답 처리
         MemberMoneyResponse memberMoneyResponse = new MemberMoneyResponse(
                 memberMoney.getMembershipId(),
-                memberMoney.getMoneyAmount(),
+                memberMoney.getBalance(),
                 true,
                 "SUCCESS"
         );

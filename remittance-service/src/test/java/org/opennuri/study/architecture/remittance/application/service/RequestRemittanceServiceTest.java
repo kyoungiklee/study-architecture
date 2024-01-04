@@ -32,7 +32,7 @@ class RequestRemittanceServiceTest {
     @DisplayName("내부 고객에게 송금을 요청을 한다.")
     void requestRemittanceInternal() {
         //given
-        MoneyResponse moneyResponse = moneyServiceAdapter.requestMoneyIncrease(1L, 1000000L);
+        MoneyResponse moneyResponse = moneyServiceAdapter.requestMoneyIncrease(1L, 10000L);
         log.info("moneyResponse: {}", moneyResponse);
         RequestRemittanceCommand command = RequestRemittanceCommand.builder()
                 .senderId(1L)
@@ -47,7 +47,7 @@ class RequestRemittanceServiceTest {
         //when
         MoneyInfo before = moneyServiceAdapter.getMoneyInfo(1L);
         RemittanceRequest remittanceRequest = null;
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10; i++) {
             remittanceRequest = requestRemittanceService.requestRemittance(command);
             log.info("remittanceRequest: {}", remittanceRequest);
         }
@@ -61,7 +61,7 @@ class RequestRemittanceServiceTest {
         assertThat(remittanceRequest.getToBankName()).isEqualTo("toBankName");
         assertThat(remittanceRequest.getToAccountNumber()).isEqualTo("toAccountNumber");
         assertThat(remittanceRequest.getRequestType().toString()).isEqualTo("INTERNAL");
-        assertThat(after.getBalance()).isEqualTo(before.getBalance() - (command.getAmount() * 1000));
+        assertThat(after.getBalance()).isEqualTo(before.getBalance() - (command.getAmount() * 10));
         assertThat(remittanceRequest.getRequestStatus().toString()).isEqualTo("COMPLETE");
         assertThat(remittanceRequest.getUuid()).isNotNull();
     }

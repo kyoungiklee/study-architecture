@@ -67,7 +67,7 @@ public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort
      */
     @Override
     public MemberMoney decreaseMoney(MemberMoney.MembershipId membershipId
-            , MemberMoney.MoneyAmount moneyAmount) {
+            ,Long moneyAmount) {
         //1. 멤버십 조회
         MemberMoneyJpaEntity findByMembershipEntity = memberMoneyPersistence.findByMembershipId(membershipId.membershipId());
         if (findByMembershipEntity == null) {
@@ -75,7 +75,7 @@ public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort
         }
 
         //2. 멤버십 Money 감소
-        findByMembershipEntity.decreaseMoney(moneyAmount.moneyAmount());
+        findByMembershipEntity.decreaseMoney(moneyAmount);
         //3. 멤버십 Money 저장
         MemberMoneyJpaEntity savedEntity = memberMoneyPersistence.save(findByMembershipEntity);
         //4. 감소된 멤버십 Money 리턴
@@ -90,9 +90,19 @@ public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort
      */
     @Override
     public MemberMoney increaseMoney(MemberMoney.MembershipId membershipId
-            , MemberMoney.MoneyAmount moneyAmount) {
+            , Long moneyAmount) {
         //1. 멤버십 조회
-        return getMemberMoney(membershipId, moneyAmount);
+        MemberMoneyJpaEntity findByMembershipEntity = memberMoneyPersistence.findByMembershipId(membershipId.membershipId());
+        if (findByMembershipEntity == null) {
+            throw new IllegalArgumentException("membership not found");
+        }
+
+        //2. 멤버십 Money 증액
+        findByMembershipEntity.increaseMoney(moneyAmount);
+        //3. 멤버십 Money 저장
+        MemberMoneyJpaEntity savedEntity = memberMoneyPersistence.save(findByMembershipEntity);
+        //4. 증액된 멤버십 Money 리턴
+        return MemberMoneyMapper.mapToMemberMoney(savedEntity);
     }
 
     /**
@@ -102,33 +112,17 @@ public class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort
      * @return  충전된 멤버십 Money
      */
     @Override
-    public MemberMoney rechargingMoney(MemberMoney.MembershipId membershipId
-            , MemberMoney.MoneyAmount moneyAmount) {
-        return getMemberMoney(membershipId, moneyAmount);
-    }
-
-    @NotNull
-    private MemberMoney getMemberMoney(MemberMoney.MembershipId membershipId, MemberMoney.MoneyAmount moneyAmount) {
-        MemberMoneyJpaEntity findByMembershipEntity;
-        try {
-            findByMembershipEntity = memberMoneyPersistence.findByMembershipId(membershipId.membershipId());
-        } catch (Exception e) {
-            log.error("findByMembershipId error: {}", e.getMessage());
-            throw new IllegalArgumentException(e.getMessage());
+    public MemberMoney rechargingMoney(MemberMoney.MembershipId membershipId, Long moneyAmount) {
+        MemberMoneyJpaEntity findByMembershipEntity = memberMoneyPersistence.findByMembershipId(membershipId.membershipId());
+        if (findByMembershipEntity == null) {
+            throw new IllegalArgumentException("membership not found");
         }
 
-        if(findByMembershipEntity == null){
-            MemberMoneyJpaEntity savedEntity = memberMoneyPersistence.save(new MemberMoneyJpaEntity(
-                    membershipId.membershipId()
-                    , moneyAmount.moneyAmount()
-            ));
-            return MemberMoneyMapper.mapToMemberMoney(savedEntity);
-        }
-
-        findByMembershipEntity.increaseMoney(moneyAmount.moneyAmount());
+        findByMembershipEntity.increaseMoney(moneyAmount);
         MemberMoneyJpaEntity savedEntity = memberMoneyPersistence.save(findByMembershipEntity);
         return MemberMoneyMapper.mapToMemberMoney(savedEntity);
     }
+
 
     /**
      * 증액요청 상태를 완료로 변경

@@ -1,5 +1,18 @@
 version: '3'
 services:
+  axon-server:
+    container_name: axon-server
+    image: axoniq/axonserver:2023.2.1-jdk-17
+    networks:
+      - simplepay_network
+    ports:
+      - "8024:8024"
+      - "8124:8124"
+    volumes:
+      - axonserver-data:/axonserver/data
+      - axonserver-events:/axonserver/events
+      - axonserver-config:/axonserver/config:ro
+
   mysql:
     image: mysql:8.0
     networks:
@@ -62,8 +75,12 @@ services:
       - "8083:8080"
     depends_on:
       - mysql
+    environment:
+      - AXON_AXONSERVER_SERVERS=axon-server:8124
+      - AXON_SERIALIZER_GENERAL=xstream
+      - AXON_SERIALIZER_EVENTS=jackson
+      - AXON_SERIALIZER_MESSAGES=jackson
 #    환경설정 파일(application.yaml)로 대체
-#    environment:
 #      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/simple_pay?useSSL=false&allowPublicKeyRetrieval=true
 #      - SPRING_DATASOURCE_USERNAME=simplepay
 #      - SPRING_DATASOURCE_PASSWORD=simplepay
@@ -183,6 +200,26 @@ services:
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+
+volumes:
+  axonserver-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./axon-server-se/data
+  axonserver-events:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./axon-server-se/events
+  axonserver-config:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./axon-server-se/config
 
 networks:
   simplepay_network:

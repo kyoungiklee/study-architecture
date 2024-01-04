@@ -9,25 +9,30 @@ public class MemberMoney {
 
     private final Long memberMoneyId;
     private final Long membershipId;
-    private final Long moneyAmount;
+    private final Long balance;
+    private final String aggregateId;
 
-    public static MemberMoney from(MemberMoneyId memberMoneyId, MembershipId membershipId, MoneyAmount moneyAmount) {
+
+    public static MemberMoney from(MemberMoneyId memberMoneyId, MembershipId membershipId, Balance balance, AggregateId aggregateId) {
         return new MemberMoney(
                 memberMoneyId.memberMoneyId()
                 , membershipId.membershipId()
-                , moneyAmount.moneyAmount());
+                , balance.balance()
+                , aggregateId.aggregateId());
     }
 
     public record MemberMoneyId(Long memberMoneyId) {}
     public record MembershipId(Long membershipId) {}
-    public record MoneyAmount(Long moneyAmount) {}
+    public record Balance(Long balance) {}
+    public record AggregateId(String aggregateId) {}
 
     @Override
     public String toString() {
         return "MemberMoney{" +
                 "memberMoneyId=" + memberMoneyId +
                 ", membershipId=" + membershipId +
-                ", moneyAmount=" + moneyAmount +
+                ", balance=" + balance +
+                ", aggregateId='" + aggregateId + '\'' +
                 '}';
     }
 }

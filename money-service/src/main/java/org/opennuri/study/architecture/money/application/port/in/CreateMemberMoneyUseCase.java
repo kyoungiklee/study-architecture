@@ -4,4 +4,6 @@ import org.opennuri.study.architecture.money.domain.MemberMoney;
 
 public interface CreateMemberMoneyUseCase {
     MemberMoney createMemberMoney(CreateMoneyRequestCommand command);
+
+    MemberMoney createMemberMoneyByEvent(CreateMoneyRequestCommand command);
 }

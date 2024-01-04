@@ -3,7 +3,7 @@ package org.opennuri.study.architecture.remittance.adapter.out.persistence;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opennuri.study.architecture.common.PersistenceAdapter;
-import org.opennuri.study.architecture.remittance.application.port.in.FindRemittanceCommand;
+import org.opennuri.study.architecture.remittance.application.port.in.RemittanceSearchCommand;
 import org.opennuri.study.architecture.remittance.application.port.out.FindRemittancePort;
 import org.opennuri.study.architecture.remittance.application.port.out.RequestRemittancePort;
 import org.opennuri.study.architecture.remittance.common.RemittanceStatus;
@@ -18,10 +18,10 @@ public class RemittanceRequestPersistenceAdapter implements RequestRemittancePor
 
     private final RemittanceRequestRepository remittanceRequestRepository;
     @Override
-    public List<RemittanceRequest> findRemittanceHistory(FindRemittanceCommand command) {
+    public List<RemittanceRequest> findRemittanceHistory(RemittanceSearchCommand command) {
         log.info("findRemittanceHistory");
-
-        return null;
+        List<RemittanceRequestJpaEntity> searchEntities = remittanceRequestRepository.findAll(new RemittanceSearchCriteria(command));
+        return searchEntities.stream().map(RemittanceRequestMapper::mapToDomainEntity).toList();
     }
 
 

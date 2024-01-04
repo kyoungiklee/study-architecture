@@ -16,7 +16,7 @@ public interface RechargingMoneyPort {
 
     MemberMoney rechargingMoney(
             MemberMoney.MembershipId membershipId
-            , MemberMoney.MoneyAmount moneyAmount
+            , Long moneyAmount
     );
 }
 

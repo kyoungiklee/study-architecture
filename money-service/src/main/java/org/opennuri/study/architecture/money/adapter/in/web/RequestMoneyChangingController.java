@@ -50,10 +50,43 @@ public class RequestMoneyChangingController {
 
         return new ChangingMoneyResponse(
                 memberMoney.getMembershipId().toString(),
-                memberMoney.getMoneyAmount(),
+                memberMoney.getBalance(),
                 ChangingMoneyRequestStatus.SUCCESS
         );
 
+    }
+
+    @PostMapping("/money/increase-eda")
+    public ResponseEntity<ChangingMoneyResponse> increaseMoneyChangingRequestByEvent(@RequestBody ChangingMoneyRequest request) {
+        log.info("increaseMoney: {}", request);
+        try {
+            ChangingMoneyResponse moneyChangingResultDetail = increaseMoneyByEvent(request);
+            return ResponseEntity.ok(moneyChangingResultDetail);
+        } catch (Exception e) {
+            log.error("increaseMoney error", e);
+
+            ChangingMoneyResponse changingMoneyResponse = new ChangingMoneyResponse(
+                    request.getMembershipId(),
+                    request.getMoneyAmount(),
+                    ChangingMoneyRequestStatus.FAILED
+            );
+            return new ResponseEntity<>(changingMoneyResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private ChangingMoneyResponse increaseMoneyByEvent(ChangingMoneyRequest request) {
+        IncreaseMoneyRequestCommand command = IncreaseMoneyRequestCommand.builder()
+                .membershipId(request.getMembershipId())
+                .moneyAmount(request.getMoneyAmount())
+                .build();
+
+        MemberMoney memberMoney = increaseMoneyRequestUseCase.increaseMoneyRequestByEvent(command);
+
+        return new ChangingMoneyResponse(
+                memberMoney.getMembershipId().toString(),
+                memberMoney.getBalance(),
+                ChangingMoneyRequestStatus.SUCCESS
+        );
     }
 
     @PostMapping("/money/decrease")
@@ -92,7 +125,7 @@ public class RequestMoneyChangingController {
 
         return new ChangingMoneyResponse(
                 memberMoney.getMembershipId().toString(),
-                memberMoney.getMoneyAmount(),
+                memberMoney.getBalance(),
                 ChangingMoneyRequestStatus.SUCCESS
         );
     }

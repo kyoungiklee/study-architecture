@@ -38,7 +38,7 @@ class RequestFirmBankingControllerTest {
     @Order(1)
     @DisplayName("계좌이체 요청")
     void requestFirmBanking() throws Exception {
-
+        //given
         RequestFirmBankingRequest request = RequestFirmBankingRequest.builder()
                 .membershipId("1")
                 .fromBankName("국민은행")
@@ -48,7 +48,7 @@ class RequestFirmBankingControllerTest {
                 .moneyAmount(10000L)
                 .description("테스트")
                 .build();
-
+        //when //then
         mockMvc.perform(
                 post("/banking/firmbanking/request")
                         .content(objectMapper.writeValueAsString(request))

@@ -20,18 +20,20 @@ public class MemberMoneyJpaEntity extends BaseEntity {
     @GeneratedValue
     private Long MemberMoneyId;
     private Long membershipId;
-    private Long moneyAmount;
+    private Long balance;
+    private String aggregateId;
 
-    public MemberMoneyJpaEntity(Long membershipId, Long moneyAmount) {
+    public MemberMoneyJpaEntity(Long membershipId, Long balance, String aggregateId) {
         this.membershipId = membershipId;
-        this.moneyAmount = moneyAmount;
+        this.balance = balance;
+        this.aggregateId = aggregateId;
     }
 
     public void increaseMoney(Long value) {
-        this.moneyAmount += value;
+        this.balance += value;
     }
 
     public void decreaseMoney(Long value) {
-        this.moneyAmount -= value;
+        this.balance -= value;
     }
 }

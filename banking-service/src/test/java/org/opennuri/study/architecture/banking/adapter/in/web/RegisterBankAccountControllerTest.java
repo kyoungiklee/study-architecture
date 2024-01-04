@@ -41,6 +41,8 @@ class RegisterBankAccountControllerTest {
     @Order(1)
     @DisplayName(value = "계좌 등록")
     void registerBankAccount() throws Exception {
+
+        //given
         RegisterBankAccountRequest request = RegisterBankAccountRequest.builder()
                 .bankName("simple bank")
                 .bankAccountNumber("123-45678-67890")
@@ -55,7 +57,7 @@ class RegisterBankAccountControllerTest {
                 , new RegisteredBankAccount.BankAccountNumber("123-45678-67890")
                 , new RegisteredBankAccount.ValidLinkedStatus(true)
         );
-
+        //when //then
         mockMvc.perform(MockMvcRequestBuilders.post("/banking/account/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(request)))

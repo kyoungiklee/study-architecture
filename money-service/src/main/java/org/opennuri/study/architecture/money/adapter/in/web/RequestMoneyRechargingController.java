@@ -42,7 +42,7 @@ public class RequestMoneyRechargingController {
 
         MemberMoneyResponse memberMoneyResponse = MemberMoneyResponse.builder()
                 .membershipId(memberMoney.getMembershipId())
-                .balance(memberMoney.getMoneyAmount())
+                .balance(memberMoney.getBalance())
                 .valid(true)
                 .message("SUCCESS")
                 .build();

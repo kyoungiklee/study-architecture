@@ -7,7 +7,8 @@ public class MemberMoneyMapper {
         return  MemberMoney.from(
                 new MemberMoney.MemberMoneyId(savedEntity.getMemberMoneyId())
                 , new MemberMoney.MembershipId(savedEntity.getMembershipId())
-                , new MemberMoney.MoneyAmount(savedEntity.getMoneyAmount())
+                , new MemberMoney.Balance(savedEntity.getBalance())
+                , new MemberMoney.AggregateId(savedEntity.getAggregateId())
         );
     }
 }

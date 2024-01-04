@@ -21,10 +21,11 @@ public class MemberMoneyPersistenceAdapter implements FindMemberMoneyPort, Creat
     }
 
     @Override
-    public MemberMoney createMemberMoney(MemberMoney.MembershipId membershipId, MemberMoney.MoneyAmount moneyAmount) {
+    public MemberMoney createMemberMoney(MemberMoney.MembershipId membershipId, MemberMoney.Balance balance, MemberMoney.AggregateId aggregateId) {
         MemberMoneyJpaEntity entity = memberMoneyPersistence.save(new MemberMoneyJpaEntity(
                 membershipId.membershipId()
-                , moneyAmount.moneyAmount()
+                , balance.balance()
+                , aggregateId.aggregateId()
         ));
         return MemberMoneyMapper.mapToMemberMoney(entity);
     }

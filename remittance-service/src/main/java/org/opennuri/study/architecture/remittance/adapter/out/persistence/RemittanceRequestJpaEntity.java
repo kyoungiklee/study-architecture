@@ -21,6 +21,7 @@ public class RemittanceRequestJpaEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "remittance_request_seq")
     @Comment("송금요청 아이디")
+    @Column(nullable = false, unique = true, length = 20, columnDefinition = "bigint")
     private Long remittanceRequestId;
     @Comment("송금요청자 아이디")
     @Column(nullable = false)

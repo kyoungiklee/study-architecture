@@ -4,6 +4,7 @@ import org.opennuri.study.architecture.money.domain.MemberMoney;
 
 public interface CreateMemberMoneyPort {
     MemberMoney createMemberMoney(MemberMoney.MembershipId membershipId,
-                                  MemberMoney.MoneyAmount moneyAmount);
+                                  MemberMoney.Balance balance,
+                                  MemberMoney.AggregateId aggregateId);
 
 }

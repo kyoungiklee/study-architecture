@@ -11,16 +11,16 @@ import org.opennuri.study.architecture.remittance.common.RemittanceType;
 @Getter
 public class RemittanceRequest {
     //송금요청에 대한 정보를 담는 클래스
-    private final Long remittanceRequestId;
-    private final Long senderId;
-    private final Long receiverId;
-    private final String toBankName;
-    private final String toAccountNumber;
-    private final RemittanceType requestType;
-    private final Long amount;
-    private final String description;
-    private final RemittanceStatus requestStatus;
-    private final String uuid;
+    private final Long remittanceRequestId; //송금요청 아이디
+    private final Long senderId; //송금요청자 아이디
+    private final Long receiverId; //송금요청 수신자 아이디
+    private final String toBankName; //송금요청 은행 이름
+    private final String toAccountNumber; // 송금요청 은행 계좌번호
+    private final RemittanceType requestType; //송금요청 타입 (내부고객, 외부은행)
+    private final Long amount; //송금요청 금액
+    private final String description; //송금요청 설명
+    private final RemittanceStatus requestStatus; //송금요청 상태 (요청, 완료, 실패)
+    private final String uuid; //송금요청 uuid
 
 
     //RemittanceRequestVO  생성자
