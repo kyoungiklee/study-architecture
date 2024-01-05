@@ -1,8 +1,10 @@
 package org.opennuri.study.architecture.remittance.application.port.in;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.opennuri.study.architecture.common.SelfValidating;
 import org.opennuri.study.architecture.remittance.common.RemittanceType;
 
@@ -17,9 +19,7 @@ public class RemittanceSearchCommand extends SelfValidating<RemittanceSearchComm
     private Long receiverId; //송금요청 수신자 아이디
     private String toBankName; //송금요청 은행 이름
     private String toAccountNumber; //송금요청 은행 계좌번호
-    @NotNull
     private RemittanceType requestType; //송금요청 타입 (INTERNAL: 내부고객, EXTERNAL: 외부은행)
-    @NotNull @Positive
     private Long amount; //송금요청 금액
     private String description; //송금요청 설명
 
@@ -34,6 +34,10 @@ public class RemittanceSearchCommand extends SelfValidating<RemittanceSearchComm
         this.validateSelf();
     }
 
+    /**
+     * toString 메소드 재정의
+     * @return String
+     */
     @Override
     public String toString() {
         return "RemittanceSearchCommand{" +
