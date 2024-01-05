@@ -51,7 +51,6 @@ class RequestMoneyRechargingControllerTest {
                     response.setCharacterEncoding("UTF-8");
                     chain.doFilter(request, response);
                 })).build();
-
     }
 
     @Test
@@ -59,13 +58,11 @@ class RequestMoneyRechargingControllerTest {
     void requestMoneyRecharging() throws Exception {
 
         // given
-
         MemberMoney memberMoney = createMemberMoneyService.createMemberMoney(
                 CreateMoneyRequestCommand.builder()
                         .membershipId(1L)
                         .moneyAmount(1000L)
                         .build());
-        log.info("memberMoney: {}", memberMoney);
 
         Long membershipId = 1L;
         Long rechargingAmount = 1000L;
@@ -75,17 +72,15 @@ class RequestMoneyRechargingControllerTest {
                 .rechargingAmount(rechargingAmount)
                 .build();
 
-
-        // when
-        // then
-            mockMvc.perform(MockMvcRequestBuilders.post("/money/recharging")
-                    .contentType("application/json")
-                    .content(objectMapper.writeValueAsString(rechargingMoneyRequest)))
-                    .andExpect(MockMvcResultMatchers.status().isOk())
-                    .andExpect(jsonPath("$.membershipId").value(membershipId))
-                    .andExpect(jsonPath("$.balance").value(2000L))
-                    .andExpect(jsonPath("$.valid").value(true))
-                    .andExpect(jsonPath("$.message").value("SUCCESS"))
-                    .andDo(print());
+        // when // then
+        mockMvc.perform(MockMvcRequestBuilders.post("/money/recharging")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(rechargingMoneyRequest)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.membershipId").value(membershipId))
+                .andExpect(jsonPath("$.balance").value(2000L))
+                .andExpect(jsonPath("$.valid").value(true))
+                .andExpect(jsonPath("$.message").value("SUCCESS"))
+                .andDo(print());
     }
 }

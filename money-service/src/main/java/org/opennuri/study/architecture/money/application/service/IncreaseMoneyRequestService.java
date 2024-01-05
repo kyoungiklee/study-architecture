@@ -77,7 +77,7 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
             // kafka TaskConsumer에서 요청내용을 처리후 task.result.topic으로 결과를 produce한다.
             // money-service에서는 task.result.topic을 subscribe하여 결과를 받아 처리후CountDownLatch를 countDown한다
             // 1초 이내에 완료되면 true를 리턴한다. 1초내에 완료되지 않으면 false를 리턴한다.
-            await = countDownLatchManager.getCountDownLatch(rechargingMoneyTask.getTaskId()).await(1000, TimeUnit.MILLISECONDS);
+            await = countDownLatchManager.getCountDownLatch(rechargingMoneyTask.getTaskId()).await(2000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
