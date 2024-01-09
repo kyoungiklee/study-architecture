@@ -38,21 +38,9 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase, Upd
     public FirmBankingResult requestFirmBanking(RequestFirmBankingCommand command) {
 
         // 1. 요청에 대해 정보를 먼저 저장한다.(요청상태 : 요청중)
-        FirmBankingRequest firmBankingRequest = requestFirmBankingPort.createFirmBankingRequest(
-                new FirmBankingRequest.MembershipId(command.getMembershipId())
-                , new FirmBankingRequest.FromBankName(command.getFromBankName())
-                , new FirmBankingRequest.FromBankAccountNumber(command.getFromBankAccountNumber())
-                , new FirmBankingRequest.ToBankName(command.getToBankName())
-                , new FirmBankingRequest.ToBankAccountNumber(command.getToBankAccountNumber())
-                , new FirmBankingRequest.MoneyAmount(command.getMoneyAmount())
-                , new FirmBankingRequest.RequestStatus(FirmBankingRequestStatus.REQUESTED)
-                , new FirmBankingRequest.RejectReason("")
-                , new FirmBankingRequest.Description(command.getDescription())
-                , new FirmBankingRequest.Uuid(UUID.randomUUID().toString())
-                , new FirmBankingRequest.AggregateId("")
-        );
+        FirmBankingRequest firmBankingRequest = saveFirmBankingRequest(command, "");
+        log.info("firmBankingRequest : {}", firmBankingRequest);
 
-        log.info("firmBankingRequest : {}", firmBankingRequest.toString());
         // 2. 요청에 대해 회원이 정상적인 회원인지 확인한다.
         // 3. 요청에 대해 회원이 충분한 잔액이 있는지 확인한다.
         // 4. 잔액이 부족한 경우 충전을 요청한다.
@@ -106,19 +94,9 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase, Upd
                 }).thenApply(result -> {
                     log.info("FirmBankingRequestService requestFirmBankingByEvent result : {}", result.toString());
                     // 1. 요청에 대해 정보를 먼저 저장한다.(요청상태 : 요청중)
-                    FirmBankingRequest firmBankingRequest = requestFirmBankingPort.createFirmBankingRequest(
-                            new FirmBankingRequest.MembershipId(command.getMembershipId())
-                            , new FirmBankingRequest.FromBankName(command.getFromBankName())
-                            , new FirmBankingRequest.FromBankAccountNumber(command.getFromBankAccountNumber())
-                            , new FirmBankingRequest.ToBankName(command.getToBankName())
-                            , new FirmBankingRequest.ToBankAccountNumber(command.getToBankAccountNumber())
-                            , new FirmBankingRequest.MoneyAmount(command.getMoneyAmount())
-                            , new FirmBankingRequest.RequestStatus(FirmBankingRequestStatus.REQUESTED)
-                            , new FirmBankingRequest.RejectReason("")
-                            , new FirmBankingRequest.Description(command.getDescription())
-                            , new FirmBankingRequest.Uuid(UUID.randomUUID().toString())
-                            , new FirmBankingRequest.AggregateId(result.toString())
-                    );
+                    FirmBankingRequest firmBankingRequest = saveFirmBankingRequest(command, result.toString());
+                    log.info("firmBankingRequest : {}", firmBankingRequest);
+
 
                     // 2. 요청에 대해 외부 은행망 시스템에 요청을 보낸다. (외부 시스템에 대한 포트를 만들어서 사용한다.)
                     ExternalFirmBankingRequest externalFirmBankingRequest = ExternalFirmBankingRequest.builder()
@@ -152,6 +130,22 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase, Upd
         } catch (InterruptedException | ExecutionException e) {
             throw new BusinessException(e.getMessage());
         }
+    }
+
+    private FirmBankingRequest saveFirmBankingRequest(RequestFirmBankingCommand command, String result) {
+        return requestFirmBankingPort.createFirmBankingRequest(
+                new FirmBankingRequest.MembershipId(command.getMembershipId())
+                , new FirmBankingRequest.FromBankName(command.getFromBankName())
+                , new FirmBankingRequest.FromBankAccountNumber(command.getFromBankAccountNumber())
+                , new FirmBankingRequest.ToBankName(command.getToBankName())
+                , new FirmBankingRequest.ToBankAccountNumber(command.getToBankAccountNumber())
+                , new FirmBankingRequest.MoneyAmount(command.getMoneyAmount())
+                , new FirmBankingRequest.RequestStatus(FirmBankingRequestStatus.REQUESTED)
+                , new FirmBankingRequest.RejectReason("")
+                , new FirmBankingRequest.Description(command.getDescription())
+                , new FirmBankingRequest.Uuid(UUID.randomUUID().toString())
+                , new FirmBankingRequest.AggregateId(result)
+        );
     }
 
 
