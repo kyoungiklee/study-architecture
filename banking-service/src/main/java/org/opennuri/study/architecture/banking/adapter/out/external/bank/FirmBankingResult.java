@@ -1,13 +1,22 @@
 package org.opennuri.study.architecture.banking.adapter.out.external.bank;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+
+@Builder
+@Data
 @AllArgsConstructor
 public class FirmBankingResult {
     private Long membershipId;
+    private String fromBankName;
+    private String fromBankAccountNumber;
+    private String toBankName;
+    private String toBankAccountNumber;
     private Long moneyAmount;
+    private String aggregateId;
     private FirmBankingResultCode resultCode;
     private String resultMessage;
 
@@ -23,8 +32,13 @@ public class FirmBankingResult {
     @Override
     public String toString() {
         return "FirmBankingResult{" +
-                "membershipId='" + membershipId + '\'' +
+                "membershipId=" + membershipId +
+                ", fromBankName='" + fromBankName + '\'' +
+                ", fromBankAccountNumber='" + fromBankAccountNumber + '\'' +
+                ", toBankName='" + toBankName + '\'' +
+                ", toBankAccountNumber='" + toBankAccountNumber + '\'' +
                 ", moneyAmount=" + moneyAmount +
+                ", aggregateId='" + aggregateId + '\'' +
                 ", resultCode=" + resultCode +
                 ", resultMessage='" + resultMessage + '\'' +
                 '}';

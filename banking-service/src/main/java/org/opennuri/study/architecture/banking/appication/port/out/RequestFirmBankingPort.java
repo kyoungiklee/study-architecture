@@ -16,7 +16,10 @@ public interface RequestFirmBankingPort {
             , FirmBankingRequest.RejectReason rejectedReason
             , FirmBankingRequest.Description description
             , FirmBankingRequest.Uuid uuid
+            , FirmBankingRequest.AggregateId aggregateId
     );
 
     FirmBankingRequest updateFirmBankingRequestStatus(String uuid, FirmBankingRequestStatus firmBankingRequestStatus);
+
+    FirmBankingRequest updateFirmBankingRequestStatusByEvent(String aggregateId, FirmBankingRequestStatus firmBankingRequestStatus);
 }

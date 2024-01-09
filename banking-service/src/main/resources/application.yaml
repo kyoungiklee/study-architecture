@@ -86,3 +86,12 @@ spring:
   sql:
     init:
       mode: always
+
+
+axon:
+  serializer:
+    general: xstream
+    events: jackson
+    messages: jackson
+  axonserver:
+    servers: localhost:8124

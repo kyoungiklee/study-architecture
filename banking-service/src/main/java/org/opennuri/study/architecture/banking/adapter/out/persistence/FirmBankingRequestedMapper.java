@@ -18,7 +18,8 @@ public class FirmBankingRequestedMapper {
                 new FirmBankingRequest.RequestStatus(firmBankingRequestedJpaEntity.getRequestStatus()),
                 new FirmBankingRequest.Description(firmBankingRequestedJpaEntity.getDescription()),
                 new FirmBankingRequest.RejectReason(firmBankingRequestedJpaEntity.getRejectReason()),
-                new FirmBankingRequest.Uuid(firmBankingRequestedJpaEntity.getUuid())
+                new FirmBankingRequest.Uuid(firmBankingRequestedJpaEntity.getUuid()),
+                new FirmBankingRequest.AggregateId(firmBankingRequestedJpaEntity.getAggregateId())
         );
     }
 }

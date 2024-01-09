@@ -51,4 +51,17 @@ public class RequestFirmBankingCommand extends SelfValidating<RequestFirmBanking
         this.validateSelf();
     }
 
+    @Override
+    public String toString() {
+        return "RequestFirmBankingCommand{" +
+                "membershipId=" + membershipId +
+                ", fromBankName='" + fromBankName + '\'' +
+                ", fromBankAccountNumber='" + fromBankAccountNumber + '\'' +
+                ", toBankName='" + toBankName + '\'' +
+                ", toBankAccountNumber='" + toBankAccountNumber + '\'' +
+                ", moneyAmount=" + moneyAmount +
+                ", requestStatus='" + requestStatus + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

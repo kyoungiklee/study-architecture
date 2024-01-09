@@ -30,18 +30,31 @@ public class BankAccountAdopter implements RequestBankAccountInfoPort, RequestEx
         boolean isSuccess = requestFirmBankingTransfer(request);
 
         if(!isSuccess) {
-            return new FirmBankingResult(
-                    request.getMembershipId()
-                    , request.getMoneyAmount()
-                    , FirmBankingResult.FirmBankingResultCode.FAIL
-                    , "법인계좌로 이체에 실패하였습니다." );
+            return FirmBankingResult.builder()
+                    .membershipId(request.getMembershipId())
+                    .toBankAccountNumber(request.getToBankAccountNumber())
+                    .toBankName(request.getToBankName())
+                    .fromBankAccountNumber(request.getFromBankAccountNumber())
+                    .fromBankName(request.getFromBankName())
+                    .moneyAmount(request.getMoneyAmount())
+                    .aggregateId("")
+                    .resultCode(FirmBankingResult.FirmBankingResultCode.FAIL)
+                    .resultMessage("법인계좌로 이체에 실패하였습니다.")
+                    .build();
         }
 
-        return new FirmBankingResult(
-                request.getMembershipId()
-                , request.getMoneyAmount()
-                , FirmBankingResult.FirmBankingResultCode.SUCCESS
-                , "법인계좌로 이체에 성공하였습니다.");
+        return FirmBankingResult.builder()
+                .membershipId(request.getMembershipId())
+                .toBankAccountNumber(request.getToBankAccountNumber())
+                .toBankName(request.getToBankName())
+                .fromBankAccountNumber(request.getFromBankAccountNumber())
+                .fromBankName(request.getFromBankName())
+                .moneyAmount(request.getMoneyAmount())
+                .aggregateId("")
+                .resultCode(FirmBankingResult.FirmBankingResultCode.SUCCESS)
+                .resultMessage("법인계좌로 이체에 성공하였습니다.")
+                .build();
+
     }
 
     private boolean requestFirmBankingTransfer(ExternalFirmBankingRequest request) {

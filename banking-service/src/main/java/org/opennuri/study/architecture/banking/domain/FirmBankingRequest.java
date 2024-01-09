@@ -22,6 +22,8 @@ public class FirmBankingRequest {
     private String rejectReason;
     private String uuid;
 
+    private String aggregateId;
+
     public static FirmBankingRequest generateFirmBankingRequest (
             FirmBankingRequest.FirmBankingRequestId firmBankingRequestId,
             FirmBankingRequest.MembershipId membershipId,
@@ -33,7 +35,8 @@ public class FirmBankingRequest {
             FirmBankingRequest.RequestStatus requestStatus,
             FirmBankingRequest.Description description,
             FirmBankingRequest.RejectReason rejectReason,
-            FirmBankingRequest.Uuid uuid
+            FirmBankingRequest.Uuid uuid,
+            FirmBankingRequest.AggregateId aggregateId
     ) {
         return new FirmBankingRequest(
                 firmBankingRequestId.firmBankingRequestId
@@ -47,6 +50,7 @@ public class FirmBankingRequest {
                 , requestStatus.status
                 , rejectReason.rejectReason
                 , uuid.uuid
+                , aggregateId.aggregateId
                 );
     }
 
@@ -150,20 +154,13 @@ public class FirmBankingRequest {
         String uuid;
     }
 
-    @Override
-    public String toString() {
-        return "FirmBankingRequest{" +
-                "firmBankingRequestId=" + firmBankingRequestId +
-                ", membershipId='" + membershipId + '\'' +
-                ", fromBankName='" + fromBankName + '\'' +
-                ", fromBankAccountNumber='" + fromBankAccountNumber + '\'' +
-                ", toBankName='" + toBankName + '\'' +
-                ", toBankAccountNumber='" + toBankAccountNumber + '\'' +
-                ", moneyAmount=" + moneyAmount +
-                ", description='" + description + '\'' +
-                ", requestStatus=" + requestStatus +
-                ", rejectReason='" + rejectReason + '\'' +
-                ", uuid='" + uuid + '\'' +
-                '}';
+    @Value
+    public static class AggregateId {
+        public AggregateId(String aggregateId) {
+            this.aggregateId = aggregateId;
+        }
+
+        String aggregateId;
     }
+
 }

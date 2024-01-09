@@ -29,6 +29,7 @@ public class FirmBankingRequestedJpaEntity  extends BaseEntity {
     private FirmBankingRequestStatus requestStatus;
     private String rejectReason;
     private String uuid;
+    private String aggregateId;
 
     public FirmBankingRequestedJpaEntity(
             Long membershipId
@@ -40,7 +41,10 @@ public class FirmBankingRequestedJpaEntity  extends BaseEntity {
             , String description
             , FirmBankingRequestStatus requestStatus
             , String rejectReason
-            , String uuid) {
+            , String uuid
+            , String aggregateId
+
+    ) {
 
         this.membershipId = membershipId;
         this.fromBankName = fromBankName;
@@ -52,14 +56,15 @@ public class FirmBankingRequestedJpaEntity  extends BaseEntity {
         this.requestStatus = requestStatus;
         this.rejectReason = rejectReason;
         this.uuid = uuid;
+        this.aggregateId = aggregateId;
 
     }
 
     @Override
     public String toString() {
-        return "FirmBankingRequestedJpsEntity{" +
-                "firmBankingRequestId='" + firmBankingRequestId + '\'' +
-                ", membershipId='" + membershipId + '\'' +
+        return "FirmBankingRequestedJpaEntity{" +
+                "firmBankingRequestId=" + firmBankingRequestId +
+                ", membershipId=" + membershipId +
                 ", fromBankName='" + fromBankName + '\'' +
                 ", fromBankAccountNumber='" + fromBankAccountNumber + '\'' +
                 ", toBankName='" + toBankName + '\'' +
@@ -69,6 +74,7 @@ public class FirmBankingRequestedJpaEntity  extends BaseEntity {
                 ", requestStatus=" + requestStatus +
                 ", rejectReason='" + rejectReason + '\'' +
                 ", uuid='" + uuid + '\'' +
+                ", aggregateId='" + aggregateId + '\'' +
                 '}';
     }
 }

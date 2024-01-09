@@ -24,7 +24,8 @@ public class FirmBankingRequestPersistenceAdapter implements RequestFirmBankingP
             , FirmBankingRequest.RequestStatus requestStatus
             , FirmBankingRequest.RejectReason rejectedReason
             , FirmBankingRequest.Description description
-            , FirmBankingRequest.Uuid uuid) {
+            , FirmBankingRequest.Uuid uuid
+            , FirmBankingRequest.AggregateId aggregateId) {
 
         FirmBankingRequestedJpaEntity savedEntity = repository.save(
                 new FirmBankingRequestedJpaEntity(
@@ -38,7 +39,8 @@ public class FirmBankingRequestPersistenceAdapter implements RequestFirmBankingP
                         , requestStatus.getStatus()
                         , rejectedReason.getRejectReason()
                         , uuid.getUuid()
-                )
+                        , aggregateId.getAggregateId()
+                        )
         );
         return firmBankingRequestedMapper.mapToDomainEntity(savedEntity);
     }
@@ -49,6 +51,12 @@ public class FirmBankingRequestPersistenceAdapter implements RequestFirmBankingP
         firmBankingRequestedJpaEntity.setRequestStatus(firmBankingRequestStatus);
         repository.save(firmBankingRequestedJpaEntity);
 
+        return firmBankingRequestedMapper.mapToDomainEntity(firmBankingRequestedJpaEntity);
+    }
+
+    @Override
+    public FirmBankingRequest updateFirmBankingRequestStatusByEvent(String aggregateId, FirmBankingRequestStatus firmBankingRequestStatus) {
+        FirmBankingRequestedJpaEntity firmBankingRequestedJpaEntity = repository.findByAggregateId(aggregateId);
         return firmBankingRequestedMapper.mapToDomainEntity(firmBankingRequestedJpaEntity);
     }
 }

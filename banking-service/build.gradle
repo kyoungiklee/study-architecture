@@ -56,6 +56,10 @@ dependencies {
 
     //Documentation
     implementation(group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0')
+
+    //Axon
+    implementation group: 'org.axonframework', name: 'axon-spring-boot-starter', version: '4.9.1'
+    implementation group: 'org.axonframework', name: 'axon-configuration', version: '4.9.1'
 }
 
 tasks.named('test') {
