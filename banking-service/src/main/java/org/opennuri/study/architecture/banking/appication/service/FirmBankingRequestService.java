@@ -74,10 +74,10 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase, Upd
 
         if (FirmBankingResult.FirmBankingResultCode.SUCCESS.equals(firmBankingResult.getResultCode())) {
             // 7. 응답이 성공이면 요청에 대한 상태를 완료로 변경한다.
-            requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.APPROVED);
+            firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.APPROVED);
         } else {
             // 8. 응답이 실패이면 요청에 대한 상태를 실패로 변경한다.
-            requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.REJECTED);
+            firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.REJECTED);
         }
         return firmBankingResult;
     }
@@ -133,10 +133,10 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase, Upd
 
                     if (FirmBankingResult.FirmBankingResultCode.SUCCESS.equals(firmBankingResult.getResultCode())) {
                         // 7. 응답이 성공이면 요청에 대한 상태를 완료로 변경한다.
-                        requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.APPROVED);
+                        firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.APPROVED);
                     } else {
                         // 8. 응답이 실패이면 요청에 대한 상태를 실패로 변경한다.
-                        requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.REJECTED);
+                        firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.REJECTED);
                     }
                     firmBankingResult.setAggregateId(result.toString());
                     return firmBankingResult;
