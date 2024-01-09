@@ -70,15 +70,18 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase, Upd
 
         // 6. 외부 시스템에 대한 응답을 받는다.
         FirmBankingResult firmBankingResult = requestExternalFirmBankingPort.requestExternalFirmBanking(externalFirmBankingRequest);
-        log.info("firmBankingResult : {}", firmBankingResult.toString());
+        log.info("FirmBankingRequestService requestFirmBanking firmBankingRequest : {}", firmBankingResult);
 
         if (FirmBankingResult.FirmBankingResultCode.SUCCESS.equals(firmBankingResult.getResultCode())) {
             // 7. 응답이 성공이면 요청에 대한 상태를 완료로 변경한다.
             firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.APPROVED);
+            log.info("FirmBankingRequestService requestFirmBanking firmBankingRequest : {}", firmBankingRequest);
         } else {
             // 8. 응답이 실패이면 요청에 대한 상태를 실패로 변경한다.
             firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.REJECTED);
+            log.info("FirmBankingRequestService requestFirmBanking firmBankingRequest : {}", firmBankingRequest);
         }
+        firmBankingResult.setAggregateId(firmBankingRequest.getAggregateId());
         return firmBankingResult;
     }
 
@@ -133,11 +136,14 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase, Upd
 
                     if (FirmBankingResult.FirmBankingResultCode.SUCCESS.equals(firmBankingResult.getResultCode())) {
                         // 7. 응답이 성공이면 요청에 대한 상태를 완료로 변경한다.
-                        firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.APPROVED);
+                        firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatusByEvent(result.toString(), FirmBankingRequestStatus.APPROVED);
+                        log.info("FirmBankingRequestService requestFirmBankingByEvent firmBankingRequest : {}", firmBankingRequest.toString());
                     } else {
                         // 8. 응답이 실패이면 요청에 대한 상태를 실패로 변경한다.
-                        firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.REJECTED);
+                        firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatusByEvent(result.toString(), FirmBankingRequestStatus.REJECTED);
+                        log.info("FirmBankingRequestService requestFirmBankingByEvent firmBankingRequest : {}", firmBankingRequest.toString());
                     }
+
                     firmBankingResult.setAggregateId(result.toString());
                     return firmBankingResult;
                 });
