@@ -51,4 +51,40 @@ public class RequestMoneyRechargingController {
 
         return ResponseEntity.ok(memberMoneyResponse);
     }
+
+
+    @PostMapping("/money/recharging-saga")
+    public ResponseEntity<MemberMoneyResponse> requestMoneyRechargingSaga(@RequestBody RechargingMoneyRequest rechargingMoneyRequest) {
+        log.info("requestMoneyRecharging: {}", rechargingMoneyRequest);
+
+        RechargingMoneyRequestCommand command = RechargingMoneyRequestCommand.builder()
+                .membershipId(rechargingMoneyRequest.getMembershipId())
+                .moneyAmount(rechargingMoneyRequest.getRechargingAmount())
+                .build();
+
+        log.info("command: {}", command);
+        MemberMoney memberMoney;
+        try {
+           memberMoney = rechargingMoneyRequestUseCase.rechargingMoneySaga(command);
+        } catch (Exception e) {
+            MemberMoneyResponse memberMoneyResponse = MemberMoneyResponse.builder()
+                    .membershipId(rechargingMoneyRequest.getMembershipId())
+                    .balance(0L)
+                    .valid(false)
+                    .message(e.getMessage())
+                    .build();
+            return new ResponseEntity<>(memberMoneyResponse, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        MemberMoneyResponse memberMoneyResponse = MemberMoneyResponse.builder()
+                .membershipId(memberMoney.getMembershipId())
+                .balance(memberMoney.getBalance())
+                .valid(true)
+                .message("SUCCESS")
+                .build();
+
+        log.info("memberMoneyResponse: {}", memberMoneyResponse);
+
+        return ResponseEntity.ok(memberMoneyResponse);
+    }
 }

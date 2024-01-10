@@ -14,11 +14,11 @@ public class CheckRegisteredBankAccountCommand extends SelfValidating<CheckRegis
     @TargetAggregateIdentifier
     private String aggregateId;
     @NotNull
-    private Long rechargingRequestId;
+    private String rechargingRequestAssociationId;
     @NotNull
     private Long membershipId;
     @NotNull
-    private String checkRegisteredBankAccountId;
+    private String checkRegisteredBankAccountAssociationId;
     @NotNull
     private String bankName;
     @NotNull
@@ -26,11 +26,17 @@ public class CheckRegisteredBankAccountCommand extends SelfValidating<CheckRegis
     @NotNull
     private Long amount;
 
-    public CheckRegisteredBankAccountCommand(String aggregateId, Long rechargingRequestId, Long membershipId, String checkRegisteredBankAccountId, String bankName, String bankAccountNumber, Long amount) {
+    public CheckRegisteredBankAccountCommand(String aggregateId
+            , String rechargingRequestAssociationId
+            , Long membershipId
+            , String checkRegisteredBankAccountAssociationId
+            , String bankName
+            , String bankAccountNumber
+            , Long amount) {
         this.aggregateId = aggregateId;
-        this.rechargingRequestId = rechargingRequestId;
+        this.rechargingRequestAssociationId = rechargingRequestAssociationId;
         this.membershipId = membershipId;
-        this.checkRegisteredBankAccountId = checkRegisteredBankAccountId;
+        this.checkRegisteredBankAccountAssociationId = checkRegisteredBankAccountAssociationId;
         this.bankName = bankName;
         this.bankAccountNumber = bankAccountNumber;
         this.amount = amount;
@@ -44,9 +50,9 @@ public class CheckRegisteredBankAccountCommand extends SelfValidating<CheckRegis
 
     public static class CheckRegisteredBankAccountCommandBuilder {
         private String aggregateId;
-        private Long rechargingRequestId;
+        private String rechargingRequestAssociationId;
         private Long membershipId;
-        private String checkRegisteredBankAccountId;
+        private String checkRegisteredBankAccountAssociationId;
         private String bankName;
         private String bankAccountNumber;
         private Long amount;
@@ -59,8 +65,8 @@ public class CheckRegisteredBankAccountCommand extends SelfValidating<CheckRegis
             return this;
         }
 
-        public CheckRegisteredBankAccountCommand.CheckRegisteredBankAccountCommandBuilder rechargingRequestId(Long rechargingRequestId) {
-            this.rechargingRequestId = rechargingRequestId;
+        public CheckRegisteredBankAccountCommand.CheckRegisteredBankAccountCommandBuilder rechargingRequestAssociationId(String rechargingRequestAssociationId) {
+            this.rechargingRequestAssociationId = rechargingRequestAssociationId;
             return this;
         }
 
@@ -69,8 +75,8 @@ public class CheckRegisteredBankAccountCommand extends SelfValidating<CheckRegis
             return this;
         }
 
-        public CheckRegisteredBankAccountCommand.CheckRegisteredBankAccountCommandBuilder checkRegisteredBankAccountId(String checkRegisteredBankAccountId) {
-            this.checkRegisteredBankAccountId = checkRegisteredBankAccountId;
+        public CheckRegisteredBankAccountCommand.CheckRegisteredBankAccountCommandBuilder checkRegisteredBankAccountAssociationId(String checkRegisteredBankAccountAssociationId) {
+            this.checkRegisteredBankAccountAssociationId = checkRegisteredBankAccountAssociationId;
             return this;
         }
 
@@ -90,7 +96,7 @@ public class CheckRegisteredBankAccountCommand extends SelfValidating<CheckRegis
         }
 
         public CheckRegisteredBankAccountCommand build() {
-            return new CheckRegisteredBankAccountCommand(aggregateId, rechargingRequestId, membershipId, checkRegisteredBankAccountId, bankName, bankAccountNumber, amount);
+            return new CheckRegisteredBankAccountCommand(aggregateId, rechargingRequestAssociationId, membershipId, checkRegisteredBankAccountAssociationId, bankName, bankAccountNumber, amount);
         }
 
     }
@@ -99,9 +105,9 @@ public class CheckRegisteredBankAccountCommand extends SelfValidating<CheckRegis
     public String toString() {
         return "CheckRegisteredBankAccountCommand{" +
                 "aggregateId='" + aggregateId + '\'' +
-                ", rechargingRequestId=" + rechargingRequestId +
+                ", rechargingRequestId=" + rechargingRequestAssociationId +
                 ", MembershipId=" + membershipId +
-                ", checkRegisteredBankAccountId='" + checkRegisteredBankAccountId + '\'' +
+                ", checkRegisteredBankAccountId='" + checkRegisteredBankAccountAssociationId + '\'' +
                 ", bankName='" + bankName + '\'' +
                 ", bankAccountNumber='" + bankAccountNumber + '\'' +
                 ", amount=" + amount +

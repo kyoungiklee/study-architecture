@@ -13,7 +13,8 @@ import org.opennuri.study.architecture.common.BaseEntity;
 
 @Entity
 @Table(name = "registered_bank_account")
-@Getter @Setter
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisteredBankAccountJpaEntity extends BaseEntity {
@@ -21,32 +22,37 @@ public class RegisteredBankAccountJpaEntity extends BaseEntity {
     @Id
     @GeneratedValue
     private Long registeredBankAccountId;
-    private String membershipId;
+    private Long membershipId;
     private String bankName;
     private String bankAccountNumber;
     private boolean validLinkedStatus;
+    private String aggregateId;
 
     public RegisteredBankAccountJpaEntity(
-            String membershipId
+            Long membershipId
             , String bankName
             , String bankAccountNumber
-            , boolean validLinkedStatus) {
+            , boolean validLinkedStatus
+            , String aggregateId
+    ) {
 
         this.membershipId = membershipId;
         this.bankName = bankName;
         this.bankAccountNumber = bankAccountNumber;
         this.validLinkedStatus = validLinkedStatus;
+        this.aggregateId = aggregateId;
 
     }
 
     @Override
     public String toString() {
         return "RegisteredBankAccountJpaEntity{" +
-                "registeredBankAccountId='" + registeredBankAccountId + '\'' +
-                ", membershipId='" + membershipId + '\'' +
+                "registeredBankAccountId=" + registeredBankAccountId +
+                ", membershipId=" + membershipId +
                 ", bankName='" + bankName + '\'' +
                 ", bankAccountNumber='" + bankAccountNumber + '\'' +
-                ", linkedStatusIsValid=" + validLinkedStatus +
+                ", validLinkedStatus=" + validLinkedStatus +
+                ", aggregateId='" + aggregateId + '\'' +
                 '}';
     }
 }

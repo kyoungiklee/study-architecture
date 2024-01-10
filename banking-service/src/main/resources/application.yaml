@@ -41,6 +41,17 @@ spring:
     init:
       mode: always
 
+# axon server
+axon:
+  serializer:
+    general: xstream
+    events: jackson
+    messages: jackson
+  axonserver:
+    servers: axon-server:8124
+
+
+
 ---
 # 단독으로 실행할 경우 사용하는 설정(자바 실행 시 프로파일 정보를 local 로 설정한다. -Dspring.profiles.active=local)
 server:

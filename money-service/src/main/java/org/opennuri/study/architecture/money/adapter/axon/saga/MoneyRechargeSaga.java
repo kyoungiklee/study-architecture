@@ -1,24 +1,16 @@
 package org.opennuri.study.architecture.money.adapter.axon.saga;
 
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.SagaLifecycle;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.spring.stereotype.Saga;
 import org.jetbrains.annotations.NotNull;
 import org.opennuri.study.architecture.common.axon.command.CheckRegisteredBankAccountCommand;
-import org.opennuri.study.architecture.common.axon.command.RequestFirmBankingCommand;
-import org.opennuri.study.architecture.common.axon.command.RollbackFirmBankingRequestCommand;
 import org.opennuri.study.architecture.common.axon.event.CheckedRegisteredBankAccountEvent;
-import org.opennuri.study.architecture.common.axon.event.RequestFirmbankingFinishedEvent;
-import org.opennuri.study.architecture.common.axon.event.RollbackFirmbankingFinishedEvent;
 import org.opennuri.study.architecture.money.adapter.axon.event.RechargingRequestCreatedEvent;
-import org.opennuri.study.architecture.money.application.port.out.IncreaseMoneyPort;
-import org.opennuri.study.architecture.money.domain.MemberMoney;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
@@ -34,31 +26,42 @@ public class MoneyRechargeSaga {
         this.commandGateway = commandGateway;
     }
 
+    /**
+     * 충전 요청이 생성되었다는 이벤트를 핸들링한다.
+     * money-service에서 발행된 이벤트로 충전 요청이 생성되었다는 것을 의미한다.
+     * 충전 요청이 생성되면 banking-service로 계좌 등록 여부를 확인하는 커맨드를 발행한다.
+     * @param event RechargingRequestCreatedEvent 충전 요청 생성 이벤트
+     */
     @StartSaga
-    @SagaEventHandler(associationProperty = "rechargingRequestId")
+    @SagaEventHandler(associationProperty = "rechargingRequestAssociationId") // 충전요청 command <--> event 연관관계 ID
     public void handle(RechargingRequestCreatedEvent event) {  //충전 요청이 생성되었다는 이벤트
         log.info("RechargingRequestCreatedEvent: {}", event);
-        String checkRegisteredBankAccountId = UUID.randomUUID().toString();
+        String checkRegisteredBankAccountAssociationId = UUID.randomUUID().toString();
 
-        SagaLifecycle.associateWith("checkRegisteredBankAccountId", checkRegisteredBankAccountId);
+        SagaLifecycle.associateWith("checkRegisteredBankAccountAssociationId", checkRegisteredBankAccountAssociationId);
 
         //step-1 Money-service에서 banking-service로 계좌 등록 여부를 확인한다. (CheckRegisteredBankAccountCommand)
-
         commandGateway.send(
                 CheckRegisteredBankAccountCommand.builder()
-                        .aggregateId(event.getRegisteredBankAccountId()) //banking-service RegisterdBankAccount의 aggregateId
-                        .rechargingRequestId(event.getRechargingRequestId())
+                        //registeredBankAccountAggregate 를 요청하므로 RegisteredBankAccountAggregateId를 전달한다.
+                        .aggregateId(event.getRegisteredBankAccountAggregateId())
+                        .rechargingRequestAssociationId(event.getRechargingRequestAssociationId())
                         .membershipId(event.getMembershipId())
-                        .checkRegisteredBankAccountId(checkRegisteredBankAccountId)
                         .bankName(event.getBankName())
                         .bankAccountNumber(event.getBankAccountNumber())
                         .amount(event.getAmount())
+                        .checkRegisteredBankAccountAssociationId(checkRegisteredBankAccountAssociationId)
                         .build()
-        );
-
+        ).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                log.error("CheckRegisteredBankAccountCommand: {}", throwable.getMessage());
+            } else {
+                log.info("CheckRegisteredBankAccountCommand: {}", result);
+            }
+        });
     }
 
-    @SagaEventHandler(associationProperty = "checkRegisteredBankAccountId")
+    @SagaEventHandler(associationProperty = "checkRegisteredBankAccountAssociationId")
     public void handle(CheckedRegisteredBankAccountEvent event) { //banking-service에서 계좌 등록 여부를 확인한 결과를 받는다. (FirmBankingResult)
         log.info("CheckedRegisteredBankAccountEvent: {}", event);
 
@@ -73,7 +76,7 @@ public class MoneyRechargeSaga {
         SagaLifecycle.associateWith("requestFirmBankingAggregateId", requestFirmBankingAggregateId);
 
         //firm banking 요청 고객계좌 --> 법인계좌
-        commandGateway.send(RequestFirmBankingCommand.builder()
+        /*commandGateway.send(RequestFirmBankingCommand.builder()
                         .aggregateId(requestFirmBankingAggregateId)
                         .requestFirmBankingId(event.getRechargingRequestId())
                         .membershipId(event.getMembershipId())
@@ -89,11 +92,13 @@ public class MoneyRechargeSaga {
                     } else {
                         log.info("RequestFirmBankingCommand: {}", result);
                     }
-                });
+                });*/
+
+        SagaLifecycle.end();
 
     }
 
-    @SagaEventHandler(associationProperty = "requestFirmBankingAggregateId")
+    /*@SagaEventHandler(associationProperty = "requestFirmBankingAggregateId")
     public void handle(RequestFirmbankingFinishedEvent event, IncreaseMoneyPort increaseMoneyPort) { //banking-service에서 firm banking을 요청한 결과를 받는다. (FirmBankingResult)
         log.info("RequestFirmbankingFinishedEvent: {}", event);
         boolean status = event.isFinished();
@@ -135,13 +140,13 @@ public class MoneyRechargeSaga {
                         }
                     });
         }
-    }
+    }*/
 
-    @EndSaga
+    /*@EndSaga
     @SagaEventHandler(associationProperty = "rollbackFirmBankingAggregateId")
     public void handle(RollbackFirmbankingFinishedEvent event) { //money-service에서 banking-service에 rollback을 요청한다. (RollbackFirmBankingCommand)
         log.info("RollbackFirmBankingRequestCommand: {}", event);
-    }
+    }*/
 
     //step-2 banking-service에서 계좌 등록 여부를 확인한 결과를 받는다. (FirmBankingResult)
 

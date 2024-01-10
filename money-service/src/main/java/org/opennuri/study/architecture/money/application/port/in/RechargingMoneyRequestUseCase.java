@@ -4,4 +4,6 @@ import org.opennuri.study.architecture.money.domain.MemberMoney;
 
 public interface RechargingMoneyRequestUseCase {
     MemberMoney rechargingMoney(RechargingMoneyRequestCommand command);
+
+    MemberMoney rechargingMoneySaga(RechargingMoneyRequestCommand command);
 }

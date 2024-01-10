@@ -23,10 +23,11 @@ public class FindBankAccountController {
                 .orElseThrow(() -> new IllegalArgumentException("bankAccount is null"));
 
         FindBankAccountResponse findBankAccountResponse = new FindBankAccountResponse(
-                bankAccount.getMembershipId()
+                String.valueOf(bankAccount.getMembershipId())
                 , bankAccount.getBankName()
                 , bankAccount.getBankAccountNumber()
-                , bankAccount.isValidLinkedStatus());
+                , bankAccount.isValidLinkedStatus()
+                , bankAccount.getAggregateId());
 
         return ResponseEntity.ok(findBankAccountResponse);
     }

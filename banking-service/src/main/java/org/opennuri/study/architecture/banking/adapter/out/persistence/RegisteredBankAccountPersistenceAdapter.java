@@ -19,7 +19,8 @@ public class RegisteredBankAccountPersistenceAdapter implements RegisterBankAcco
             RegisteredBankAccount.MembershipId membershipId,
             RegisteredBankAccount.BankName bankName,
             RegisteredBankAccount.BankAccountNumber bankAccountNumber,
-            RegisteredBankAccount.ValidLinkedStatus validLinkedStatus
+            RegisteredBankAccount.ValidLinkedStatus validLinkedStatus,
+            RegisteredBankAccount.AggregateId aggregateId
             ) {
 
         RegisteredBankAccountJpaEntity savedEntity = bankingRepository.save(
@@ -27,7 +28,8 @@ public class RegisteredBankAccountPersistenceAdapter implements RegisterBankAcco
                         membershipId.getMembershipIdValue(),
                         bankName.getBankNameValue(),
                         bankAccountNumber.getBankAccountNumberValue(),
-                        validLinkedStatus.isValidLinkedStatusValue()
+                        validLinkedStatus.isValidLinkedStatusValue(),
+                        aggregateId.getAggregateIdValue()
                 )
         );
         return bankAccountMapper.mapToDomainEntity(savedEntity);
@@ -35,17 +37,21 @@ public class RegisteredBankAccountPersistenceAdapter implements RegisterBankAcco
 
     @Override
     public RegisteredBankAccount findBankAccount(Long membershipId) {
-        String stringOfMembershipId;
-        try {
-            stringOfMembershipId = String.valueOf(membershipId);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("membershipId is null or empty");
-        }
 
-        RegisteredBankAccountJpaEntity entity = bankingRepository.findByMembershipId(stringOfMembershipId);
+        RegisteredBankAccountJpaEntity entity = bankingRepository.findByMembershipId(membershipId);
         if(entity == null) {
             throw new IllegalArgumentException("bankAccount is null");
         }
         return bankAccountMapper.mapToDomainEntity(entity);
+    }
+
+    @Override
+    public RegisteredBankAccount findBankAccount(String bankName, String bankAccountNumber) {
+        RegisteredBankAccountJpaEntity byBankNameAndBankAccountNumber
+                = bankingRepository.findByBankNameAndBankAccountNumber(bankName, bankAccountNumber);
+        if(byBankNameAndBankAccountNumber == null) {
+            throw new IllegalArgumentException("bankAccount is null");
+        }
+        return bankAccountMapper.mapToDomainEntity(byBankNameAndBankAccountNumber);
     }
 }

@@ -3,7 +3,7 @@ package org.opennuri.study.architecture.banking.adapter.in.web;
 import org.junit.jupiter.api.*;
 import org.opennuri.study.architecture.banking.adapter.out.persistence.SpringDataRegisteredBankAccountRepository;
 import org.opennuri.study.architecture.banking.appication.port.in.RegisterBankAccountCommand;
-import org.opennuri.study.architecture.banking.appication.service.BankAccountRegisterService;
+import org.opennuri.study.architecture.banking.appication.service.RegisterBankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,13 +38,13 @@ class FindBankAccountControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private BankAccountRegisterService bankAccountRegisterService;
+    private RegisterBankAccountService bankAccountRegisterService;
     @Test
     @DisplayName("고객 계좌 조회")
     void findBankAccount() throws Exception {
         // given
         bankAccountRegisterService.registerBankAccount(RegisterBankAccountCommand.builder()
-                .membershipId("1")
+                .membershipId(1L)
                 .bankName("abc bank")
                 .bankAccountNumber("1111-2222-3333-4444")
                 .validLinkedStatus(true)

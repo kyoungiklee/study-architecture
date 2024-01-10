@@ -51,11 +51,12 @@ class RegisterBankAccountControllerTest {
                 .build();
 
         RegisteredBankAccount registeredBankAccount = RegisteredBankAccount.generateRegisteredBankAccount(
-                new RegisteredBankAccount.RegisteredBankAccountId("1")
-                , new RegisteredBankAccount.MembershipId("1")
+                new RegisteredBankAccount.RegisteredBankAccountId(1L)
+                , new RegisteredBankAccount.MembershipId(1L)
                 , new RegisteredBankAccount.BankName("simple bank")
                 , new RegisteredBankAccount.BankAccountNumber("123-45678-67890")
                 , new RegisteredBankAccount.ValidLinkedStatus(true)
+                , new RegisteredBankAccount.AggregateId("")
         );
         //when //then
         mockMvc.perform(MockMvcRequestBuilders.post("/banking/account/register")

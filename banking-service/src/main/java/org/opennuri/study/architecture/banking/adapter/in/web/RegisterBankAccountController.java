@@ -24,12 +24,26 @@ public class RegisterBankAccountController {
         log.info("request: {}", request);
 
         RegisterBankAccountCommand command = RegisterBankAccountCommand.builder()
-                .membershipId(request.getMembershipId())
+                .membershipId(Long.parseLong(request.getMembershipId()))
                 .bankName(request.getBankName())
                 .bankAccountNumber(request.getBankAccountNumber())
                 .validLinkedStatus(request.isValidLinkedStatus())
                 .build();
 
         return registerBankAccountUseCase.registerBankAccount(command);
+    }
+
+    @PostMapping(path = "/banking/account/register-eda")
+    public RegisteredBankAccount registerBankAccountByEvent(@RequestBody RegisterBankAccountRequest request) {
+        log.info("request: {}", request);
+
+        RegisterBankAccountCommand command = RegisterBankAccountCommand.builder()
+                .membershipId(Long.parseLong(request.getMembershipId()))
+                .bankName(request.getBankName())
+                .bankAccountNumber(request.getBankAccountNumber())
+                .validLinkedStatus(request.isValidLinkedStatus())
+                .build();
+
+        return registerBankAccountUseCase.registerBankAccountByEvent(command);
     }
 }

@@ -6,5 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SpringDataRegisteredBankAccountRepository
         extends JpaRepository<RegisteredBankAccountJpaEntity, Long> {
-    RegisteredBankAccountJpaEntity findByMembershipId(String membershipId);
+    RegisteredBankAccountJpaEntity findByMembershipId(Long membershipId);
+
+    RegisteredBankAccountJpaEntity findByBankNameAndBankAccountNumber(String bankName, String bankAccountNumber);
 }

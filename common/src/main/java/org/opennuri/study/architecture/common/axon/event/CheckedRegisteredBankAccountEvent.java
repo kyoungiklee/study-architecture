@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CheckedRegisteredBankAccountEvent {
-    private String rechargingRequestId; // 충전 요청 ID
-    private String checkRegisteredBankAccountId; // 충전요청 등록된 계좌 확인 ID
-    private String membershipId; //충전요청 회원 ID
+    private String rechargingRequestAId; // 충전 요청 ID
+    private String checkRegisteredBankAccountAssociationId; // 충전요청 등록된 계좌 확인 ID
+    private Long membershipId; //충전요청 회원 ID
     private String bankName; // 충전요청 은행명
     private String bankAccountNumber; // 충전요청 계좌번호
     private Long amount; // 충전요청 금액

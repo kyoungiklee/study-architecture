@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
 @Slf4j
 @UseCase
 @RequiredArgsConstructor
-public class FirmBankingRequestService implements RequestFirmBankingUseCase, UpdateFirmBankingUseCase {
+public class RequestFirmBankingService implements RequestFirmBankingUseCase, UpdateFirmBankingUseCase {
     private final RequestFirmBankingPort requestFirmBankingPort;
     private final RequestExternalFirmBankingPort requestExternalFirmBankingPort;
 
@@ -58,16 +58,16 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase, Upd
 
         // 6. 외부 시스템에 대한 응답을 받는다.
         FirmBankingResult firmBankingResult = requestExternalFirmBankingPort.requestExternalFirmBanking(externalFirmBankingRequest);
-        log.info("FirmBankingRequestService requestFirmBanking firmBankingRequest : {}", firmBankingResult);
+        log.info("RequestFirmBankingService requestFirmBanking firmBankingRequest : {}", firmBankingResult);
 
         if (FirmBankingResult.FirmBankingResultCode.SUCCESS.equals(firmBankingResult.getResultCode())) {
             // 7. 응답이 성공이면 요청에 대한 상태를 완료로 변경한다.
             firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.APPROVED);
-            log.info("FirmBankingRequestService requestFirmBanking firmBankingRequest : {}", firmBankingRequest);
+            log.info("RequestFirmBankingService requestFirmBanking firmBankingRequest : {}", firmBankingRequest);
         } else {
             // 8. 응답이 실패이면 요청에 대한 상태를 실패로 변경한다.
             firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatus(firmBankingRequest.getUuid(), FirmBankingRequestStatus.REJECTED);
-            log.info("FirmBankingRequestService requestFirmBanking firmBankingRequest : {}", firmBankingRequest);
+            log.info("RequestFirmBankingService requestFirmBanking firmBankingRequest : {}", firmBankingRequest);
         }
         firmBankingResult.setAggregateId(firmBankingRequest.getAggregateId());
         return firmBankingResult;
@@ -75,7 +75,7 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase, Upd
 
     @Override
     public FirmBankingResult requestFirmBankingByEvent(RequestFirmBankingCommand command) {
-        log.info("FirmBankingRequestService requestFirmBankingByEvent command : {}", command);
+        log.info("RequestFirmBankingService requestFirmBankingByEvent command : {}", command);
 
         CreateFirmbankingRequestCommand createFirmbankingRequestCommand = CreateFirmbankingRequestCommand.builder()
                 .toBankName(command.getToBankName())
@@ -88,11 +88,11 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase, Upd
         CompletableFuture<FirmBankingResult> firmBankingResultCompletableFuture = commandGateway.send(createFirmbankingRequestCommand)
                 .whenComplete((result, throwable) -> {
                     if (throwable != null) {
-                        log.error("FirmBankingRequestService requestFirmBankingByEvent error : {}", throwable.getMessage());
+                        log.error("RequestFirmBankingService requestFirmBankingByEvent error : {}", throwable.getMessage());
                         throw new BusinessCreateException(throwable.getMessage());
                     }
                 }).thenApply(result -> {
-                    log.info("FirmBankingRequestService requestFirmBankingByEvent result : {}", result.toString());
+                    log.info("RequestFirmBankingService requestFirmBankingByEvent result : {}", result.toString());
                     // 1. 요청에 대해 정보를 먼저 저장한다.(요청상태 : 요청중)
                     FirmBankingRequest firmBankingRequest = saveFirmBankingRequest(command, result.toString());
                     log.info("firmBankingRequest : {}", firmBankingRequest);
@@ -115,11 +115,11 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase, Upd
                     if (FirmBankingResult.FirmBankingResultCode.SUCCESS.equals(firmBankingResult.getResultCode())) {
                         // 7. 응답이 성공이면 요청에 대한 상태를 완료로 변경한다.
                         firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatusByEvent(result.toString(), FirmBankingRequestStatus.APPROVED);
-                        log.info("FirmBankingRequestService requestFirmBankingByEvent firmBankingRequest : {}", firmBankingRequest.toString());
+                        log.info("RequestFirmBankingService requestFirmBankingByEvent firmBankingRequest : {}", firmBankingRequest.toString());
                     } else {
                         // 8. 응답이 실패이면 요청에 대한 상태를 실패로 변경한다.
                         firmBankingRequest = requestFirmBankingPort.updateFirmBankingRequestStatusByEvent(result.toString(), FirmBankingRequestStatus.REJECTED);
-                        log.info("FirmBankingRequestService requestFirmBankingByEvent firmBankingRequest : {}", firmBankingRequest.toString());
+                        log.info("RequestFirmBankingService requestFirmBankingByEvent firmBankingRequest : {}", firmBankingRequest.toString());
                     }
 
                     firmBankingResult.setAggregateId(result.toString());
@@ -159,11 +159,11 @@ public class FirmBankingRequestService implements RequestFirmBankingUseCase, Upd
         CompletableFuture<UpdateFirmBankingResponse> updateFirmBankingResponseCompletableFuture =
                 commandGateway.send(updateFirmBankingRequestCommand).whenComplete((result, throwable) -> {
                     if (throwable != null) {
-                        log.error("FirmBankingRequestService updateFirmbankingByEvent error : {}", throwable.getMessage());
+                        log.error("RequestFirmBankingService updateFirmbankingByEvent error : {}", throwable.getMessage());
                         throw new BusinessCreateException(throwable.getMessage());
                     }
                 }).thenApply(result -> {
-                    log.info("FirmBankingRequestService updateFirmbankingByEvent result : {}", result.toString());
+                    log.info("RequestFirmBankingService updateFirmbankingByEvent result : {}", result.toString());
                     FirmBankingRequest firmBankingRequest =
                             requestFirmBankingPort.updateFirmBankingRequestStatusByEvent(command.getAggregateId()
                                     , FirmBankingRequestStatus.APPROVED);
