@@ -2,12 +2,14 @@ package org.opennuri.study.architecture.money.application.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.jetbrains.annotations.NotNull;
 import org.opennuri.study.architecture.common.CountDownLatchManager;
 import org.opennuri.study.architecture.common.UseCase;
 import org.opennuri.study.architecture.common.exception.BusinessException;
 import org.opennuri.study.architecture.common.task.RechargingMoneyTask;
 import org.opennuri.study.architecture.common.task.SubTask;
+import org.opennuri.study.architecture.money.adapter.axon.command.RechargingMoneyRequestCreateCommand;
 import org.opennuri.study.architecture.money.application.port.in.RechargingMoneyRequestCommand;
 import org.opennuri.study.architecture.money.application.port.in.RechargingMoneyRequestUseCase;
 import org.opennuri.study.architecture.money.application.port.out.RechargingMoneyPort;
@@ -20,6 +22,7 @@ import org.opennuri.study.architecture.money.domain.MoneyChangingRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @UseCase
@@ -29,6 +32,8 @@ public class RechargingMoneyRequestService implements RechargingMoneyRequestUseC
     private final RechargingMoneyPort rechargingMoneyPort;
     private final CountDownLatchManager countDownLatchManager;
     private final SendRechargingMoneyTaskPort sendRechargingMoneyTaskPort;
+    private final CommandGateway commandGateway;
+    private final FindMemberMoneyService findMemberMoneyService;
 
     @Override
     public MemberMoney rechargingMoney(RechargingMoneyRequestCommand command) {
@@ -46,7 +51,7 @@ public class RechargingMoneyRequestService implements RechargingMoneyRequestUseC
 
         // 고객상태확인 및 연결계좌상태 확인이 성공적하면 고객의 Money 잔액을 증액하는 작업을 진행한다.
         MemberMoney memberMoney;
-        if(result.equals("SUCCESS")) {
+        if (result.equals("SUCCESS")) {
 
             //4. 고객의 Money 잔액을 증액한다. (머니)
             memberMoney = rechargingMoneyPort.rechargingMoney(
@@ -65,6 +70,7 @@ public class RechargingMoneyRequestService implements RechargingMoneyRequestUseC
             throw new BusinessException("머니요청 처리에 실패하였습니다.");
         }
     }
+
 
     private void saveChangingMoneyStatus(RechargingMoneyRequestCommand command
             , ChangingMoneyRequestStatus status, String uuid) {
@@ -128,5 +134,38 @@ public class RechargingMoneyRequestService implements RechargingMoneyRequestUseC
 
         //7. TaskConsumer에서 produce한 처리결과를 ResultConsumer consume하여 countDownLatchManager에 결과를 저장한다. (countDownLatchManager에 결과가 저장되면 countDown을 실행한다.)
         return countDownLatchManager.getResult(rechargingMoneyTask.getTaskId()).orElse("FAIL");
+    }
+
+
+    /**
+     * Saga를 이용한 머니 증액 요청, 고객의 머니정보를 조회하여
+     *
+     * @param command 머니 증액 요청 정보
+     * @return MemberMoney 고객의 머니 정보
+     */
+    @Override
+    public MemberMoney rechargingMoneySaga(RechargingMoneyRequestCommand command) {
+        //1. 고객의 머니 정보를 조회하여 aggregateId를 가져온다.
+        MemberMoney memberMoney = findMemberMoneyService.findMemberMoney(command.getMembershipId());
+        String memberMoneyAggregateId = memberMoney.getAggregateId();
+
+        //2. 고객 충전 saga의 시작을 알리는 command를 전송한다.(RechargingMoneyRequestCreateCommand)
+        CompletableFuture<MemberMoney> memberMoneyCompletableFuture = commandGateway.send(RechargingMoneyRequestCreateCommand.builder()
+                        .aggregateId(memberMoneyAggregateId) //MoneyRechargeSaga의 aggregateId
+                        .rechargingRequestAssociationId(UUID.randomUUID().toString()) //command와 연결되는 이벤트의 associationId
+                        .membershipId(command.getMembershipId())
+                        .amount(command.getMoneyAmount())
+                        .build())
+                .whenComplete((result, throwable) -> {
+                    if (throwable != null) {
+                        log.error("rechargingMoneySaga error", throwable);
+                        throw new BusinessException("rechargingMoneySaga error");
+                    }
+                }).thenApply((result) -> {
+                    log.info("rechargingMoneySaga result: {}", result);
+                    return findMemberMoneyService.findMemberMoney(command.getMembershipId());
+                });
+        log.info("memberMoneyCompletableFuture: {}", memberMoneyCompletableFuture.join());
+        return memberMoneyCompletableFuture.join();
     }
 }

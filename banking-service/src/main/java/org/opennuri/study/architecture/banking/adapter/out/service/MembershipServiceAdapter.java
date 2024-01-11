@@ -25,12 +25,12 @@ public class MembershipServiceAdapter implements GetMembershipPort {
         this.httpClient = httpClient;
     }
     @Override
-    public MembershipStatus getMembership(String membershipId) {
+    public MembershipStatus getMembership(Long membershipId) {
 
         // hppt client 를 통해 membership service 에서 membershipId 를 통해 회원 정보를 가져온다.
         // 회원 정보가 없으면 null 을 리턴한다.
 
-        String url = String.join("/", membershipServiceUrl, "membership", membershipId);
+        String url = String.join("/", membershipServiceUrl, "membership", String.valueOf(membershipId));
 
         try {
             HttpResponse<String> stringHttpResponse = httpClient.sendGetRequest(url);

@@ -1,15 +1,13 @@
-package org.opennuri.study.architecture.banking.adapter.in.web;
+package org.opennuri.study.architecture.money.adapter.out.service;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Builder
-public class FindBankAccountResponse {
+public class BankAccount {
     private String membershipId;
     private String bankName;
     private String bankAccountNumber;

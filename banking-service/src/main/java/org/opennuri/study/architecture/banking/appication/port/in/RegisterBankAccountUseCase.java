@@ -5,4 +5,6 @@ import org.opennuri.study.architecture.banking.domain.RegisteredBankAccount;
 public interface RegisterBankAccountUseCase {
 
     RegisteredBankAccount registerBankAccount(RegisterBankAccountCommand command);
+
+    RegisteredBankAccount registerBankAccountByEvent(RegisterBankAccountCommand command);
 }

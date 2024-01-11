@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @UseCase
 @RequiredArgsConstructor
-public class BankAccountFindService implements FindBankAccountUseCase {
+public class FindBankAccountService implements FindBankAccountUseCase {
     private final FindBankAccountPort findBankAccountPort;
     @Override
     public Optional<RegisteredBankAccount> findBankAccount(Long membershipId) {

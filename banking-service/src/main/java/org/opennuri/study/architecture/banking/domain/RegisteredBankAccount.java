@@ -9,18 +9,20 @@ import lombok.Value;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class RegisteredBankAccount {
 
-    private final String registeredBankAccountId;
-    private final String membershipId;
+    private final Long registeredBankAccountId;
+    private final Long membershipId;
     private final String bankName;
     private final String bankAccountNumber;
     private final boolean validLinkedStatus;
+    private final String aggregateId;
 
     public static RegisteredBankAccount generateRegisteredBankAccount (
             RegisteredBankAccount.RegisteredBankAccountId registeredBankAccountId,
             RegisteredBankAccount.MembershipId membershipId,
             RegisteredBankAccount.BankName bankName,
             RegisteredBankAccount.BankAccountNumber bankAccountNumber,
-            RegisteredBankAccount.ValidLinkedStatus validlinkedStatus
+            RegisteredBankAccount.ValidLinkedStatus validlinkedStatus,
+            RegisteredBankAccount.AggregateId aggregateId
     ) {
         return new RegisteredBankAccount(
                 registeredBankAccountId.registeredBankAccountIdValue,
@@ -28,23 +30,24 @@ public class RegisteredBankAccount {
                 bankName.bankNameValue,
                 bankAccountNumber.bankAccountNumberValue,
                 validlinkedStatus.validLinkedStatusValue
+                , aggregateId.aggregateIdValue
         );
     }
 
     @Value
     public static class RegisteredBankAccountId {
-        public RegisteredBankAccountId(String value) {
+        public RegisteredBankAccountId(Long value) {
             this.registeredBankAccountIdValue = value;
         }
-        String registeredBankAccountIdValue;
+        Long registeredBankAccountIdValue;
     }
 
     @Value
     public static class MembershipId {
-        public MembershipId(String value) {
+        public MembershipId(Long value) {
             this.membershipIdValue = value;
         }
-        String membershipIdValue;
+        Long membershipIdValue;
     }
     @Value
     public static class BankName {
@@ -68,5 +71,13 @@ public class RegisteredBankAccount {
             this.validLinkedStatusValue = value;
         }
         boolean validLinkedStatusValue;
+    }
+
+    @Value
+    public static class AggregateId {
+        public AggregateId(String value) {
+            this.aggregateIdValue = value;
+        }
+        String aggregateIdValue;
     }
 }

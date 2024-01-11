@@ -9,5 +9,6 @@ public interface RegisterBankAccountPort {
             , RegisteredBankAccount.BankName bankName
             , RegisteredBankAccount.BankAccountNumber bankAccountNumber
             , RegisteredBankAccount.ValidLinkedStatus validLinkedStatus
+            , RegisteredBankAccount.AggregateId aggregateId
     );
 }

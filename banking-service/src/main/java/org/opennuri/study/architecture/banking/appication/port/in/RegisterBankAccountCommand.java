@@ -13,8 +13,7 @@ import org.opennuri.study.architecture.common.SelfValidating;
 public class RegisterBankAccountCommand extends SelfValidating<RegisterBankAccountCommand> {
 
     @NotNull
-    @NotBlank
-    private final String membershipId;
+    private final Long membershipId;
 
     @NotNull
     @NotBlank
@@ -26,7 +25,7 @@ public class RegisterBankAccountCommand extends SelfValidating<RegisterBankAccou
 
     private final boolean validLinkedStatus;
 
-    public RegisterBankAccountCommand(String membershipId, String bankName, String bankAccountNumber, boolean validLinkedStatus) {
+    public RegisterBankAccountCommand(Long membershipId, String bankName, String bankAccountNumber, boolean validLinkedStatus) {
         this.membershipId = membershipId;
         this.bankName = bankName;
         this.bankAccountNumber = bankAccountNumber;
