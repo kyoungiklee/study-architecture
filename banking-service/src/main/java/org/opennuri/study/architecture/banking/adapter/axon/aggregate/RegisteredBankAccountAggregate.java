@@ -65,7 +65,7 @@ public class RegisteredBankAccountAggregate {
                 .bankName(command.getBankName())
                 .bankAccountNumber(command.getBankAccountNumber())
                 .amount(command.getAmount())
-                .firmBankingRequestAggregateId(firmBankingRequestAggregateId)
+                .firmBankingRequestAggregateId(firmBankingRequestAggregateId) //UUID
                 .isChecked(isValidLinkedStatus)
                 .build()
         );

@@ -12,10 +12,10 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 @Builder
 public class RequestFirmBankingCommand {
 
-    private String requestFirmBankingId; // 충전요청 ID
     @TargetAggregateIdentifier
     private String aggregateId; // 충전요청 Aggregate ID
-    private String membershipId; // 충전요청 회원 ID
+    private String requestFirmBankingId;
+    private Long membershipId; // 충전요청 회원 ID
     private String fromBankName; // 출금 은행명
     private String fromBankAccountNumber; // 출금 계좌번호
     private String toBankName; // 입금 은행명

@@ -150,8 +150,7 @@ public class RechargingMoneyRequestService implements RechargingMoneyRequestUseC
         String memberMoneyAggregateId = memberMoney.getAggregateId();
 
         //2. 고객 충전 saga의 시작을 알리는 command를 전송한다.(RechargingMoneyRequestCreateCommand)
-        CompletableFuture<Object> objectCompletableFuture
-                = commandGateway.send(RechargingMoneyRequestCreateCommand.builder()
+        CompletableFuture<MemberMoney> memberMoneyCompletableFuture = commandGateway.send(RechargingMoneyRequestCreateCommand.builder()
                         .aggregateId(memberMoneyAggregateId) //MoneyRechargeSaga의 aggregateId
                         .rechargingRequestAssociationId(UUID.randomUUID().toString()) //command와 연결되는 이벤트의 associationId
                         .membershipId(command.getMembershipId())
@@ -164,10 +163,9 @@ public class RechargingMoneyRequestService implements RechargingMoneyRequestUseC
                     }
                 }).thenApply((result) -> {
                     log.info("rechargingMoneySaga result: {}", result);
-                    return result;
+                    return findMemberMoneyService.findMemberMoney(command.getMembershipId());
                 });
-        Object join = objectCompletableFuture.join();
-        log.info("join: {}", join.toString());
-        return null;
+        log.info("memberMoneyCompletableFuture: {}", memberMoneyCompletableFuture.join());
+        return memberMoneyCompletableFuture.join();
     }
 }
